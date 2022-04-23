@@ -1,0 +1,19 @@
+﻿@namespace AgileConfig.BlazorUI.Components
+@inherits AntDomComponentBase
+
+<Space Class="@ClassMapper.Class">
+    <SpaceItem>
+        <AvatarDropdown
+            Name=@UserName
+            MenuItems="@_avatarMenuItems"
+            Avatar="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+            OnItemSelected="OnUserItemSelected" />
+    </SpaceItem>
+    <SpaceItem>
+         <SelectLang
+            Locales="@_locales" 
+            LanguageLabels="@_languageLabels" 
+            LanguageIcons="@_languageIcons" 
+            OnItemSelected="OnLangItemSelected" />
+    </SpaceItem>
+</Space>

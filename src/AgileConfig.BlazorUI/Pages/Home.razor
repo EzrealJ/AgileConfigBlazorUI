@@ -1,0 +1,67 @@
+﻿@page "/home"
+@page "/"
+@namespace AgileConfig.BlazorUI.Pages
+@using static AgileConfig.BlazorUI.IconHelper
+
+
+<div class="site-statistic-demo-card">
+    <Row Gutter="_gutter">
+        <Col Span="12">
+        <Card>
+            <Statistic Title="节点" Value=@NodeValue>
+                <PrefixTemplate>
+                    <span><Icon Type=@IconTypes.Node Theme=@_iconTheme /></span>
+                </PrefixTemplate>
+            </Statistic>
+        </Card>
+        </Col>
+        <Col Span="12">
+        <Card>
+            <Statistic Title="应用" Value=@AppCount>
+                <PrefixTemplate>
+                    <span><Icon Type=@IconTypes.App Theme=@_iconTheme /></span>
+                </PrefixTemplate>
+            </Statistic>
+        </Card>
+        </Col>
+
+        <Col Span="12">
+        <Card>
+            <Statistic Title="配置" Value=@ConfigCount>
+                <PrefixTemplate>
+                    <span><Icon Type=@IconTypes.Config Theme=@_iconTheme /></span>
+                </PrefixTemplate>
+            </Statistic>
+        </Card>
+        </Col>
+        <Col Span="12">
+        <Card>
+            <Statistic Title="客户端" Value=@ClientCount>
+                <PrefixTemplate>
+                    <span><Icon Type=@IconTypes.Client Theme=@_iconTheme /></span>
+                </PrefixTemplate>
+            </Statistic>
+        </Card>
+        </Col>
+
+        <Col Span="12">
+        <Card>
+            <Statistic Title="服务" Value=@ServiceValue>
+                <PrefixTemplate>
+                    <span><Icon Type=@IconTypes.Service Theme=@_iconTheme /></span>
+                </PrefixTemplate>
+            </Statistic>
+        </Card>
+        </Col>
+        <Col Span="12">
+
+        </Col>
+    </Row>
+</div>
+
+<style>
+    .site-statistic-demo-card {
+        background: #ececec;
+        padding: 30px;
+    }
+</style>

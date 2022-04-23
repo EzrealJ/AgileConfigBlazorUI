@@ -1,0 +1,86 @@
+﻿@page "/node"
+@using System.ComponentModel
+@using AgileConfig.UIApiClient
+@using AntDesign.TableModels
+@using AntDesign;
+
+
+<Row>
+    <Col Span="4">
+    <Button Type="@ButtonType.Primary"
+            Loading="_dataLoading"
+            OnClick="ReLoadAsync">
+        重新加载
+    </Button></Col>
+</Row>
+<Divider />
+<Table TItem="ServerNodeVM" DataSource="@DataSource" OnRow="OnRow" OnHeaderRow="OnHeaderRow">
+    <AntDesign.Column Title="节点地址"
+                      DataIndex="@nameof(context.Address)"
+                      TData="string"
+                      OnCell="OnCell"
+                      OnHeaderCell="OnHeaderCell" />
+    <AntDesign.Column Title="备注" DataIndex="@nameof(context.Remark)" TData="string"></AntDesign.Column>
+    <AntDesign.Column Title="最后响应时间"
+                      DataIndex="@nameof(context.LastEchoTime)"
+                      TData="Nullable<DateTimeOffset>"
+                      Format=@Consts.Format.DATE_TIMEYYYY_MM_DD_HH_MM_SS />
+    <AntDesign.Column Title="状态" DataIndex="@nameof(context.Status)" TData="NodeStatus">
+        @if (context.Status == NodeStatus.Online)
+        {
+            <Tag Color="green">在线</Tag>
+        }
+        else
+        {
+            <Tag Color="red-inverse">离线</Tag>
+        }
+
+    </AntDesign.Column>
+    <AntDesign.ActionColumn Title="操作">
+        <Space>
+            <SpaceItem><Button OnClick=@(async e=>await ReloadAllClientAsync(context.Address))>刷新所有客户端的配置</Button></SpaceItem>
+            <SpaceItem><Button Danger OnClick=@(e=>DeleteConfirm(context))>Delete</Button></SpaceItem>
+        </Space>
+    </AntDesign.ActionColumn>
+</Table>
+
+@code {
+    RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+
+    record Data(string Key, string Name, int Age, string Address, string[] Tags);
+
+
+    Dictionary<string, object> OnRow(RowData<ServerNodeVM> row) => new()
+        {
+            ["id"] = row.Data.Address,
+            ["onclick"] = ((Action)delegate
+            {
+                Console.WriteLine($"row {row.Data.Address} was clicked");
+            })
+        };
+
+    Dictionary<string, object> OnHeaderRow() => new()
+        {
+            ["id"] = "header-row",
+            ["onclick"] = ((Action)delegate
+            {
+                Console.WriteLine("header row was clicked");
+            })
+        };
+
+    Dictionary<string, object> OnCell(CellData cellData) => new()
+        {
+            ["onclick"] = ((Action)delegate
+            {
+                Console.WriteLine($"cell { ((RowData<Data>)cellData.RowData).Data.Name} was clicked");
+            }),
+        };
+
+    Dictionary<string, object> OnHeaderCell() => new()
+        {
+            ["onclick"] = ((Action)delegate
+            {
+                Console.WriteLine("header cell was clicked");
+            }),
+        };
+}

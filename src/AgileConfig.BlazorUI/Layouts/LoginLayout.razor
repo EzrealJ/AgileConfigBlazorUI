@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+
+<AntDesign.Layout Style="padding:0;margin:0">
+@*    
+    <Header Style="height:10%">
+        <div style="margin:10px;">
+            <AntDesign.Row Justify="space-around" Align="middle">
+                <AntDesign.Col Span="8">
+                    <img src="/assets/logo.svg" style="align-self:center" />
+                </AntDesign.Col>
+                <AntDesign.Col Span="8" Offset="8" Style="text-align:center">
+                    <span style="color:white; font-size:24px"> @ProductionName </span>
+                </AntDesign.Col>
+            </AntDesign.Row>
+        </div>
+    </Header>
+*@
+    <Content Style="background-color:white; min-height:500px">
+        <AntDesign.Row>
+            <AntDesign.Col Span="20" Offset="2">
+                <div style="margin:100px 0">
+                    @Body
+                </div>
+            </AntDesign.Col>
+        </AntDesign.Row>
+    </Content>
+</AntDesign.Layout>
+
+@code {
+    private const string ProductionName = "AgileConfig-轻量级配置中心";
+}

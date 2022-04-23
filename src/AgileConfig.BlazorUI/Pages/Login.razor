@@ -1,0 +1,53 @@
+﻿@page "/login"
+@layout Layouts.LoginLayout
+
+
+@using AgileConfig.BlazorUI.Auth
+@using AgileConfig.UIApiClient
+@using Blazored.LocalStorage
+
+@inject NavigationManager NavigationManager
+@inject MessageService MsgService
+@inject AuthService authService
+
+
+<AntDesign.Form Model="@_loginData" Style="height:100%"
+                OnFinish="OnFinish"
+                LabelColSpan="4"
+                WrapperColSpan="4">
+    <FormItem WrapperColOffset="10" WrapperColSpan="4">
+        <AntDesign.Input Placeholder="请输入账号" AllowClear="true" @bind-Value="@context.UserName">
+            <Prefix>
+                <Icon Type="user"></Icon>
+            </Prefix>
+        </AntDesign.Input>
+    </FormItem>
+    <FormItem WrapperColOffset="10" WrapperColSpan="4">
+        <InputPassword Placeholder="请输入密码" @bind-Value="@context.Password">
+            <Prefix>
+                <Icon Type="lock"></Icon>
+            </Prefix>
+        </InputPassword>
+    </FormItem>
+    <FormItem WrapperColOffset="11" WrapperColSpan="2">
+        <Button Type="@ButtonType.Primary" HtmlType="submit" Block>
+            登录
+        </Button>
+    </FormItem>
+</AntDesign.Form>
+
+@code {
+    private LoginVM _loginData = new();
+
+    private async Task OnFinish(EditContext editContext)
+    {
+        var result = await authService.LoginAsync(_loginData);
+        if (!result)
+        {
+            await MsgService.Error("帐号或密码错误！");
+            return;
+        }
+        await MsgService.Success("登录成功！");
+        NavigationManager.NavigateTo("/home");
+    }
+}

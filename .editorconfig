@@ -1,0 +1,337 @@
+#version 1.0-pre
+#created by Ezreal
+
+###############################
+# Core EditorConfig Options   #
+###############################
+#修改为true则成为最终的规范文件，不能被更高层级的配置文件覆盖
+root = true
+# All files
+[*]
+indent_style = space
+
+# XML project files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+indent_size = 2
+
+# XML config files
+[*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size = 2
+
+# Code files
+[*.{cs,csx,vb,vbx}]
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
+###############################
+#       .NET 样式规则          #
+###############################
+[*.{cs,vb}]
+# Organize usings
+#按字母顺序对 System.* using 指令排序，并将它们放在其他 using 指令前面
+dotnet_sort_system_directives_first = true
+#语言规则部分
+#文档参考https://docs.microsoft.com/zh-cn/dotnet/fundamentals/code-analysis/style-rules/language-rules
+#IDE0003 和 IDE0009 不使用this或Me；违反规则时不提示
+# this. preferences
+dotnet_style_qualification_for_field = false:silent
+dotnet_style_qualification_for_property = false:silent
+dotnet_style_qualification_for_method = false:silent
+dotnet_style_qualification_for_event = false:silent
+#IDE0049 使用语言关键字，而非类型引用的框架类型名称；违反规则时不提示
+# Language keywords vs BCL types preferences
+dotnet_style_predefined_type_for_locals_parameters_members = true:silent
+dotnet_style_predefined_type_for_member_access = true:silent
+# 括号约定
+#IDE0047：删除不必要的括号
+#IDE0048：添加括号确保清晰
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
+# 可访问性修饰符约定
+#IDE0040 添加可访问性修饰符
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
+#IDE0044 添加 readonly 修饰符
+dotnet_style_readonly_field = true:suggestion
+# Expression-level preferences
+#IDE0017 优先使用对象初始值设定项
+dotnet_style_object_initializer = true:suggestion
+#IDE0028 优先使用集合初始值设定项
+dotnet_style_collection_initializer = true:suggestion
+#IDE0033 使用显式提供的元组名称而不是隐式的ItemX
+dotnet_style_explicit_tuple_names = true:suggestion
+#IDE0031 优先使用 Null 传播
+dotnet_style_null_propagation = true:suggestion
+#IDE0029 和 IDE0030 优先使用 coalesce 表达式
+dotnet_style_coalesce_expression = true:suggestion
+#IDE0041 优先使用 is null 检查
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:silent
+#IDE0037 使用推断的元组元素名称
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+#IDE0037 优先使用推断的匿名类型成员名称
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+#IDE0032 首选使用自动属性
+dotnet_style_prefer_auto_properties = true:silent
+#IDE0045 优先使用条件表达式进行赋值
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+#IDE0046 优先使用 return 的条件表达式
+dotnet_style_prefer_conditional_expression_over_return = true:silent
+#IDE0054 和 IDE0074 优先使用复合赋值
+dotnet_style_prefer_compound_assignment = true:suggestion
+#IDE0071 建议简化字符串内插
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+#IDE0075 建议简化条件表达式
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+###############################
+#         C# 样式规则          #
+###############################
+[*.cs]
+#var限定
+#IDE0008 使用显式类型而不是“var”来声明内置系统类型
+csharp_style_var_for_built_in_types = false:suggestion
+#IDE0007 声明表达式右侧已提到该类型时更倾向使用 var
+csharp_style_var_when_type_is_apparent = true:suggestion
+
+#表达式主体
+#IDE0021 优先使用构造函数的表达式主体
+csharp_style_expression_bodied_constructors = true:suggestion
+#IDE0022 方法体单行时，优先表达式主体
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+#IDE0023 和 IDE0024 定义操作符代码体为单行时，优先表达式主体
+csharp_style_expression_bodied_operators = when_on_single_line :suggestion
+#IDE0025 只读属性的get块为单行时，优先表达式主体
+csharp_style_expression_bodied_properties = when_on_single_line :suggestion
+#IDE0026 索引表达式为单行时，优先表达式主体
+csharp_style_expression_bodied_indexers = when_on_single_line :suggestion
+#IDE0027 属性访问器为单行时，对访问器优先表达式主体
+csharp_style_expression_bodied_accessors = when_on_single_line :suggestion
+#IDE0053 Lambda块为单行时，使用 Lambda 的表达式主体
+csharp_style_expression_bodied_lambdas = when_on_single_line :suggestion
+#IDE0061 局部函数块为单行时，优先表达式主体
+csharp_style_expression_bodied_local_functions = when_on_single_line:suggestion
+
+#模式匹配
+#IDE0019 使用模式匹配来避免 as 后跟 null 检查
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+#IDE0020 使用模式匹配来避免后跟强制转换的“is”检查
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+#IDE0066 优先使用 switch 表达式
+csharp_style_prefer_switch_expression = true:suggestion
+#IDE0078 不建议使用模式匹配
+csharp_style_prefer_pattern_matching = false:suggestion
+#IDE0083 若C#>9.0,优先使用not关键字，如(is not null)
+csharp_style_prefer_not_pattern = true:suggestion
+
+#表达式级首选项
+#IDE0018 建议内联out变量声明
+csharp_style_inlined_variable_declaration = true:suggestion
+#IDE0034 在编译器可推断表达式类型的情况下，建议简化 default 表达式
+csharp_prefer_simple_default_expression = true:suggestion
+#IDE0039 使用本地函数而不是匿名的 Lambda
+csharp_style_pattern_local_over_anonymous_function = true:suggestion
+#IDE0042 允许析构变量声明
+csharp_style_deconstructed_variable_declaration = true:silent
+#IDE0056 使用索引运算符简化索引计算
+csharp_style_prefer_index_operator = true:suggestion
+#IDE0057 使用范围运算符简化切片位置计算
+csharp_style_prefer_range_operator = true:suggestion
+#IDE0090 若可推断类型，简化new表达式
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+
+#“NULL”检查首选项
+#IDE0016 使用 throw 表达式作为null检查的首选项
+csharp_style_throw_expression = true:suggestion
+#IDE1005 调用 Lambda 表达式时使用 Null 条件运算符 (?.)，而非执行 NULL 检查
+csharp_style_conditional_delegate_call = true:suggestion
+
+#代码块首选项
+#IDE0011 使用大括号为首选项，即使只有一个代码行
+csharp_prefer_braces = true:suggestion
+#IDE0063 使用简单的 using 语句减少括号层级
+csharp_prefer_simple_using_statement = true:suggestion
+
+#“using”指令首选项
+#IDE0065 首选将 using 指令放在名称空间之外
+csharp_using_directive_placement = outside_namespace:warning
+
+#修饰符首选项
+#IDE0062 优先将本地函数 设置为 static（如可能）
+csharp_prefer_static_local_function = true:suggestion
+
+
+###############################
+#         代码命名规范          #
+###############################
+# 定义帕斯卡样式
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+
+# 定义以I开头的帕斯卡样式
+dotnet_naming_style.interface_style.capitalization = pascal_case
+dotnet_naming_style.interface_style.required_prefix = I
+
+# 定义以T开头的帕斯卡样式
+dotnet_naming_style.type_parameter_style.capitalization = pascal_case
+dotnet_naming_style.type_parameter_style.required_prefix = T
+
+# 定义驼峰样式
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+# 定义以_开头的驼峰样式
+dotnet_naming_style._camelCase.capitalization = camel_case
+dotnet_naming_style._camelCase.required_prefix = _
+
+# 定义以_分割的全大写样式
+dotnet_naming_style.word_separator_all_upper.capitalization = all_upper
+dotnet_naming_style.word_separator_all_upper.word_separator = _
+
+# 定义以_分割的全小写样式
+dotnet_naming_style.word_separator_all_lower.capitalization = all_lower
+dotnet_naming_style.word_separator_all_lower.word_separator = _
+
+
+#以下代码要素，任何可访问级别(如果有可访问级别)，使用帕斯卡
+dotnet_naming_symbols.pascal_case_group.applicable_accessibilities = *
+dotnet_naming_symbols.pascal_case_group.applicable_kinds = namespace, class, struct, enum, method, property, delegate, event
+dotnet_naming_rule.must_pascal_case_style.symbols = pascal_case_group
+dotnet_naming_rule.must_pascal_case_style.style = pascal_case_style
+dotnet_naming_rule.must_pascal_case_style.severity = warning
+
+#以下代码要素，任何可访问级别(如果有可访问级别)，使用驼峰
+dotnet_naming_symbols.camel_case_group.applicable_accessibilities = *
+dotnet_naming_symbols.camel_case_group.applicable_kinds = parameter, local
+dotnet_naming_rule.must_camel_case_style.symbols = camel_case_group
+dotnet_naming_rule.must_camel_case_style.style = camel_case_style
+dotnet_naming_rule.must_camel_case_style.severity = warning
+
+# 针对接口约定命名
+dotnet_naming_symbols.interface_symbol.applicable_kinds = interface
+dotnet_naming_symbols.interface_symbol.applicable_accessibilities = *
+dotnet_naming_rule.interface_naming.symbols = interface_symbol
+dotnet_naming_rule.interface_naming.style = interface_style
+dotnet_naming_rule.interface_naming.severity = warning
+
+# 针对泛型参数命名
+dotnet_naming_symbols.type_parameter_symbol.applicable_kinds = type_parameter
+dotnet_naming_symbols.type_parameter_symbol.applicable_accessibilities = *
+dotnet_naming_rule.type_parameter_naming.symbols = type_parameter_symbol
+dotnet_naming_rule.type_parameter_naming.style = type_parameter_style
+dotnet_naming_rule.type_parameter_naming.severity = warning
+
+# 针对常量命名
+dotnet_naming_symbols.constant_symbol.applicable_kinds = field, local
+dotnet_naming_symbols.constant_symbol.applicable_accessibilities = *
+dotnet_naming_symbols.constant_symbol.required_modifiers = const
+dotnet_naming_rule.constant_naming.symbols = constant_symbol
+dotnet_naming_rule.constant_naming.style = word_separator_all_upper
+dotnet_naming_rule.constant_naming.severity = warning
+
+# 私有的字段
+dotnet_naming_symbols.private_field_symbol.applicable_kinds = field
+dotnet_naming_symbols.private_field_symbol.applicable_accessibilities = private, protected, private_protected
+dotnet_naming_rule.private_field_naming.symbols = private_field_symbol
+dotnet_naming_rule.private_field_naming.style = _camelCase
+dotnet_naming_rule.private_field_naming.severity = warning
+
+# 非私有字段(若有可能请用属性代替)
+dotnet_naming_symbols.public_field_symbol.applicable_kinds = field
+dotnet_naming_symbols.public_field_symbol.applicable_accessibilities = public, internal, protected_internal
+dotnet_naming_rule.public_field_naming.symbols = public_field_symbol
+dotnet_naming_rule.public_field_naming.style = pascal_case_style
+dotnet_naming_rule.public_field_naming.severity = warning
+
+
+###############################
+#         代码格式化规范        #
+###############################
+[*.cs]
+#这些要素，大括号另起一行
+csharp_new_line_before_open_brace = all
+#else换行
+csharp_new_line_before_else = true
+#catch换行
+csharp_new_line_before_catch = true
+#finally换行
+csharp_new_line_before_finally = true
+#对象初始化成员换行
+csharp_new_line_before_members_in_object_initializers = true
+#匿名对象初始化换行
+csharp_new_line_before_members_in_anonymous_types = true
+#表达式子句换行
+csharp_new_line_between_query_expression_clauses = true
+
+###############################
+#         代码缩进规范          #
+###############################
+[*.cs]
+#缩进 switch case 内容
+csharp_indent_case_contents = true
+#缩进 switch 标签
+csharp_indent_switch_labels = true
+#标签在代码最左侧，一般不推荐goto控制逻辑，所以意义不大
+csharp_indent_labels = flush_left
+#缩进块内容
+csharp_indent_block_contents = true
+#不缩进大括号
+csharp_indent_braces = false
+#缩进case块内容
+csharp_indent_case_contents_when_block = true
+
+###############################
+#         代码间距控制          #
+###############################
+[*.cs]
+#不在强制转换和值之间放置空格字符
+csharp_space_after_cast = false
+#在控制流语句（如 for 循环）中的关键字后放置空格字符
+csharp_space_after_keywords_in_control_flow_statements = true
+#括号和它中间的内容之间不包含空格
+csharp_space_between_parentheses = none
+#在类型声明中的基或接口冒号前放置空格字符
+csharp_space_before_colon_in_inheritance_clause = true
+#在类型声明中的基或接口冒号后放置空格字符
+csharp_space_after_colon_in_inheritance_clause = true
+#在二元运算符前后插入空格
+csharp_space_around_binary_operators = before_and_after
+#不在方法声明参数列表的左括号之后和右括号之前放置空格字符
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+#不在方法声明的空参数列表括号内插入空格
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+#不在方法声明中方法名称和左括号之间放置空格字符
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+#不在方法调用的左括号之后和右括号之前放置空格字符
+csharp_space_between_method_call_parameter_list_parentheses = false
+#不在空参数调用列表的括号中插入空格
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+#不在方法调用名称和左括号之间插入空格
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+#在逗号后加入空格
+csharp_space_after_comma = true
+#不在逗号前加空格
+csharp_space_before_comma = false
+#不点后加空格
+csharp_space_after_dot = false
+#不点前加空格
+csharp_space_before_dot = false
+#在 for 语句中的每个分号后面插入空格
+csharp_space_after_semicolon_in_for_statement = true
+#不在 for 语句中的每个分号前插入空格
+csharp_space_before_semicolon_in_for_statement = false
+#删除声明语句中多余的空格字符
+csharp_space_around_declaration_statements = false
+#不在左方括号 [ 前插入空格
+csharp_space_before_open_square_brackets = false
+#不在空方括号 [ ] 之间插入空格
+csharp_space_between_empty_square_brackets = false
+#不在非空方括号 [ 0 ] 中插入空格字符
+csharp_space_between_square_brackets = false
+
+###############################
+#         代码换行控制          #
+###############################
+[*.cs]
+#每个声明单独行
+csharp_preserve_single_line_statements = false
+#将代码块保留在单个行上
+csharp_preserve_single_line_blocks = true
