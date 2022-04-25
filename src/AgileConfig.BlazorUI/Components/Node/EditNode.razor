@@ -1,0 +1,13 @@
+﻿@using AgileConfig.UIApiClient
+<Modal Title="@Title" Visible="@Visible" OnOk="@AddAsync" OnCancel=@Cancel>
+    <Form @ref=@_form Model="CurrentObject">
+        <FormItem Label="地址" Required>
+            <Input @bind-Value="@context.Address" />
+        </FormItem>
+        <FormItem Label="备注">
+            <TextArea @bind-Value="@context.Remark" />
+        </FormItem>
+    </Form>
+</Modal>
+
+

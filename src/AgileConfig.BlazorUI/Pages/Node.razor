@@ -1,86 +1,90 @@
 ﻿@page "/node"
-@using System.ComponentModel
-@using AgileConfig.UIApiClient
-@using AntDesign.TableModels
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.UIApiClient;
+@using AntDesign.TableModels;
 @using AntDesign;
+@using AgileConfig.BlazorUI.Components.Node;
+@using Microsoft.AspNetCore.Components.Rendering
 
 
 <Row>
-    <Col Span="4">
-    <Button Type="@ButtonType.Primary"
-            Loading="_dataLoading"
-            OnClick="ReLoadAsync">
-        重新加载
-    </Button></Col>
+    <Col>
+    <Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button>
+    <Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="ReLoadAsync">重新加载</Button>
+    <Button Type="@ButtonType.Primary" OnClick="@(()=>_editNode.Visible=true)">添加节点</Button>
+    </Col>
 </Row>
 <Divider />
-<Table TItem="ServerNodeVM" DataSource="@DataSource" OnRow="OnRow" OnHeaderRow="OnHeaderRow">
-    <AntDesign.Column Title="节点地址"
+@if (_itemShowType == EnumItemShowType.TableRow)
+{
+    <Table TItem="ServerNodeVM" DataSource="@DataSource">
+        <AntDesign.Column Title="节点地址"
                       DataIndex="@nameof(context.Address)"
-                      TData="string"
-                      OnCell="OnCell"
-                      OnHeaderCell="OnHeaderCell" />
-    <AntDesign.Column Title="备注" DataIndex="@nameof(context.Remark)" TData="string"></AntDesign.Column>
-    <AntDesign.Column Title="最后响应时间"
+                      TData="string" />
+        <AntDesign.Column Title="备注" DataIndex="@nameof(context.Remark)" TData="string"></AntDesign.Column>
+        <AntDesign.Column Title="最后响应时间"
                       DataIndex="@nameof(context.LastEchoTime)"
                       TData="Nullable<DateTimeOffset>"
                       Format=@Consts.Format.DATE_TIMEYYYY_MM_DD_HH_MM_SS />
-    <AntDesign.Column Title="状态" DataIndex="@nameof(context.Status)" TData="NodeStatus">
-        @if (context.Status == NodeStatus.Online)
+        <AntDesign.Column Title="状态" DataIndex="@nameof(context.Status)" TData="NodeStatus">
+            @GetItemTag(context)
+        </AntDesign.Column>
+        <AntDesign.ActionColumn Title="操作">
+            @GetItemButtons(context)
+        </AntDesign.ActionColumn>
+    </Table>
+}
+@if (_itemShowType == EnumItemShowType.Card)
+{
+    <Row Gutter=@Gutter>
+        @foreach (ServerNodeVM item in DataSource)
         {
-            <Tag Color="green">在线</Tag>
+            <AntDesign.Col Xs="24" Md="16" Lg="8" @key=@item.Address>
+                <Card>
+                    <p>地址:@item.Address</p>
+                    <p>备注:@item.Remark</p>
+                    <p>最后响应时间:@item.LastEchoTime?.ToString(Consts.Format.DATE_TIMEYYYY_MM_DD_HH_MM_SS)</p>
+                    @GetItemTag(item)
+                    <Divider />
+                    @GetItemButtons(item)
+
+                </Card>
+            </AntDesign.Col>
+        }
+    </Row>
+}
+
+<EditNode @ref=@_editNode EditType=@EnumEditType.Add OnCompleted=@ReLoadAsync />
+
+
+@code {
+    RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline" />
+    ;
+
+    RenderFragment GetItemButtons(ServerNodeVM node)
+    => (RenderFragment)(
+    @<Space>
+        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(async e=>await ReloadAllClientAsync(node.Address))>刷新所有客户端的配置</Button></SpaceItem>
+        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(node))>删除</Button></SpaceItem>
+    </Space>
+    );
+
+    RenderFragment GetItemTag(ServerNodeVM node)
+    {
+        if (node.Status == NodeStatus.Online)
+        {
+            return (RenderFragment)(
+    @<Tag Color="green">在线</Tag>
+    );
         }
         else
         {
-            <Tag Color="red-inverse">离线</Tag>
+            return (RenderFragment)(
+    @<Tag Color="red-inverse">离线</Tag>
+    );
         }
-
-    </AntDesign.Column>
-    <AntDesign.ActionColumn Title="操作">
-        <Space>
-            <SpaceItem><Button OnClick=@(async e=>await ReloadAllClientAsync(context.Address))>刷新所有客户端的配置</Button></SpaceItem>
-            <SpaceItem><Button Danger OnClick=@(e=>DeleteConfirm(context))>Delete</Button></SpaceItem>
-        </Space>
-    </AntDesign.ActionColumn>
-</Table>
-
-@code {
-    RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
-
-    record Data(string Key, string Name, int Age, string Address, string[] Tags);
+    }
 
 
-    Dictionary<string, object> OnRow(RowData<ServerNodeVM> row) => new()
-        {
-            ["id"] = row.Data.Address,
-            ["onclick"] = ((Action)delegate
-            {
-                Console.WriteLine($"row {row.Data.Address} was clicked");
-            })
-        };
-
-    Dictionary<string, object> OnHeaderRow() => new()
-        {
-            ["id"] = "header-row",
-            ["onclick"] = ((Action)delegate
-            {
-                Console.WriteLine("header row was clicked");
-            })
-        };
-
-    Dictionary<string, object> OnCell(CellData cellData) => new()
-        {
-            ["onclick"] = ((Action)delegate
-            {
-                Console.WriteLine($"cell { ((RowData<Data>)cellData.RowData).Data.Name} was clicked");
-            }),
-        };
-
-    Dictionary<string, object> OnHeaderCell() => new()
-        {
-            ["onclick"] = ((Action)delegate
-            {
-                Console.WriteLine("header cell was clicked");
-            }),
-        };
 }

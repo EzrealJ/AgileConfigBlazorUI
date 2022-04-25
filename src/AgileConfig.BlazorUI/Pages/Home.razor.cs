@@ -14,7 +14,7 @@ namespace AgileConfig.BlazorUI.Pages
     {
         #region UI Bind
         readonly string _iconTheme = IconHelper.IconThemes.Outline;
-        readonly (Dictionary<string, int> X, int Y) _gutter = (_gutterX, _gutterY);
+        protected (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
         protected string NodeValue => $"{_nodeStatuses.Count(s => s.N.Status == NodeStatus.Online)}/{_nodeStatuses.Count}";
         protected int AppCount { get; set; }
         protected int ConfigCount { get; set; }

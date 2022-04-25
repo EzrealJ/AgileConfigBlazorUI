@@ -9,13 +9,13 @@ namespace AgileConfig.UIApiClient
     public class ServerNodeVM
     {
 
-        [Required(AllowEmptyStrings = true)]
+        [Required]
         [StringLength(100)]
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
 
 
         [StringLength(50)]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
 
         [JsonPropertyName("status")]
         public NodeStatus Status { get; set; }

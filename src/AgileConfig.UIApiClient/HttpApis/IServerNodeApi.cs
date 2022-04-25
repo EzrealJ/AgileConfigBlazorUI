@@ -14,7 +14,7 @@ namespace AgileConfig.UIApiClient
     public interface IServerNodeApi : IHttpApi
     {
         [HttpPost("ServerNode/Add")]
-        Task AddAsync([JsonContent] ServerNodeVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> AddAsync([JsonContent] ServerNodeVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("ServerNode/Delete")]
         ITask<ApiResult> DeleteAsync([JsonContent] ServerNodeVM body, CancellationToken cancellationToken = default);

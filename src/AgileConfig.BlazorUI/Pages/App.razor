@@ -1,0 +1,26 @@
+﻿@page "/app"
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.UIApiClient;
+@using AntDesign.TableModels;
+@using AntDesign;
+@using AgileConfig.BlazorUI.Components.Node;
+@using Microsoft.AspNetCore.Components.Rendering
+
+<Form Layout=@FormLayout.Inline Model=@_formClass>
+    <FormItem Label="名称">
+        <Input @bind-Value=@context.Name />
+    </FormItem>
+    <FormItem Label="应用Id">
+        <Input @bind-Value="@context.Id" />
+    </FormItem>
+    <FormItem Label="应用组">
+        <Input @bind-Value="@context.Group" />
+    </FormItem>
+    <FormItem >
+        <Space>
+            <SpaceItem><Button Type="@ButtonType.Default" >重置</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" >搜索</Button></SpaceItem>
+        </Space>        
+    </FormItem>
+</Form>

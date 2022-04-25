@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Components.Node;
+using AgileConfig.BlazorUI.Enums;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
@@ -16,11 +18,29 @@ namespace AgileConfig.BlazorUI.Pages
         [Inject] private ModalService ModalService { get; set; }
         public IEnumerable<ServerNodeVM> DataSource { get; set; }
 
+        protected (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+
+        private EnumItemShowType _itemShowType = EnumItemShowType.TableRow;
+        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
+        private bool _dataLoading;
+        private EditNode _editNode;
+
+
+        static readonly int _gutterY = 24;
+        static readonly Dictionary<string, int> _gutterX = new()
+        {
+            ["xs"] = 8,
+            ["sm"] = 16,
+            ["md"] = 24,
+            ["lg"] = 32,
+            ["xl"] = 48,
+            ["xxl"] = 64
+        };
+
         protected override async Task OnInitializedAsync()
         {
             await LoadData();
         }
-        private bool _dataLoading;
         private async Task ReLoadAsync()
         {
             _dataLoading = true;
@@ -56,8 +76,17 @@ namespace AgileConfig.BlazorUI.Pages
             }
         }
 
+        private void ChangeShowType()
+        {
+            _itemShowType = _itemShowType == EnumItemShowType.TableRow
+                ? EnumItemShowType.Card
+                : EnumItemShowType.TableRow;
+        }
+
+
         private void DeleteConfirm(ServerNodeVM node)
         {
+            ModalService.DestroyAllConfirmAsync();
             var options = new ConfirmOptions
             {
                 Title = $"是否确定删除节点【{node.Address}】",
