@@ -2,10 +2,12 @@
 @using System.ComponentModel;
 @using AgileConfig.BlazorUI.Enums
 @using AgileConfig.UIApiClient;
+@using AgileConfig.UIApiClient.HttpResults
 @using AntDesign.TableModels;
 @using AntDesign;
 @using AgileConfig.BlazorUI.Components.Node;
 @using Microsoft.AspNetCore.Components.Rendering
+@using Consts;
 
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="名称">
@@ -17,10 +19,84 @@
     <FormItem Label="应用组">
         <Input @bind-Value="@context.Group" />
     </FormItem>
-    <FormItem >
+    <FormItem>
         <Space>
-            <SpaceItem><Button Type="@ButtonType.Default" >重置</Button></SpaceItem>
-            <SpaceItem><Button Type="@ButtonType.Primary" >搜索</Button></SpaceItem>
-        </Space>        
+            <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@SearchAsync>搜索</Button></SpaceItem>
+        </Space>
     </FormItem>
 </Form>
+<Divider />
+<Table TItem="AppListVM" DataSource="@_dataSource.Data"
+       @bind-PageIndex="_dataSource.Current"
+       @bind-PageSize="_dataSource.PageSize" Total="_dataSource.Total"
+       Loading="_loading" OnChange="@HandleTableChange" RemoteDataSource>
+    <AntDesign.Column Title="名称" DataIndex="@nameof(context.Name)"
+                      TData="string"
+                      Sortable
+                      DefaultSortOrder="SortDirection.Ascending"
+                      SortDirections=@SortDirection.Preset.TwoWay />
+    <AntDesign.Column Title="应用Id" DataIndex="@nameof(context.Id)" TData="string"
+                      Sortable
+                      DefaultSortOrder="SortDirection.Ascending"
+                      SortDirections=@SortDirection.Preset.TwoWay>
+        <Paragraph Copyable>@context.Id</Paragraph>
+    </AntDesign.Column>
+    <AntDesign.Column Title="密钥" DataIndex="@nameof(context.Secret)" TData="string">
+        <Paragraph Copyable>@context.Secret</Paragraph>
+    </AntDesign.Column>
+    <AntDesign.Column Title="应用组" DataIndex="@nameof(context.Group)" TData="string"
+                      Sortable
+                      DefaultSortOrder="SortDirection.Ascending"
+                      SortDirections=@SortDirection.Preset.TwoWay />
+    <AntDesign.Column Title="创建时间"
+                      DataIndex="@nameof(context.CreateTime)"
+                      TData="Nullable<DateTimeOffset>"
+                      Format=@Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS
+                      Sortable
+                      DefaultSortOrder="SortDirection.Descending"
+                      SortDirections=@SortDirection.Preset.TwoWay />
+    <AntDesign.Column Title="管理员" DataIndex="@nameof(context.AppAdminName)" TData="string" />
+    <AntDesign.Column Title="公共" TData="bool">
+        @GetPublicTag(context)
+    </AntDesign.Column>
+
+    <AntDesign.Column Title="关联" DataIndex="@nameof(context.InheritancedAppNames)" TData="List<string>">
+        @GetInheritancedAppNames(context)
+    </AntDesign.Column>
+    <AntDesign.Column Title="启用" TData="bool">
+        <Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" />
+    </AntDesign.Column>
+
+    <AntDesign.ActionColumn Title="操作">
+
+    </AntDesign.ActionColumn>
+</Table>
+@{
+
+    RenderFragment GetInheritancedAppNames(AppListVM app)
+    => (RenderFragment)(
+    @<Space>
+        @foreach (string name in app.InheritancedAppNames)
+            {
+                <SpaceItem><Tag>@name</Tag></SpaceItem>
+            }
+        </Space>
+    );
+
+    RenderFragment GetPublicTag(AppListVM app)
+    {
+        if (app.Inheritanced)
+        {
+            return (RenderFragment)(
+    @<Tag Color="green-inverse">公开</Tag>
+    );
+        }
+        else
+        {
+            return (RenderFragment)(
+    @<Tag Color="purple">私有</Tag>
+    );
+        }
+    }
+}

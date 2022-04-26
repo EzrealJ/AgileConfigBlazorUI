@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using AgileConfig.UIApiClient.HttpResults;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
 using WebApiClientCore.Parameters;
@@ -13,7 +14,7 @@ namespace AgileConfig.UIApiClient
     public interface IAppApi : IHttpApi
     {
         [HttpGet("App/Search")]
-        Task SearchAsync(string name, string id, string group, string sortField, string ascOrDesc, bool? tableGrouped, int current, int pageSize, CancellationToken cancellationToken = default);
+        ITask<PageResult<AppListVM>> SearchAsync(string name, string id, string group, string sortField, string ascOrDesc, bool? tableGrouped, int current, int pageSize, CancellationToken cancellationToken = default);
 
         [HttpPost("App/Add")]
         Task AddAsync([JsonContent] AppVM body, CancellationToken cancellationToken = default);

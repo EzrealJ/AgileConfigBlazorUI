@@ -33,10 +33,10 @@ namespace AgileConfig.UIApiClient
         public bool Inheritanced { get; set; }
 
         [JsonPropertyName("inheritancedApps")]
-        public List<string> InheritancedApps { get; set; }
+        public List<string> InheritancedApps { get; set; }=new ();
 
         [JsonPropertyName("inheritancedAppNames")]
-        public List<string> InheritancedAppNames { get; set; }
+        public List<string> InheritancedAppNames { get; set; } = new();
 
         [JsonPropertyName("appAdmin")]
         public string AppAdmin { get; set; }

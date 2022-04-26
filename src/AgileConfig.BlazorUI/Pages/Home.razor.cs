@@ -90,5 +90,14 @@ namespace AgileConfig.BlazorUI.Pages
                 }
             };
         }
+
+
+        [Inject]
+        public NavigationManager NavigationManager1 { get; set; }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            NavigationManager1.NavigateTo("/app");
+        }
     }
 }

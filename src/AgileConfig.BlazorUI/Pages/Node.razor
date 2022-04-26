@@ -26,7 +26,7 @@
         <AntDesign.Column Title="最后响应时间"
                       DataIndex="@nameof(context.LastEchoTime)"
                       TData="Nullable<DateTimeOffset>"
-                      Format=@Consts.Format.DATE_TIMEYYYY_MM_DD_HH_MM_SS />
+                      Format=@Consts.Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS />
         <AntDesign.Column Title="状态" DataIndex="@nameof(context.Status)" TData="NodeStatus">
             @GetItemTag(context)
         </AntDesign.Column>
@@ -44,7 +44,7 @@
                 <Card>
                     <p>地址:@item.Address</p>
                     <p>备注:@item.Remark</p>
-                    <p>最后响应时间:@item.LastEchoTime?.ToString(Consts.Format.DATE_TIMEYYYY_MM_DD_HH_MM_SS)</p>
+                    <p>最后响应时间:@item.LastEchoTime?.ToString(Consts.Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS)</p>
                     @GetItemTag(item)
                     <Divider />
                     @GetItemButtons(item)
