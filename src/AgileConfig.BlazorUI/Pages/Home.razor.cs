@@ -49,11 +49,11 @@ namespace AgileConfig.BlazorUI.Pages
         }
         private async Task RunTimerAsync()
         {
-            while (await _periodicTimer.WaitForNextTickAsync())
+            do
             {
                 await ReloadAsync();
                 StateHasChanged();
-            }
+            } while (await _periodicTimer.WaitForNextTickAsync());
         }
 
         private async Task ReloadAsync()

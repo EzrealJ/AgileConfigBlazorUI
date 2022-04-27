@@ -25,19 +25,29 @@ namespace AgileConfig.BlazorUI.Pages
 
             public bool TableGrouped { get; set; }
         }
-
+        #endregion
         FormClass _formClass = new();
 
-        bool _loading = false;
+        private bool _loading = false;
+        IEnumerable<string> _options = new List<string>();
 
-        protected PageResult<AppListVM> _dataSource  = new()
+        protected PageResult<AppListVM> _dataSource = new()
         {
             Current = 1,
             PageSize = 20
         };
-        #endregion
+
         [Inject]
         private IAppApi AppApi { get; set; }
+        [Inject]
+        private ModalService ModalService { get; set; }
+        [Inject]
+        public MessageService MessageService { get; set; }
+        protected override async Task OnInitializedAsync()
+        {
+            var res = await AppApi.GetAppGroupsAsync();
+            _options = res.Data ?? Array.Empty<string>();
+        }
 
         private void ReSet() => _formClass = new();
 
@@ -52,18 +62,24 @@ namespace AgileConfig.BlazorUI.Pages
                 _formClass.Order = SortDirection.Ascending.Name;
             }
             _formClass.SortField = _formClass.SortField[0].ToString().ToLower() + _formClass.SortField[1..];
-           _dataSource = await AppApi.SearchAsync(
-                _formClass.Name,
-                _formClass.Id,
-                _formClass.Group,
-                _formClass.SortField,
-                _formClass.Order,
-                _formClass.TableGrouped,
-                _dataSource.Current,
-                _dataSource.PageSize
-                );
+            _dataSource = await AppApi.SearchAsync(
+                 _formClass.Name,
+                 _formClass.Id,
+                 _formClass.Group,
+                 _formClass.SortField,
+                 _formClass.Order,
+                 _formClass.TableGrouped,
+                 _dataSource.Current,
+                 _dataSource.PageSize
+                 );
 
             StateHasChanged();
+        }
+
+        private async Task EnabledOrDisableAsync(string id)
+        {
+            await AppApi.DisableOrEanbleAsync(id);
+            await SearchAsync();
         }
         private async Task HandleTableChange(QueryModel<AppListVM> queryModel)
         {
@@ -71,13 +87,61 @@ namespace AgileConfig.BlazorUI.Pages
             _dataSource.PageSize = queryModel.PageSize;
             foreach (var item in queryModel.SortModel)
             {
-
                 Console.WriteLine($"{item.FieldName},{item.Sort}");
             }
-            ITableSortModel tableSortModel = queryModel.SortModel.Last(s=>!string.IsNullOrWhiteSpace(s.Sort));
+            ITableSortModel tableSortModel = queryModel.SortModel.Last(s => !string.IsNullOrWhiteSpace(s.Sort));
             _formClass.SortField = tableSortModel.FieldName;
             _formClass.Order = tableSortModel.Sort;
             await SearchAsync();
+        }
+
+        private void DeleteConfirm(AppListVM app)
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = $"是否确定删除节点【{app.Name}】",
+                Icon = infoIcon,
+                OnOk = async e => await DeleteAsync(app)
+            };
+            ModalService.Confirm(options);
+        }
+
+        private async Task DeleteAsync(AppListVM app)
+        {
+            var config = new MessageConfig()
+            {
+                Content = "删除中...",
+                Key = $"{nameof(DeleteAsync)}-{app.Id}"
+            };
+            _ = MessageService.Loading(config, 1);
+            var res = await AppApi.DeleteAsync(app.Id);
+            if (res.Success)
+            {
+                config.Content = "删除成功";
+                await MessageService.Success(config);
+            }
+            else
+            {
+                config.Content = $"删除失败,{res.Message}";
+                await MessageService.Error(config);
+            }
+        }
+
+        private async Task AddAsync()
+        {
+            await MessageService.Info("点击了新建");
+        }
+        private async Task EditAsync()
+        {
+            await MessageService.Info("点击了编辑");
+        }
+        private async Task ConfigListAsync()
+        {
+            await MessageService.Info("点击了配置项列表");
+        }
+        private async Task AuthAsync()
+        {
+            await MessageService.Info("点击了授权");
         }
     }
 }

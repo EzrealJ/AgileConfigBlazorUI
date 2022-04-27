@@ -16,9 +16,10 @@ namespace AgileConfig.BlazorUI.Pages
         [Inject] private IRemoteServerProxyApi RemoteServerProxyApi { get; set; }
         [Inject] private MessageService MessageService { get; set; }
         [Inject] private ModalService ModalService { get; set; }
+
         public IEnumerable<ServerNodeVM> DataSource { get; set; }
 
-        protected (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+        protected static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
 
         private EnumItemShowType _itemShowType = EnumItemShowType.TableRow;
         private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";

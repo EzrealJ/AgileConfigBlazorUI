@@ -35,10 +35,10 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpPost("App/DisableOrEanble")]
-        Task DisableOrEanbleAsync(string id, CancellationToken cancellationToken = default);
+        ITask<ApiResult> DisableOrEanbleAsync(string id, CancellationToken cancellationToken = default);
 
         [HttpPost("App/Delete")]
-        Task DeleteAsync(string id, CancellationToken cancellationToken = default);
+        ITask<ApiResult> DeleteAsync(string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取所有可以继承的app
@@ -62,7 +62,7 @@ namespace AgileConfig.UIApiClient
         Task GetUserAppAuthAsync(string appId, CancellationToken cancellationToken = default);
 
         [HttpGet("App/GetAppGroups")]
-        Task GetAppGroupsAsync(CancellationToken cancellationToken = default);
+        ITask<ApiResult<string[]>> GetAppGroupsAsync(CancellationToken cancellationToken = default);
 
     }
 }

@@ -12,4 +12,8 @@ namespace AgileConfig.UIApiClient
         public string Status { get; set; }
         public string Message { get; set; }
     }
+    public class ApiResult<T> : ApiResult
+    {
+        public T Data { get; set; }
+    }
 }
