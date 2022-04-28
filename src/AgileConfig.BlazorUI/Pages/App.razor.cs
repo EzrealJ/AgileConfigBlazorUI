@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Components.App;
 using AgileConfig.BlazorUI.Enums;
 using AgileConfig.UIApiClient;
 using AgileConfig.UIApiClient.HttpResults;
@@ -27,6 +28,11 @@ namespace AgileConfig.BlazorUI.Pages
         }
         #endregion
         FormClass _formClass = new();
+        EditApp _editApp;
+        AuthApp _authApp;
+        EnumEditType _enumEditType;
+        AppListVM _editObj;
+        AppVM _authObj=new AppVM();
 
         private bool _loading = false;
         IEnumerable<string> _options = new List<string>();
@@ -45,6 +51,7 @@ namespace AgileConfig.BlazorUI.Pages
         public MessageService MessageService { get; set; }
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
             var res = await AppApi.GetAppGroupsAsync();
             _options = res.Data ?? Array.Empty<string>();
         }
@@ -113,7 +120,7 @@ namespace AgileConfig.BlazorUI.Pages
                 Content = "删除中...",
                 Key = $"{nameof(DeleteAsync)}-{app.Id}"
             };
-            _ = MessageService.Loading(config, 1);
+            _ = MessageService.Loading(config);
             var res = await AppApi.DeleteAsync(app.Id);
             if (res.Success)
             {
@@ -129,19 +136,29 @@ namespace AgileConfig.BlazorUI.Pages
 
         private async Task AddAsync()
         {
-            await MessageService.Info("点击了新建");
+            //await MessageService.Info("点击了新建");
+            _enumEditType = EnumEditType.Add;
+            _editObj = new();
+            _editApp.Visible = true;
+            await Task.CompletedTask;
         }
-        private async Task EditAsync()
+        private async Task EditAsync(AppListVM app)
         {
-            await MessageService.Info("点击了编辑");
+            //await MessageService.Info("点击了编辑");
+            _enumEditType = EnumEditType.Edit;
+            _editObj = app;
+            _editApp.Visible = true;
+            await Task.CompletedTask;
         }
         private async Task ConfigListAsync()
         {
             await MessageService.Info("点击了配置项列表");
         }
-        private async Task AuthAsync()
+        private async Task AuthAsync(AppVM app)
         {
-            await MessageService.Info("点击了授权");
+            _authObj = app;
+            _authApp.Visible = true;
+            await Task.CompletedTask;
         }
     }
 }

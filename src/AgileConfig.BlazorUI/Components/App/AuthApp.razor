@@ -1,0 +1,25 @@
+﻿@using AgileConfig.UIApiClient
+@using AntDesign.Select;
+<Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel>
+    <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Horizontal LabelColSpan="6" WrapperColSpan="18" Size=@AntSizeLDSType.Large>
+        <FormItem Label="发布权">
+            <Select @bind-Values=@(PublishConfigPermissionUsers)
+                    LabelName=@nameof(UserVM.UserName)
+                    ValueName=@nameof(UserVM.Id)
+                    Mode="multiple"
+                    DataSource=@_userAdminOptions Placeholder="选择一个管理员">
+                <LabelTemplate Context="option" >
+                </LabelTemplate>
+            </Select>
+        </FormItem>
+        <FormItem Label="修改权">
+            <Select @bind-Values=@(EditConfigPermissionUsers)
+                    LabelName=@nameof(UserVM.UserName)
+                    ValueName=@nameof(UserVM.Id)
+                    TItem="@UserVM"
+                    TItemValue="string"
+                    Mode="multiple"
+                    DataSource=@_userAdminOptions Placeholder="选择一个管理员" />
+        </FormItem>
+    </Form>
+</Modal>

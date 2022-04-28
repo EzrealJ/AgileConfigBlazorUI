@@ -17,10 +17,10 @@ namespace AgileConfig.UIApiClient
         ITask<PageResult<AppListVM>> SearchAsync(string name, string id, string group, string sortField, string ascOrDesc, bool? tableGrouped, int current, int pageSize, CancellationToken cancellationToken = default);
 
         [HttpPost("App/Add")]
-        Task AddAsync([JsonContent] AppVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> AddAsync([JsonContent] AppVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("App/Edit")]
-        Task EditAsync([JsonContent] AppVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> EditAsync([JsonContent] AppVM body, CancellationToken cancellationToken = default);
 
         [HttpGet("App/All")]
         Task AllAsync(CancellationToken cancellationToken = default);
@@ -47,7 +47,7 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("App/InheritancedApps")]
-        Task InheritancedAppsAsync(string currentAppId, CancellationToken cancellationToken = default);
+        ITask<ApiResult<AppVM[]>> InheritancedAppsAsync(string currentAppId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 保存app的授权信息
@@ -56,10 +56,10 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpPost("App/SaveAppAuth")]
-        Task SaveAppAuthAsync([JsonContent] AppAuthVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> SaveAppAuthAsync([JsonContent] AppAuthVM body, CancellationToken cancellationToken = default);
 
         [HttpGet("App/GetUserAppAuth")]
-        Task GetUserAppAuthAsync(string appId, CancellationToken cancellationToken = default);
+        ITask<ApiResult<AppAuthVM>> GetUserAppAuthAsync(string appId, CancellationToken cancellationToken = default);
 
         [HttpGet("App/GetAppGroups")]
         ITask<ApiResult<string[]>> GetAppGroupsAsync(CancellationToken cancellationToken = default);

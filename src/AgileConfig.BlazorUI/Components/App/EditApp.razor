@@ -1,12 +1,70 @@
 ﻿@using AgileConfig.UIApiClient
-@*<Modal Title="@Title" Visible="@Visible" OnOk="@AddAsync" OnCancel=@Cancel>
-    <Form @ref=@_form Model="CurrentObject">
-        <FormItem Label="地址" Required>
-            <Input @bind-Value="@context.Address" />
+<Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel >
+    <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Horizontal LabelColSpan="6" WrapperColSpan="18" Size=@AntSizeLDSType.Large>
+        <FormItem Label="名称" Required>
+            <Input @bind-Value="@context.Name" />
         </FormItem>
-        <FormItem Label="备注">
-            <TextArea @bind-Value="@context.Remark" />
+        <FormItem Label="应用Id">
+            <Input @bind-Value="@context.Id" />
+        </FormItem>
+        <FormItem Label="密钥">
+            <InputPassword @bind-Value="@context.Secret" />
+        </FormItem>
+        <FormItem Label="应用组">
+            @*<Input @bind-Value="@context.Group" />*@
+            <Select DataSource="@_groupOptions"
+                    @bind-Value="@context.Group"
+                    Placeholder="选择一个分组"
+                    DropdownRender="@DropdownRender">
+            </Select>
+        </FormItem>
+        <FormItem Label="应用类型">
+            <Switch @bind-Value="context.Inheritanced" CheckedChildren="公共应用" UnCheckedChildren="私有应用" />
+        </FormItem>
+        <FormItem Label="继承公共项">
+            <Select @bind-Values=@(InheritancedApp)
+                    LabelName=@nameof(AppVM.Name)
+                    ValueName=@nameof(AppVM.Id)
+                    TItem="@AppVM"
+                    TItemValue="string"
+                    Mode="multiple" 
+                    DataSource=@_publicAppOptions>
+            </Select>
+        </FormItem>
+        <FormItem Label="管理员">
+            <Select @bind-Value=@context.AppAdmin
+                    LabelName=@nameof(UserVM.UserName)
+                    ValueName=@nameof(UserVM.Id)
+                    TItem="@UserVM"
+                    TItemValue="string"
+                    DataSource=@_adminOptions Placeholder="选择一个管理员" />
+        </FormItem>
+        <FormItem Label="状态">
+            <Switch @bind-Value="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" />
         </FormItem>
     </Form>
 </Modal>
-*@
+@code {
+    string _name = string.Empty;
+    private RenderFragment DropdownRender(RenderFragment originNode)
+    {
+        RenderFragment customDropdownRender =
+    @<Template>
+        <div>
+            @originNode
+            <Divider Style="margin: 4px 0"></Divider>
+            <div style="display: flex; flex-wrap: nowrap; padding: 8px">
+                <Input Style="flex: auto" @bind-Value="@_name" />
+                <a style="flex: none; padding: 8px; display: block; cursor: pointer" @onclick="AddItem">
+                    <Icon Type="plus" Theme="outline"></Icon>
+                    Add Item
+                </a>
+            </div>
+        </div>
+    </Template>
+    ;
+
+        return customDropdownRender;
+    }
+
+}

@@ -28,10 +28,10 @@ namespace AgileConfig.UIApiClient
         Task Delete4Async(string userId, CancellationToken cancellationToken = default);
 
         [HttpGet("User/adminUsers")]
-        Task AdminUsersAsync(CancellationToken cancellationToken = default);
+        ITask<ApiResult<UserVM[]>> AdminUsersAsync(CancellationToken cancellationToken = default);
 
         [HttpGet("User/AllUsers")]
-        Task AllUsersAsync(CancellationToken cancellationToken = default);
+        ITask<ApiResult<UserVM[]>> AllUsersAsync(CancellationToken cancellationToken = default);
 
     }
 }
