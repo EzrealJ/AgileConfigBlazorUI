@@ -3,12 +3,20 @@
 <Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel>
     <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Horizontal LabelColSpan="6" WrapperColSpan="18" Size=@AntSizeLDSType.Large>
         <FormItem Label="发布权">
-            <Select @bind-Values=@(PublishConfigPermissionUsers)
+            <Select  @bind-Values=@(PublishConfigPermissionUsers)
                     LabelName=@nameof(UserVM.UserName)
                     ValueName=@nameof(UserVM.Id)
+                    TItem="@UserVM"
+                    TItemValue="string"
                     Mode="multiple"
-                    DataSource=@_userAdminOptions Placeholder="选择一个管理员">
-                <LabelTemplate Context="option" >
+                    DataSource=@_userAdminOptions
+                    Placeholder="选择一个管理员">
+                <LabelTemplate Context="item">
+                    <LabelTemplateItem TItem="UserVM" TItemValue="string" Style="margin-right: 4px;" RemoveIconStyle="margin-top: 1px; display: inline-block;">
+                        <LabelTemplateItemContent Context="c">
+                            <span>@(item.UserName+"-"+item.Team)</span>
+                        </LabelTemplateItemContent>
+                    </LabelTemplateItem>
                 </LabelTemplate>
             </Select>
         </FormItem>
@@ -19,7 +27,22 @@
                     TItem="@UserVM"
                     TItemValue="string"
                     Mode="multiple"
-                    DataSource=@_userAdminOptions Placeholder="选择一个管理员" />
+                    DataSource=@_userAdminOptions
+                    Placeholder="选择一个管理员">
+                <LabelTemplate Context="item">
+                    <LabelTemplateItem TItem="UserVM" TItemValue="string" Style="margin-right: 4px;" RemoveIconStyle="margin-top: 1px; display: inline-block;">
+                        <LabelTemplateItemContent Context="c">
+                            <span>@(item.UserName+"-"+item.Team)</span>
+                        </LabelTemplateItemContent>
+                    </LabelTemplateItem>
+                </LabelTemplate>
+            </Select>
+
         </FormItem>
     </Form>
 </Modal>
+
+@code {
+
+
+}

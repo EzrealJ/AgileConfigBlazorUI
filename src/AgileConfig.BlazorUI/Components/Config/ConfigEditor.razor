@@ -1,0 +1,20 @@
+﻿@using AgileConfig.UIApiClient
+@using AntDesign;
+
+
+<Modal Visible=@Visible Title=@($"按{ConfigEditorParameter.ConfigType}视图编辑,您修改的环境为{ConfigEditorParameter.ENV}") OnCancel=@Cancel>
+
+    @if (ConfigEditorParameter.ConfigType == "JSON")
+    {
+        <TextArea AutoSize @bind-value="_value" OnBlur=@(e=>CheckJsonAsync(_value)) />
+    }
+    else
+    {
+        <TextArea AutoSize @bind-value="_value" OnBlur=@(e=>CheckTextAsync(_value)) />
+    }
+    <Title Level=2>@_dataError</Title>
+</Modal>
+
+
+
+

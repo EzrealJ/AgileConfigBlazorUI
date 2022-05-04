@@ -1,15 +1,16 @@
-﻿using AgileConfig.BlazorUI.Auth;
-using AntDesign.ProLayout;
-using Blazor.Extensions.Logging;
-using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Auth;
+using AntDesign.ProLayout;
+using Blazor.Extensions.Logging;
+using Blazored.LocalStorage;
+using HighlightBlazor;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AgileConfig.BlazorUI
 {
@@ -53,6 +54,7 @@ namespace AgileConfig.BlazorUI
                 config.JsonSerializerOptions.WriteIndented = false;
             });
             services.AddAuth();
+            services.AddHighlight();
         }
     }
 }

@@ -1,0 +1,20 @@
+﻿<Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel>
+    <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Vertical Size=@AntSizeLDSType.Large>
+        <FormItem Label="组">
+            <Input @bind-Value="@context.Group" />
+        </FormItem>
+        <FormItem Label="键" Required>
+            <Input @bind-Value="@context.Key" />
+        </FormItem>
+        <FormItem Label="值" Required>
+            <TextArea  @bind-Value="@context.Value" />
+        </FormItem>
+        <FormItem Label="描述">
+            <TextArea  @bind-Value="@context.Description" />
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+
+}

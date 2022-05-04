@@ -11,6 +11,10 @@
 @using Microsoft.AspNetCore.Components.Rendering
 @using Consts;
 
+
+
+
+
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="名称">
         <Input @bind-Value=@context.Name />
@@ -90,7 +94,8 @@
     <AntDesign.ActionColumn Title="操作">
         <Space>
             <SpaceItem><Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" OnChange=@(async e=>await EnabledOrDisableAsync(context.Id)) /></SpaceItem>
-            <SpaceItem><Button Type=@ButtonType.Default Size=@AntSizeLDSType.Small OnClick=@ConfigListAsync>配置项</Button></SpaceItem>
+            @*<SpaceItem><NavLink>配置项</Link></SpaceItem>*@
+            <SpaceItem><Button Type=@ButtonType.Default Size=@AntSizeLDSType.Small OnClick=@(e=>ConfigList(context))>配置项</Button></SpaceItem>
             <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button></SpaceItem>
             <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>AuthAsync(context))>授权</Button></SpaceItem>
             <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button></SpaceItem>

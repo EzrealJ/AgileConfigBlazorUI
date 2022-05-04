@@ -20,7 +20,7 @@ namespace AgileConfig.UIApiClient
         ITask<CurrentUserResult> CurrentAsync(CancellationToken cancellationToken = default);
 
         [HttpGet("Home/Sys")]
-        Task SysAsync(CancellationToken cancellationToken = default);
+        ITask<HomeSysResult> SysAsync(CancellationToken cancellationToken = default);
 
         [HttpGet("Home/Echo")]
         Task EchoAsync(CancellationToken cancellationToken = default);

@@ -1,0 +1,16 @@
+﻿
+<Drawer Visible="@Visible" Placement="@_placement"
+        Title="@Title"
+        OnClose="_ => Close()">
+    @foreach (var item in _dataSource)
+    {
+        <h4>@item?.TimelineNode?.PublishTime?.ToString(Consts.Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS)</h4>
+        <span>组：@item?.Config?.Group</span>
+        <br />
+        <span>键：@item?.Config?.Key</span>
+        <br />
+        <span>值：@item?.Config?.Value</span>
+        <Divider />
+    }
+</Drawer>
+

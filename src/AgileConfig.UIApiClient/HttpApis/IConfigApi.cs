@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using AgileConfig.UIApiClient.HttpResults;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
 using WebApiClientCore.Parameters;
@@ -13,16 +14,16 @@ namespace AgileConfig.UIApiClient
     public interface IConfigApi : IHttpApi
     {
         [HttpPost("Config/Add")]
-        Task Add2Async(string env, [JsonContent] ConfigVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> AddAsync(string env, [JsonContent] ConfigVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/AddRange")]
         Task AddRangeAsync(string env, [JsonContent] IEnumerable<ConfigVM> body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/Edit")]
-        Task Edit2Async(string env, [JsonContent] ConfigVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> EditAsync(string env, [JsonContent] ConfigVM body, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/All")]
-        Task All2Async(string env, CancellationToken cancellationToken = default);
+        Task AllAsync(string env, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 按多条件进行搜索
@@ -39,22 +40,22 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Config/Search")]
-        Task Search2Async(string appId, string group, string key, OnlineStatus? onlineStatus, string sortField, string ascOrDesc, string env, int pageSize, int current, CancellationToken cancellationToken = default);
+        ITask<PageResult<ConfigVM>> SearchAsync(string appId, string group, string key, OnlineStatus? onlineStatus, string sortField, string ascOrDesc, string env, int pageSize, int current, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/Get")]
-        Task Get2Async(string id, string env, CancellationToken cancellationToken = default);
+        Task GetAsync(string id, string env, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/Delete")]
-        Task Delete2Async(string id, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult> DeleteAsync(string id, string env, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/DeleteSome")]
-        Task DeleteSomeAsync(string env, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> DeleteSomeAsync(string env, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/Rollback")]
-        Task RollbackAsync(string publishTimelineId, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult> RollbackAsync(string publishTimelineId, string env, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/ConfigPublishedHistory")]
-        Task ConfigPublishedHistoryAsync(string configId, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult<List<ConfigItemPublishedLog>>> ConfigPublishedHistoryAsync(string configId, string env, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 发布所有待发布的配置项
@@ -64,7 +65,7 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpPost("Config/Publish")]
-        Task PublishAsync(string env, [JsonContent] PublishLogVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> PublishAsync(string env, [JsonContent] PublishLogVM body, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 预览上传的json文件
@@ -72,7 +73,7 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Config/PreViewJsonFile")]
-        Task PreViewJsonFileAsync(CancellationToken cancellationToken = default);
+        ITask<ApiResult> PreViewJsonFileAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 导出json文件
@@ -82,7 +83,7 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Config/ExportJson")]
-        Task ExportJsonAsync(string appId, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult> ExportJsonAsync(string appId, string env, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取待发布的明细
@@ -102,19 +103,19 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Config/PublishHistory")]
-        Task PublishHistoryAsync(string appId, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult<List<ConfigPublishedLog>>> PublishHistoryAsync(string appId, string env, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/CancelEdit")]
         Task CancelEditAsync(string configId, string env, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/CancelSomeEdit")]
-        Task CancelSomeEditAsync(string env, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> CancelSomeEditAsync(string env, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/SyncEnv")]
         Task SyncEnvAsync(string appId, string currentEnv, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/GetKvList")]
-        Task GetKvListAsync(string appId, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult<List<KeyValuePair<string, string>>>> GetKvListAsync(string appId, string env, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取json格式的配置
@@ -124,13 +125,13 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Config/GetJson")]
-        Task GetJsonAsync(string appId, string env, CancellationToken cancellationToken = default);
+        ITask<ApiResult<string>> GetJsonAsync(string appId, string env, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/SaveJson")]
-        Task SaveJsonAsync(string appId, string env, [JsonContent] SaveJsonVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> SaveJsonAsync(string appId, string env, [JsonContent] SaveJsonVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/SaveKvList")]
-        Task SaveKvListAsync(string appId, string env, [JsonContent] SaveKVListVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> SaveKvListAsync(string appId, string env, [JsonContent] SaveKVListVM body, CancellationToken cancellationToken = default);
 
     }
 }

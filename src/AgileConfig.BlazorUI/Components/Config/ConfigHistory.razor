@@ -1,0 +1,44 @@
+﻿@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.UIApiClient.HttpResults
+<Modal Visible=@Visible Title="历史版本" OnCancel=Close Width="700">
+
+    @foreach(var item in _dataSource)
+    {
+        <Card>
+            <TitleTemplate>
+                <h4>@(@GetItemTitle(item?.TimelineNode))</h4>
+            </TitleTemplate>
+            <Extra>
+                @if (item == _dataSource[0])
+                {
+                    <Tag>当前版本</Tag>
+                }
+                else
+                {                    
+                    <Button Type=@ButtonType.Primary OnClick=@RollBackAsync>回滚</Button>
+                }
+            </Extra>
+            <Body>
+                <Table TItem="PublishDetail" DataSource="@item?.List" HidePagination>
+                    <AntDesign.Column Title="组" DataIndex="@nameof(context.Group)" TData="string" />
+                    <AntDesign.Column Title="键" DataIndex="@nameof(context.Key)" TData="string" />
+                    <AntDesign.Column Title="值" DataIndex="@nameof(context.Value)" TData="string" />
+                    <AntDesign.Column Title="描述" DataIndex="@nameof(context.Description)" TData="string" />
+                    <AntDesign.Column Title="编辑状态" TData="bool">
+                        @GetEditStatusTag(context)
+                    </AntDesign.Column>
+                </Table>
+            </Body>
+        </Card>
+    }
+
+</Modal>
+
+@code {
+    RenderFragment GetEditStatusTag(PublishDetail config)
+    {
+        return (RenderFragment)(
+    @<Tag Color="green-inverse">@config.EditStatus.GetDescription()</Tag>
+    );
+    }
+}

@@ -1,8 +1,8 @@
-﻿using AgileConfig.BlazorUI.Auth;
+﻿using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Auth;
 using AgileConfig.BlazorUI.Consts;
 using AntDesign.ProLayout;
 using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
 
 namespace AgileConfig.BlazorUI.Layouts
 {

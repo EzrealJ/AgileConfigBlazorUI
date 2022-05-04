@@ -4,8 +4,50 @@ using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
 namespace AgileConfig.UIApiClient
 {
+    /// <summary>
+    ///    Deleted = 0,
+    ///    Enabled = 1,
+    /// </summary>
+    public enum ConfigStatus
+    {
+        Deleted = 0,
+        Enabled = 1,
+    }
+
+    /// <summary>
+    ///    Add = 0,
+    /// Edit = 1,
+    ///   Deleted = 2,
+    ///   Commit = 10
+    /// </summary>
+    public enum EditStatus
+    {
+        [Description("新增")]
+        Add = 0,
+        [Description("编辑")]
+        Edit = 1,
+        [Description("删除")]
+        Deleted = 2,
+        [Description("已提交")]
+        Commit = 10
+    }
+
+    /// <summary>
+    ///   WaitPublish = 0,
+    /// Online = 1,
+    /// </summary>
+    public enum OnlineStatus
+    {
+        [Description("待发布")]
+        WaitPublish = 0,
+        [Description("已发布")]
+        Online = 1,
+    }
+
     public class ConfigVM
     {
         [JsonPropertyName("id")]
@@ -39,6 +81,14 @@ namespace AgileConfig.UIApiClient
 
         [JsonPropertyName("status")]
         public ConfigStatus Status { get; set; }
+
+        [JsonPropertyName("createTime")]
+        public DateTimeOffset? CreateTime { get; set; }
+
+        [JsonPropertyName("updateTime")]
+        public DateTimeOffset? UpdateTime { get; set; }
+
+        public EditStatus EditStatus { get; set; }
 
     }
 }

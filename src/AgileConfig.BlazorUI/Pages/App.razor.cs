@@ -32,7 +32,7 @@ namespace AgileConfig.BlazorUI.Pages
         AuthApp _authApp;
         EnumEditType _enumEditType;
         AppListVM _editObj;
-        AppVM _authObj=new AppVM();
+        AppVM _authObj = new AppVM();
 
         private bool _loading = false;
         IEnumerable<string> _options = new List<string>();
@@ -49,6 +49,8 @@ namespace AgileConfig.BlazorUI.Pages
         private ModalService ModalService { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -92,10 +94,6 @@ namespace AgileConfig.BlazorUI.Pages
         {
             _dataSource.Current = queryModel.PageIndex;
             _dataSource.PageSize = queryModel.PageSize;
-            foreach (var item in queryModel.SortModel)
-            {
-                Console.WriteLine($"{item.FieldName},{item.Sort}");
-            }
             ITableSortModel tableSortModel = queryModel.SortModel.Last(s => !string.IsNullOrWhiteSpace(s.Sort));
             _formClass.SortField = tableSortModel.FieldName;
             _formClass.Order = tableSortModel.Sort;
@@ -150,9 +148,9 @@ namespace AgileConfig.BlazorUI.Pages
             _editApp.Visible = true;
             await Task.CompletedTask;
         }
-        private async Task ConfigListAsync()
+        private void ConfigList(AppVM app)
         {
-            await MessageService.Info("点击了配置项列表");
+            NavigationManager.NavigateTo($"/Config/{app.Id}");
         }
         private async Task AuthAsync(AppVM app)
         {

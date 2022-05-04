@@ -49,6 +49,11 @@ namespace AgileConfig.BlazorUI.Components.App
         private IEnumerable<UserVM> _userAdminOptions = new List<UserVM>();
         private Form<AppAuthVM> _form;
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+        }
+
         protected override async Task OnParametersSetAsync()
         {
             if (Visible)
@@ -63,10 +68,6 @@ namespace AgileConfig.BlazorUI.Components.App
             _userAdminOptions = res2.Data ?? Array.Empty<UserVM>();
             var res = await AppApi.GetUserAppAuthAsync(AppId);
             CurrentObject = res.Data;
-            foreach (var c in CurrentObject.EditConfigPermissionUsers)
-            {
-                Console.WriteLine(c);
-            }
         }
         private void Cancel(MouseEventArgs e)
         {

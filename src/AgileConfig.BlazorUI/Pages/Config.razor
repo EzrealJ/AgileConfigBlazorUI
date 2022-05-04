@@ -1,0 +1,158 @@
+﻿@page "/config/{AppId}"
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Components
+@using AgileConfig.BlazorUI.Components.Config
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.UIApiClient;
+@using AgileConfig.UIApiClient.HttpResults
+@using AntDesign.TableModels;
+@using AntDesign;
+@using AgileConfig.BlazorUI.Components.Node;
+@using Microsoft.AspNetCore.Components.Rendering
+@using Consts;
+
+
+
+<PageHeader BackIcon="true" Ghost="false">
+    <PageHeaderTitle>@AppId</PageHeaderTitle>
+    <PageHeaderSubtitle>@($"您正在编辑{AppId}的配置项,当前您操作的环境为{_formClass.ENV}")</PageHeaderSubtitle>
+    <PageHeaderExtra>
+        <RadioGroup @bind-Value="_formClass.ENV" ButtonStyle="@RadioButtonStyle.Solid">
+            @foreach (var s in _envs)
+            {
+                <Radio RadioButton Value="@s">@s</Radio>
+            }
+        </RadioGroup>
+    </PageHeaderExtra>
+</PageHeader>
+<Divider />
+<Form Layout=@FormLayout.Inline Model=@_formClass>
+    <FormItem Label="组">
+        <Input @bind-Value=@context.Group />
+    </FormItem>
+    <FormItem Label="键">
+        <Input @bind-Value="@context.Key" />
+    </FormItem>
+    <FormItem Label="发布状态">
+        <SimpleSelect @bind-Value="@_onlineStatusStr" Placeholder="点击选择状态" DefaultActiveFirstOption="false">
+            <SelectOptions>
+                <SimpleSelectOption Value="@null"
+                                    Label="全部"></SimpleSelectOption>
+                <SimpleSelectOption Value="@OnlineStatus.Online.GetIntValue().ToString()"
+                                    Label="@OnlineStatus.Online.GetDescription()"></SimpleSelectOption>
+                <SimpleSelectOption Value="@OnlineStatus.WaitPublish.GetIntValue().ToString()"
+                                    Label="@OnlineStatus.WaitPublish.GetDescription()"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+    </FormItem>
+    <FormItem>
+        <Space>
+            <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@SearchAsync>搜索</Button></SpaceItem>
+        </Space>
+    </FormItem>
+</Form>
+<Divider />
+<Space>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick=@AddAsync>新建</Button>
+        <Button Type="@ButtonType.Primary" OnClick=@EditAsJsonAsync>以JSON格式编辑整个App的配置</Button>
+        <Button Type="@ButtonType.Primary" OnClick=@EditAsTextAsync>以TEXT格式编辑整个App的配置</Button>
+        @if (_selectedRows?.Count() > 0)
+        {
+            <Button Type="@ButtonType.Primary" Danger OnClick=@CancelSelectAsync>撤销选中条目中未发布项</Button>
+            <Button Type="@ButtonType.Primary" Danger OnClick=@DeleteSelectAsync>删除选中的条目</Button>
+        }
+        <DropdownButton>
+            <Overlay>
+                <Menu>
+                    <MenuItem Key="1" OnClick="HistoryAsync">历史版本</MenuItem>
+                    <MenuItem Key="2">环境同步</MenuItem>
+                    <MenuItem Key="3">导入</MenuItem>
+                    <MenuItem Key="4">导出</MenuItem>
+                </Menu>
+            </Overlay>
+            <Unbound>
+                更多操作
+            </Unbound>
+        </DropdownButton>
+    </SpaceItem>
+</Space>
+<Divider />
+<Table TItem="ConfigVM" DataSource="@_dataSource.Data"
+       @bind-PageIndex="_dataSource.Current"
+       @bind-PageSize="_dataSource.PageSize"
+       Total="_dataSource.Total"
+       Loading="_loading"
+       OnChange=@HandleTableChange
+       RemoteDataSource @bind-SelectedRows="_selectedRows">
+    <Selection Key="@context.Key" />
+    <AntDesign.Column Title="组" DataIndex="@nameof(context.Group)" TData="string"
+                      Sortable
+                      DefaultSortOrder="SortDirection.Ascending"
+                      SortDirections=@SortDirection.Preset.TwoWay>
+        <Paragraph Copyable>@context.Group</Paragraph>
+    </AntDesign.Column>
+    <AntDesign.Column Title="键" DataIndex="@nameof(context.Key)" TData="string">
+        <Paragraph Copyable>@context.Key</Paragraph>
+    </AntDesign.Column>
+    <AntDesign.Column Title="值" DataIndex="@nameof(context.Value)" TData="string">
+        <Paragraph Copyable>@context.Value</Paragraph>
+    </AntDesign.Column>
+    <AntDesign.Column Title="描述" DataIndex="@nameof(context.Description)" TData="string" />
+    <AntDesign.Column Title="创建时间"
+                      DataIndex="@nameof(context.CreateTime)"
+                      TData="Nullable<DateTimeOffset>"
+                      Format=@Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS
+                      Sortable
+                      DefaultSortOrder="SortDirection.Descending"
+                      SortDirections=@SortDirection.Preset.TwoWay />
+    <AntDesign.Column Title="编辑状态" TData="bool">
+        @GetEditStatusTag(context)
+    </AntDesign.Column>
+    <AntDesign.Column Title="发布状态" TData="bool">
+        @GetPublicTag(context)
+    </AntDesign.Column>
+
+    <AntDesign.ActionColumn Title="操作">
+        <Space>
+            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button></SpaceItem>
+            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button></SpaceItem>
+            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemHistoryAsync(context))>历史</Button></SpaceItem>
+        </Space>
+    </AntDesign.ActionColumn>
+</Table>
+<ConfigEditor @ref=@_configEditor ConfigEditorParameter=@_configEditorParameter></ConfigEditor>
+<EditConfig @ref=@_editConfig EditType=@_enumEditType CurrentObject=@_editObj OnCompleted=@SearchAsync></EditConfig>
+<ConfigItemHistory @ref=_configItemHistory Para=@_configItemHistoryPara></ConfigItemHistory>
+<ConfigHistory @ref="_configHistory" Para=@_configHistoryPara ></ConfigHistory>
+@code {
+
+    RenderFragment infoIcon =
+    @<Icon Type="exclamation-circle" Theme="outline" />
+    ;
+
+    RenderFragment GetEditStatusTag(ConfigVM config)
+    {
+        return (RenderFragment)(
+    @<Tag Color="green-inverse">@config.EditStatus.GetDescription()</Tag>
+    );
+    }
+
+    RenderFragment GetPublicTag(ConfigVM config)
+    {
+        if (config.OnlineStatus == OnlineStatus.Online)
+        {
+            return (RenderFragment)(
+    @<Tag Color="green-inverse">@OnlineStatus.Online.GetDescription()</Tag>
+    );
+        }
+        else
+        {
+            return (RenderFragment)(
+    @<Tag Color="purple">@OnlineStatus.WaitPublish.GetDescription()</Tag>
+    );
+        }
+    }
+}
