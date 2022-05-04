@@ -126,7 +126,7 @@
 <ConfigEditor @ref=@_configEditor ConfigEditorParameter=@_configEditorParameter></ConfigEditor>
 <EditConfig @ref=@_editConfig EditType=@_enumEditType CurrentObject=@_editObj OnCompleted=@SearchAsync></EditConfig>
 <ConfigItemHistory @ref=_configItemHistory Para=@_configItemHistoryPara></ConfigItemHistory>
-<ConfigHistory @ref="_configHistory" Para=@_configHistoryPara ></ConfigHistory>
+<ConfigHistory @ref="_configHistory" Para=@_configHistoryPara OnCompleted=@SearchAsync></ConfigHistory>
 @code {
 
     RenderFragment infoIcon =

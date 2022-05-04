@@ -2,7 +2,7 @@
 @using AgileConfig.UIApiClient.HttpResults
 <Modal Visible=@Visible Title="历史版本" OnCancel=Close Width="700">
 
-    @foreach(var item in _dataSource)
+    @foreach (var item in _dataSource)
     {
         <Card>
             <TitleTemplate>
@@ -14,8 +14,8 @@
                     <Tag>当前版本</Tag>
                 }
                 else
-                {                    
-                    <Button Type=@ButtonType.Primary OnClick=@RollBackAsync>回滚</Button>
+                {
+                    <Button Type=@ButtonType.Primary OnClick=@(_=>RollBackConfirm(item))>回滚</Button>
                 }
             </Extra>
             <Body>
@@ -35,6 +35,10 @@
 </Modal>
 
 @code {
+    RenderFragment infoIcon =
+    @<Icon Type="exclamation-circle" Theme="outline" />
+    ;
+
     RenderFragment GetEditStatusTag(PublishDetail config)
     {
         return (RenderFragment)(

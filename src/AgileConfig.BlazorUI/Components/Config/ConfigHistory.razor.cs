@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Pages;
 using AgileConfig.UIApiClient;
 using AgileConfig.UIApiClient.HttpResults;
 using AntDesign;
@@ -17,11 +18,15 @@ namespace AgileConfig.BlazorUI.Components.Config
     {
         [Parameter]
         public ConfigHistoryParameter Para { get; set; } = new();
+        [Parameter]
+        public EventCallback OnCompleted { get; set; }
         public bool Visible { get; set; }
         [Inject]
         public IConfigApi ConfigApi { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
+        [Inject]
+        public ModalService ModalService { get; set; }
 
         private List<ConfigPublishedLog> _dataSource = new(0);
         protected override async Task OnParametersSetAsync()
@@ -41,10 +46,36 @@ namespace AgileConfig.BlazorUI.Components.Config
             Para = new();
             Visible = false;
         }
-        private async Task RollBackAsync()
+        private void RollBackConfirm(PublishTimeline timeline)
         {
-            await MessageService.Info("你点击了回滚");
-            await Task.CompletedTask;
+            var options = new ConfirmOptions()
+            {
+                Title = $"确定回滚至【{timeline?.PublishTime?.ToString(Consts.Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS)}】时刻的发布版本吗？",
+                Icon = infoIcon,
+                OnOk = async e => await RollBackAsync(timeline)
+            };
+            ModalService.Confirm(options);
+        }
+        private async Task RollBackAsync(PublishTimeline timeline)
+        {
+            var config = new MessageConfig()
+            {
+                Content = "回滚中...",
+                Key = $"{nameof(RollBackAsync)}-{Para.AppId}"
+            };
+            _ = MessageService.Loading(config);
+            var res = await ConfigApi.RollbackAsync(timeline.Id, Para.ENV);
+            if (res.Success)
+            {
+                config.Content = "回滚成功";
+                await MessageService.Success(config);
+            }
+            else
+            {
+                config.Content = $"回滚失败,{res.Message}";
+                await MessageService.Error(config);
+            }
+            await OnCompleted.InvokeAsync();
         }
     }
 }
