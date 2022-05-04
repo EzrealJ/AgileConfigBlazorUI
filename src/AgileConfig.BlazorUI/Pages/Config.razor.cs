@@ -247,5 +247,9 @@ namespace AgileConfig.BlazorUI.Pages
             };
             await Task.CompletedTask;
         }
+        private async Task EnvSyncAsync()
+        {
+            await Task.CompletedTask;
+        }
     }
 }

@@ -1,0 +1,55 @@
+﻿@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.UIApiClient
+@using AgileConfig.UIApiClient.HttpResults
+<Modal Visible=@Visible Title="历史版本" OnCancel=Close OnOk=OnOkAsync Width="700">
+
+</Modal>
+
+@code {
+    public class EnvSyncParameter
+    {
+        public string AppId { get; set; }
+        public string CurrentEnvironment { get; set; }
+        public string[] SyncableEnvironments { get; set; }
+    }
+    [Parameter]
+    public EnvSyncParameter Para { get; set; }
+    [Parameter]
+    public EventCallback OnCompleted { get; set; }
+
+    [Inject]
+    public IConfigApi ConfigApi { get; set; }
+    [Inject]
+    public MessageService MessageService { get; set; }
+    public bool Visible { get; set; }
+
+    private string[] _targetEnvironments = Array.Empty<string>();
+
+    public async Task OnOkAsync()
+    {
+        var config = new MessageConfig()
+        {
+            Content = "同步中...",
+            Key = $"{nameof(ConfigEnvironmentSync)}-{Para.AppId}"
+        };
+        var res = await ConfigApi.SyncEnvAsync(Para.AppId, Para.CurrentEnvironment, _targetEnvironments);
+        if (res.Success)
+        {
+            config.Content = "同步成功";
+            await MessageService.Success(config);
+        }
+        else
+        {
+            config.Content = $"同步失败,{res.Message}";
+            await MessageService.Error(config);
+        }
+
+    }
+
+    private void Close()
+    {
+        Para = new();
+        Visible = false;
+    }
+
+}

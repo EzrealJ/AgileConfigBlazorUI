@@ -112,7 +112,7 @@ namespace AgileConfig.UIApiClient
         ITask<ApiResult> CancelSomeEditAsync(string env, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/SyncEnv")]
-        Task SyncEnvAsync(string appId, string currentEnv, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> SyncEnvAsync(string appId, string currentEnv, [JsonContent] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         [HttpGet("Config/GetKvList")]
         ITask<ApiResult<List<KeyValuePair<string, string>>>> GetKvListAsync(string appId, string env, CancellationToken cancellationToken = default);
