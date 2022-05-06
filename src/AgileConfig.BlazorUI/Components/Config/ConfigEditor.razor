@@ -2,7 +2,10 @@
 @using AntDesign;
 
 
-<Modal Visible=@Visible Title=@($"按{ConfigEditorParameter.ConfigType}视图编辑,您修改的环境为{ConfigEditorParameter.ENV}") OnCancel=@Cancel>
+<Modal Visible=@Visible
+       Title=@($"按{ConfigEditorParameter.ConfigType}视图编辑,您修改的环境为{ConfigEditorParameter.ENV}")
+       OnCancel=@Cancel
+       OnOk=@OnOkAsync>
 
     @if (ConfigEditorParameter.ConfigType == "JSON")
     {

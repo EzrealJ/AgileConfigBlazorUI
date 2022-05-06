@@ -12,6 +12,7 @@ using System.Linq;
 using AgileConfig.BlazorUI.Components.Config;
 using Blazored.LocalStorage;
 using AgileConfig.BlazorUI.Extensions;
+using static AgileConfig.BlazorUI.Components.Config.ConfigEnvironmentSync;
 
 namespace AgileConfig.BlazorUI.Pages
 {
@@ -38,11 +39,15 @@ namespace AgileConfig.BlazorUI.Pages
         IEnumerable<ConfigVM> _selectedRows;
         private bool _loading = false;
         private readonly IEnumerable<string> _options = Enum.GetValues<OnlineStatus>().Select(e => e.GetDescription());
-        IEnumerable<string> _envs = new List<string>();
+        string[] _envs = Array.Empty<string>();
         private ConfigItemHistory _configItemHistory;
         private ConfigItemHistoryPara _configItemHistoryPara;
         private ConfigHistory _configHistory;
         private ConfigHistoryParameter _configHistoryPara;
+        private ConfigEnvironmentSync _configEnvironmentSync;
+        private ConfigEnvSyncParameter _configEnvSyncParameter;
+        private ConfigImport _configImport;
+        private ConfigImportParameter _configImportParameter;
 
         protected PageResult<ConfigVM> _dataSource = new()
         {
@@ -247,8 +252,25 @@ namespace AgileConfig.BlazorUI.Pages
             };
             await Task.CompletedTask;
         }
-        private async Task EnvSyncAsync()
+        private async Task EnvironmentSyncAsync()
         {
+            _configEnvironmentSync.Visible = true;
+            _configEnvSyncParameter = new ConfigEnvSyncParameter
+            {
+                AppId = AppId,
+                CurrentEnvironment = _formClass.ENV,
+                SyncableEnvironments = _envs.Where(e=>e!= _formClass.ENV).ToArray()
+            };
+            await Task.CompletedTask;
+        }
+
+        private async Task JsonImportAsync()
+        {
+            _configImport.Visible = true;
+            _configImportParameter = new ConfigImportParameter
+            {
+                AppId = AppId,
+            };
             await Task.CompletedTask;
         }
     }

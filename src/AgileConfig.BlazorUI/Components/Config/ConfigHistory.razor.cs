@@ -69,6 +69,7 @@ namespace AgileConfig.BlazorUI.Components.Config
             {
                 config.Content = "回滚成功";
                 await MessageService.Success(config);
+                Visible = false;
             }
             else
             {

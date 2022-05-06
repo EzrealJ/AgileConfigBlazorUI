@@ -37,6 +37,8 @@ namespace AgileConfig.BlazorUI.Auth
             return true;
         }
 
+        public async Task<LoginResult> GetAuthInfo() => await _localStorageService.GetItemAsync<LoginResult>(Consts.Auth.AUTH_TOKEN_NAME);
+
         public async Task LogoutAsync()
         {
             await _localStorageService.RemoveItemAsync(Consts.Auth.AUTH_TOKEN_NAME);

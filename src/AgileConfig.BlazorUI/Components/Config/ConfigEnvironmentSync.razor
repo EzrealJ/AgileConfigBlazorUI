@@ -1,19 +1,20 @@
 ﻿@using AgileConfig.BlazorUI.Extensions
 @using AgileConfig.UIApiClient
 @using AgileConfig.UIApiClient.HttpResults
-<Modal Visible=@Visible Title="历史版本" OnCancel=Close OnOk=OnOkAsync Width="700">
-
+<Modal Visible=@Visible Title="同步环境" OnCancel=Close OnOk=OnOkAsync Width="700">
+    <h4>将当前@(Para?.CurrentEnvironment)环境同步到:</h4>
+    <CheckboxGroup Options="@Para.SyncableEnvironments" @bind-Value=@_targetEnvironments />
 </Modal>
 
 @code {
-    public class EnvSyncParameter
+    public class ConfigEnvSyncParameter
     {
         public string AppId { get; set; }
         public string CurrentEnvironment { get; set; }
-        public string[] SyncableEnvironments { get; set; }
+        public string[] SyncableEnvironments { get; set; } = Array.Empty<string>();
     }
     [Parameter]
-    public EnvSyncParameter Para { get; set; }
+    public ConfigEnvSyncParameter Para { get; set; } = new();
     [Parameter]
     public EventCallback OnCompleted { get; set; }
 
@@ -28,10 +29,10 @@
     public async Task OnOkAsync()
     {
         var config = new MessageConfig()
-        {
-            Content = "同步中...",
-            Key = $"{nameof(ConfigEnvironmentSync)}-{Para.AppId}"
-        };
+            {
+                Content = "同步中...",
+                Key = $"{nameof(ConfigEnvironmentSync)}-{Para.AppId}"
+            };
         var res = await ConfigApi.SyncEnvAsync(Para.AppId, Para.CurrentEnvironment, _targetEnvironments);
         if (res.Success)
         {
@@ -43,7 +44,8 @@
             config.Content = $"同步失败,{res.Message}";
             await MessageService.Error(config);
         }
-
+        Visible = false;
+        await OnCompleted.InvokeAsync();
     }
 
     private void Close()

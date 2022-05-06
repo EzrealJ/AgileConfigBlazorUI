@@ -9,6 +9,7 @@ using Blazor.Extensions.Logging;
 using Blazored.LocalStorage;
 using HighlightBlazor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -38,8 +39,9 @@ namespace AgileConfig.BlazorUI
             
             services.AddAgileConfigUIApiClient((option, sp) =>
             {
-                const string DEMO_HOST = "http://agileconfig_server.xbaby.xyz/";
-                option.HttpHost = new Uri(DEMO_HOST);
+                IConfiguration configuration=sp.GetRequiredService<IConfiguration>();
+                string server = configuration["AgileConfigServer"];
+                option.HttpHost = new Uri(server);
                 UIApiTokenProvider filter = sp.GetRequiredService<UIApiTokenProvider>();
                 option.GlobalFilters.Add(filter);
             });

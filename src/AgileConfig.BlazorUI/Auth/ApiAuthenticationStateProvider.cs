@@ -16,7 +16,7 @@ namespace AgileConfig.BlazorUI.Auth
     {
         private readonly ILocalStorageService _localStorage;
 
-        public ApiAuthenticationStateProvider(HttpClient httpClient, ILocalStorageService localStorage)
+        public ApiAuthenticationStateProvider(ILocalStorageService localStorage)
         {
             _localStorage = localStorage;
         }

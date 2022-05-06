@@ -17,7 +17,7 @@ namespace AgileConfig.UIApiClient
         ITask<ApiResult> AddAsync(string env, [JsonContent] ConfigVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/AddRange")]
-        Task AddRangeAsync(string env, [JsonContent] IEnumerable<ConfigVM> body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> AddRangeAsync(string env, [JsonContent] IEnumerable<ConfigVM> body, CancellationToken cancellationToken = default);
 
         [HttpPost("Config/Edit")]
         ITask<ApiResult> EditAsync(string env, [JsonContent] ConfigVM body, CancellationToken cancellationToken = default);

@@ -51,30 +51,30 @@ namespace AgileConfig.UIApiClient
     public class ConfigVM
     {
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [JsonPropertyName("appId")]
         [Required(AllowEmptyStrings = true)]
         [StringLength(36)]
-        public string AppId { get; set; }
+        public string AppId { get; set; } = string.Empty;
 
         [JsonPropertyName("group")]
         [StringLength(100)]
-        public string Group { get; set; }
+        public string Group { get; set; } = string.Empty;
 
         [JsonPropertyName("key")]
         [Required(AllowEmptyStrings = true)]
         [StringLength(100)]
-        public string Key { get; set; }
+        public string Key { get; set; } = string.Empty;
 
         [JsonPropertyName("value")]
         [Required(AllowEmptyStrings = true)]
         [StringLength(4000)]
-        public string Value { get; set; }
+        public string Value { get; set; }=string.Empty;
 
         [JsonPropertyName("description")]
         [StringLength(200)]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [JsonPropertyName("onlineStatus")]
         public OnlineStatus OnlineStatus { get; set; }
@@ -83,10 +83,10 @@ namespace AgileConfig.UIApiClient
         public ConfigStatus Status { get; set; }
 
         [JsonPropertyName("createTime")]
-        public DateTimeOffset? CreateTime { get; set; }
+        public DateTime? CreateTime { get; set; }
 
         [JsonPropertyName("updateTime")]
-        public DateTimeOffset? UpdateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
 
         public EditStatus EditStatus { get; set; }
 

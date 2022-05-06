@@ -67,9 +67,9 @@
         <DropdownButton>
             <Overlay>
                 <Menu>
-                    <MenuItem Key="1" OnClick="HistoryAsync">历史版本</MenuItem>
-                    <MenuItem Key="2">环境同步</MenuItem>
-                    <MenuItem Key="3">导入</MenuItem>
+                    <MenuItem Key="1" OnClick="@HistoryAsync">历史版本</MenuItem>
+                    <MenuItem Key="2" OnClick="@EnvironmentSyncAsync">环境同步</MenuItem>
+                    <MenuItem Key="3" OnClick="@JsonImportAsync">导入</MenuItem>
                     <MenuItem Key="4">导出</MenuItem>
                 </Menu>
             </Overlay>
@@ -127,7 +127,10 @@
 <EditConfig @ref=@_editConfig EditType=@_enumEditType CurrentObject=@_editObj OnCompleted=@SearchAsync></EditConfig>
 <ConfigItemHistory @ref=_configItemHistory Para=@_configItemHistoryPara></ConfigItemHistory>
 <ConfigHistory @ref="_configHistory" Para=@_configHistoryPara OnCompleted=@SearchAsync></ConfigHistory>
+<ConfigEnvironmentSync @ref=@_configEnvironmentSync Para=@_configEnvSyncParameter OnCompleted=@SearchAsync></ConfigEnvironmentSync>
+<ConfigImport @ref="_configImport" Para=@_configImportParameter OnCompleted=@SearchAsync></ConfigImport>
 @code {
+
 
     RenderFragment infoIcon =
     @<Icon Type="exclamation-circle" Theme="outline" />
