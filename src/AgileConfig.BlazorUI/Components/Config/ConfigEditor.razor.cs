@@ -8,6 +8,7 @@ using AgileConfig.UIApiClient;
 using System.Linq;
 using AntDesign;
 using Microsoft.AspNetCore.Components.Web;
+using AgileConfig.BlazorUI.Model;
 
 namespace AgileConfig.BlazorUI.Components.Config
 {
@@ -98,24 +99,15 @@ namespace AgileConfig.BlazorUI.Components.Config
             Visible = false;
         }
 
-        public class JsonData
-        {
-            [JsonExtensionData]
-            public Dictionary<string, JsonElement> ExtensionData { get; set; }
-        }
+
         private string _dataError;
-        private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
-        {
-            AllowTrailingCommas = true,
-            NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
-            WriteIndented = true,
-        };
+
         private async Task CheckJsonAsync(string value)
         {
             try
             {
-                var json = JsonSerializer.Deserialize<JsonData>(value, _jsonSerializerOptions);
-                _value = JsonSerializer.Serialize(json, _jsonSerializerOptions);
+                var json = JsonSerializer.Deserialize<JsonData>(value, Consts.Json.SystemTextJsonDeserializeOptions);
+                _value = JsonSerializer.Serialize(json, Consts.Json.SystemTextJsonSerializerOptions);
                 _dataError = string.Empty;
             }
             catch (Exception ex)

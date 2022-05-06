@@ -83,7 +83,7 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Config/ExportJson")]
-        ITask<ApiResult> ExportJsonAsync(string appId, string env, CancellationToken cancellationToken = default);
+        ITask<string> ExportJsonAsync(string appId, string env, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取待发布的明细

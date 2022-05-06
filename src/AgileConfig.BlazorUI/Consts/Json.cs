@@ -1,5 +1,6 @@
 ﻿using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using WebApiClientCore.Serialization.JsonConverters;
 
 namespace AgileConfig.BlazorUI.Consts
@@ -7,6 +8,7 @@ namespace AgileConfig.BlazorUI.Consts
     public static class Json
     {
         public static JsonSerializerOptions SystemTextJsonDeserializeOptions { get; } = CreateJsonDeserializeOptions();
+        public static JsonSerializerOptions SystemTextJsonSerializerOptions { get; } = CreateJsonDeserializeOptions();
 
         public static JsonWriterOptions SystemTextJsonWriterOptions { get; } = new JsonWriterOptions
         {
@@ -29,7 +31,10 @@ namespace AgileConfig.BlazorUI.Consts
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                AllowTrailingCommas = true,
+                NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
+                WriteIndented = true,
             };
         }
 

@@ -48,6 +48,8 @@ namespace AgileConfig.BlazorUI.Pages
         private ConfigEnvSyncParameter _configEnvSyncParameter;
         private ConfigImport _configImport;
         private ConfigImportParameter _configImportParameter;
+        private ConfigExport _configExport;
+        private ConfigExportParameter _configExportParameter;
 
         protected PageResult<ConfigVM> _dataSource = new()
         {
@@ -259,7 +261,7 @@ namespace AgileConfig.BlazorUI.Pages
             {
                 AppId = AppId,
                 CurrentEnvironment = _formClass.ENV,
-                SyncableEnvironments = _envs.Where(e=>e!= _formClass.ENV).ToArray()
+                SyncableEnvironments = _envs.Where(e => e != _formClass.ENV).ToArray()
             };
             await Task.CompletedTask;
         }
@@ -270,6 +272,18 @@ namespace AgileConfig.BlazorUI.Pages
             _configImportParameter = new ConfigImportParameter
             {
                 AppId = AppId,
+                ENV = _formClass.ENV,
+            };
+            await Task.CompletedTask;
+        }
+
+        private async Task JsonExportAsync()
+        {
+            _configExport.Visible = true;
+            _configExportParameter = new ConfigExportParameter
+            {
+                AppId = AppId,
+                ENV = _formClass.ENV,
             };
             await Task.CompletedTask;
         }

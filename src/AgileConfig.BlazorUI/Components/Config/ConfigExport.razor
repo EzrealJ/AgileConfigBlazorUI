@@ -1,0 +1,11 @@
+﻿<Modal Visible=@Visible
+       Title=@($"导出前预览,当前环境为{Para.ENV}")
+       OnCancel=@Cancel
+       OnOk=@SaveAsync>
+    <TextArea AutoSize @bind-value="_value" OnBlur=@(e=>CheckJsonAsync(_value)) />
+
+</Modal>
+
+@code {
+
+}
