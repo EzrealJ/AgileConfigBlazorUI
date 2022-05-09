@@ -1,0 +1,95 @@
+﻿@page "/user"
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Components.User
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.BlazorUI.Localizations
+@using AgileConfig.UIApiClient;
+@using AgileConfig.UIApiClient.HttpModels
+@using AntDesign.TableModels;
+@using AntDesign;
+@using Microsoft.AspNetCore.Components.Rendering
+
+
+<Form Layout=@FormLayout.Inline Model=@_formClass>
+    <FormItem Label="用户名">
+        <Input @bind-Value=@context.UserName />
+    </FormItem>
+    <FormItem Label="团队">
+        <Input @bind-Value="@context.Team" />
+    </FormItem>
+    <FormItem>
+        <Space>
+            <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@SearchAsync>搜索</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button></SpaceItem>
+        </Space>
+    </FormItem>
+</Form>
+<Divider />
+<Space>
+    <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@AddAsync>添加</Button></SpaceItem>
+</Space>
+<Divider />
+@if (_itemShowType == EnumItemShowType.TableRow)
+{
+    <Table TItem="UserVM" DataSource="@_dataSource.Data"
+       RemoteDataSource
+       PageIndex=@_dataSource.Current
+       PageSize=@_dataSource.PageSize
+       Total="@_dataSource.Total">
+        <AntDesign.Column Title="用户名" DataIndex="@nameof(context.UserName)" TData="string" />
+        <AntDesign.Column Title="团队" DataIndex="@nameof(context.Team)" TData="string" />
+        <AntDesign.Column Title="角色" DataIndex="@nameof(context.UserRoleNames)" TData="List<string>">
+            @GetUserRoleNames(context)
+        </AntDesign.Column>
+        <AntDesign.ActionColumn Title="操作">
+            @GetItemButtons(context)
+        </AntDesign.ActionColumn>
+    </Table>
+}
+@if (_itemShowType == EnumItemShowType.Card)
+{
+    <Row Gutter=@Gutter>
+        @foreach (var context in _dataSource.Data)
+        {
+            <AntDesign.Col Xs="24" Md="16" Lg="8" @key=@context.Id>
+                <Card>
+                    <p>用户名: @(context.UserName)</p>
+                    <p>团队: @(context.Team)</p>
+                    <p>@GetUserRoleNames(context)</p>
+                    <Divider />
+                    @GetItemButtons(context)
+                </Card>
+            </AntDesign.Col>
+        }
+    </Row>
+}
+<EditUser @ref="@_editUser" CurrentObject=@_editObj OnCompleted=@SearchAsync></EditUser>
+
+@code {
+
+
+
+    RenderFragment infoIcon =
+    @<Icon Type="exclamation-circle" Theme="outline" />
+    ;
+    RenderFragment GetItemButtons(UserVM user)
+    => (RenderFragment)(
+    @<Space>
+        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(e=>ResetPasswordConfirm(user))>重置密码</Button></SpaceItem>
+        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(e=>EditAsync(user))>修改</Button></SpaceItem>
+        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(user))>删除</Button></SpaceItem>
+    </Space>
+    );
+
+    RenderFragment GetUserRoleNames(UserVM user)
+    => (RenderFragment)(
+    @<Space>
+        @foreach (string name in user.UserRoleNames)
+            {
+                <Tag>@name</Tag>
+            }
+        </Space>
+    );
+}

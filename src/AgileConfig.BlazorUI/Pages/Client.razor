@@ -1,0 +1,87 @@
+﻿@page "/client"
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.UIApiClient;
+@using AgileConfig.UIApiClient.HttpModels
+@using AntDesign.TableModels;
+@using AntDesign;
+@using AgileConfig.BlazorUI.Components.Node;
+@using Microsoft.AspNetCore.Components.Rendering
+
+
+
+
+
+
+
+<Divider />
+<Row Justify="space-between">
+    <Col>
+    <label>节点:</label>
+    <Select DataSource="@_addresses"
+            @bind-Value="@_address"
+            Placeholder="点击选择分组"
+            Style="width:150px;"
+            DefaultActiveFirstOption="true">
+    </Select>
+    <Space>
+        <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
+        <SpaceItem><Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="ReLoadAsync">重新加载</Button></SpaceItem>
+        <SpaceItem><Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button></SpaceItem>
+    </Space>
+    </Col>
+</Row>
+<Divider />
+@if (_itemShowType == EnumItemShowType.TableRow)
+{
+    <Table TItem="ClientVM" DataSource="@_dataSource.Data" RemoteDataSource
+       PageIndex=@_dataSource.Current
+       PageSize=@_dataSource.PageSize
+       Total="@_dataSource.Total"
+       Loading="_dataLoading">
+        <AntDesign.Column Title="Id" DataIndex="@nameof(context.Id)" TData="string" />
+        <AntDesign.Column Title="节点" DataIndex="@nameof(context.Address)" TData="string" />
+        <AntDesign.Column Title="应用Id" DataIndex="@nameof(context.AppId)" TData="string" />
+        <AntDesign.Column Title="环境" DataIndex="@nameof(context.Env)" TData="string" />
+        <AntDesign.Column Title="IP地址" DataIndex="@nameof(context.Ip)" TData="string" />
+        <AntDesign.Column Title="客户端名称" DataIndex="@nameof(context.Name)" TData="string" />
+        <AntDesign.Column Title="标签" DataIndex="@nameof(context.Tag)" TData="string" />
+        <AntDesign.Column Title="最后活跃时间" DataIndex="@nameof(context.LastHeartbeatTime)" TData="DateTime" />
+        <AntDesign.ActionColumn Title="操作">
+            @GetItemButtons(context)
+        </AntDesign.ActionColumn>
+    </Table>
+}
+@if (_itemShowType == EnumItemShowType.Card)
+{
+    <Row Gutter=@Gutter>
+        @foreach (var item in _dataSource.Data)
+        {
+            <AntDesign.Col Xs="24" Md="16" Lg="8" @key=@item.Address>
+                <Card>
+                    <p>Id:@item.Id</p>
+                    <p>节点:@item.Address</p>
+                    <p>应用Id:@item.AppId</p>
+                    <p>环境:@item.Env</p>
+                    <p>IP地址:@item.Ip</p>
+                    <p>客户端名称:@item.Name</p>
+                    <p>标签:@item.Tag</p>
+                    <p>最后活跃时间:@item.LastHeartbeatTime.ToString(Consts.Format.DATE_TIME_YYYY_MM_DD_HH_MM_SS)</p>
+                    @GetItemButtons(item)
+                </Card>
+            </AntDesign.Col>
+        }
+    </Row>
+}
+
+@code {
+    RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline" />
+    ;
+    RenderFragment GetItemButtons(ClientVM client)
+    => (RenderFragment)(
+    @<Space>
+        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(async _=>await ReloadClientAsync(client))>刷新配置</Button></SpaceItem>
+        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>OfflineConfirm(client))>强制断开</Button></SpaceItem>
+    </Space>
+    );
+}

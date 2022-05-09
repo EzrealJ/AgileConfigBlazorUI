@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
+using AgileConfig.BlazorUI.Extensions;
 
-namespace AgileConfig.BlazorUI.Components.Config
+namespace AgileConfig.BlazorUI.Components.User
 {
-    public partial class EditConfig
+    public partial class EditUser
     {
-        private Form<ConfigVM> _form;
-        public string ENV { get; set; }
-
+        private Form<UserVM> _form;
         [Parameter]
         public EnumEditType EditType { get; set; }
         [Parameter]
@@ -21,34 +21,16 @@ namespace AgileConfig.BlazorUI.Components.Config
         private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
         public bool Visible { get; set; }
         [Parameter]
-        public ConfigVM CurrentObject { get; set; } = new();
+        public UserVM CurrentObject { get; set; } = new UserVM();
 
-        [Inject]
-        private IConfigApi ConfigApi { get; set; }
         [Inject]
         public IUserApi UserApi { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
-
-
-        private IEnumerable<string> _groupOptions = new List<string>();
-        private IEnumerable<AppVM> _publicAppOptions = new List<AppVM>();
-        private IEnumerable<UserVM> _adminOptions = new List<UserVM>();
-
-
-        protected override async Task OnParametersSetAsync()
+        private IEnumerable<string> UserRoles
         {
-            if (Visible)
-            {
-                await LoadDataAsync();
-            }
-        }
-
-
-
-        private async Task LoadDataAsync()
-        {
-            await Task.CompletedTask;
+            get => CurrentObject.UserRoles?.Select(r => r.GetIntValue().ToString());
+            set => CurrentObject.UserRoles = value.Select(v => Enum.Parse<EnumRole>(v)).ToList();
         }
 
         private void Cancel(MouseEventArgs e)
@@ -59,19 +41,20 @@ namespace AgileConfig.BlazorUI.Components.Config
 
         private async Task OnOkAsync(MouseEventArgs e)
         {
+            _form.Validate();
             var config = new MessageConfig()
             {
                 Content = $"正在{Title}...",
-                Key = $"{nameof(EditType)}-{CurrentObject.Key}"
+                Key = $"{nameof(EditType)}-{CurrentObject.UserName}"
             };
             ApiResult res = new();
             if (EditType == EnumEditType.Add)
             {
-                res = await ConfigApi.AddAsync(ENV,CurrentObject);
+                res = await UserApi.AddAsync(CurrentObject);
             }
             if (EditType == EnumEditType.Edit)
             {
-                res = await ConfigApi.EditAsync(ENV,CurrentObject);
+                res = await UserApi.EditAsync(CurrentObject);
             }
             if (res.Success)
             {
@@ -91,4 +74,5 @@ namespace AgileConfig.BlazorUI.Components.Config
         }
 
     }
+
 }

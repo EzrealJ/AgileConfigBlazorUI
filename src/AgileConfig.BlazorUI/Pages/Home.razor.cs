@@ -97,7 +97,7 @@ namespace AgileConfig.BlazorUI.Pages
 
         protected override void OnAfterRender(bool firstRender)
         {
-            NavigationManager1.NavigateTo("/app");
+            NavigationManager1.NavigateTo("/user");
         }
     }
 }

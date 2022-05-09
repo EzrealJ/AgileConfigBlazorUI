@@ -1,0 +1,29 @@
+﻿@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.UIApiClient
+<Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel>
+    <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Horizontal LabelColSpan="6" WrapperColSpan="18" Size=@AntSizeLDSType.Large>
+        <FormItem Label="用户名" Required>
+            <Input @bind-Value="@context.UserName" />
+        </FormItem>
+        @if (EditType == Enums.EnumEditType.Add)
+        {
+            <FormItem Label="密码">
+                <InputPassword @bind-Value="@context.Id" />
+            </FormItem>
+        }
+        <FormItem Label="团队">
+            <Input @bind-Value="@context.Team" />
+        </FormItem>
+        <FormItem Label="角色" Required>
+            <SimpleSelect @bind-Values="@UserRoles" Placeholder="点击选择状态" DefaultActiveFirstOption="false" 
+                    Mode="multiple">
+                <SelectOptions>
+                    <SimpleSelectOption Value="@EnumRole.Admin.GetIntValue().ToString()"
+                                        Label="@EnumRole.Admin.GetDescription()"></SimpleSelectOption>
+                    <SimpleSelectOption Value="@EnumRole.NormalUser.GetIntValue().ToString()"
+                                        Label="@EnumRole.NormalUser.GetDescription()"></SimpleSelectOption>
+                </SelectOptions>
+            </SimpleSelect>
+        </FormItem>
+    </Form>
+</Modal>

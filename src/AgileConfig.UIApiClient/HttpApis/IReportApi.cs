@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using AgileConfig.UIApiClient.HttpModels;
 using AgileConfig.UIApiClient.HttpResults;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
@@ -31,7 +32,7 @@ namespace AgileConfig.UIApiClient
         Task ServerNodeClientsAsync(string address, CancellationToken cancellationToken = default);
 
         [HttpGet("Report/SearchServerNodeClients")]
-        Task SearchServerNodeClientsAsync(string address, int? current, int? pageSize, CancellationToken cancellationToken = default);
+        ITask<PageResult<ClientVM>> SearchServerNodeClientsAsync(string address, int? current, int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取App数量

@@ -1,0 +1,114 @@
+﻿@page "/service"
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Components.Service
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.BlazorUI.Localizations
+@using AgileConfig.UIApiClient;
+@using AgileConfig.UIApiClient.HttpModels
+@using AntDesign.TableModels;
+@using AntDesign;
+@using Microsoft.AspNetCore.Components.Rendering
+
+
+
+
+
+
+
+<Form Layout=@FormLayout.Inline Model=@_formClass>
+    <FormItem Label="服务Id">
+        <Input @bind-Value=@context.Id />
+    </FormItem>
+    <FormItem Label="服务名">
+        <Input @bind-Value="@context.Name" />
+    </FormItem>
+    <FormItem Label="状态">
+        <SimpleSelect @bind-Value="@context.Status" Placeholder="点击选择状态" DefaultActiveFirstOption="false">
+            <SelectOptions>
+                <SimpleSelectOption Value="@null"
+                                    Label="全部"></SimpleSelectOption>
+                <SimpleSelectOption Value="@ServiceStatus.Healthy.GetIntValue().ToString()"
+                                    Label="@ServiceStatus.Healthy.GetDescription()"></SimpleSelectOption>
+                <SimpleSelectOption Value="@ServiceStatus.Unhealthy.GetIntValue().ToString()"
+                                    Label="@ServiceStatus.Unhealthy.GetDescription()"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+    </FormItem>
+    <FormItem>
+        <Space>
+            <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@SearchAsync>搜索</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button></SpaceItem>
+        </Space>
+    </FormItem>
+</Form>
+<Divider />
+<Space>
+    <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@AddAsync>注册一个新的服务</Button></SpaceItem>
+</Space>
+<Divider />
+@if (_itemShowType == EnumItemShowType.TableRow)
+{
+    <Table TItem="ServiceInfoVM" DataSource="@_dataSource.Data"
+       RemoteDataSource
+       OnChange=@HandleTableChange
+       PageIndex=@_dataSource.Current
+       PageSize=@_dataSource.PageSize
+       Total="@_dataSource.Total">
+        <AntDesign.Column Title="服务Id" DataIndex="@nameof(context.ServiceId)" TData="string" />
+        <AntDesign.Column Title="服务名" DataIndex="@nameof(context.ServiceName)" TData="string" />
+        <AntDesign.Column Title="IP" DataIndex="@nameof(context.Ip)" TData="string" />
+        <AntDesign.Column Title="端口" DataIndex="@nameof(context.Port)" TData="int?" />
+        <AntDesign.Column Title="元数据" DataIndex="@nameof(context.MetaData)" TData="string" />
+        <AntDesign.Column Title="健康检查模式" DataIndex="@nameof(context.HeartBeatMode)" TData="string" />
+        <AntDesign.Column Title="检测Url" DataIndex="@nameof(context.CheckUrl)" TData="string" />
+        <AntDesign.Column Title="告警Url" DataIndex="@nameof(context.AlarmUrl)" TData="string" />
+        <AntDesign.Column Title="注册时间" DataIndex="@nameof(context.RegisterTime)" TData="DateTime?" />
+        <AntDesign.Column Title="最后响应时间" DataIndex="@nameof(context.LastHeartBeat)" TData="DateTime?" />
+        <AntDesign.Column Title="状态" DataIndex="@nameof(context.Status)" TData="ServiceStatus" />
+        <AntDesign.ActionColumn Title="操作">
+            @GetItemButtons(context)
+        </AntDesign.ActionColumn>
+    </Table>
+}
+@if (_itemShowType == EnumItemShowType.Card)
+{
+    <Row Gutter=@Gutter>
+        @foreach (var context in _dataSource.Data)
+        {
+            <AntDesign.Col Xs="24" Md="16" Lg="8" @key=@context.ServiceId>
+                <Card>
+                    <p>服务Id: @(context.ServiceId)</p>
+                    <p>服务名: @(context.ServiceName)</p>
+                    <p>IP: @(context.Ip)</p>
+                    <p>端口: @(context.Port)</p>
+                    <p>元数据: @(context.MetaData)</p>
+                    <p>健康检查模式: @(context.HeartBeatMode)</p>
+                    <p>检测Url: @(context.CheckUrl)</p>
+                    <p>告警Url: @(context.AlarmUrl)</p>
+                    <p>注册时间: @(Display.DateTimeAsString(context.RegisterTime))</p>
+                    <p>最后活跃时间:@(Display.DateTimeAsString(context.LastHeartBeat))</p>
+                    <p>状态: @(context.Status)</p>
+                    @GetItemButtons(context)
+                </Card>
+            </AntDesign.Col>
+        }
+    </Row>
+}
+<EditService @ref="@_editService" OnCompleted=@SearchAsync></EditService>
+
+@code {
+    private EditService _editService;
+
+
+    RenderFragment infoIcon =
+    @<Icon Type="exclamation-circle" Theme="outline" />
+    ;
+    RenderFragment GetItemButtons(ServiceInfoVM serivce)
+    => (RenderFragment)(
+    @<Space>
+        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(serivce))>删除</Button></SpaceItem>
+    </Space>
+    );
+}

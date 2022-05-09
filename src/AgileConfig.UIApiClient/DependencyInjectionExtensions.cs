@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddHttpApi<IServerNodeApi>().ConfigureHttpApi(configureOptions);
             services.AddHttpApi<ISysLogApi>().ConfigureHttpApi(configureOptions);
             services.AddHttpApi<IUserApi>().ConfigureHttpApi(configureOptions);
+            services.AddHttpApi<IServiceApi>().ConfigureHttpApi(configureOptions);
             return services;
         }
     }

@@ -1,0 +1,46 @@
+﻿@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.UIApiClient
+@using AgileConfig.UIApiClient.HttpModels
+<Modal Title="@Title" Visible="@Visible" OnOk="@AddAsync" OnCancel=@Cancel>
+    <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Horizontal LabelColSpan="6" WrapperColSpan="18" Size=@AntSizeLDSType.Large>
+        <FormItem Label="服务Id" Required>
+            <Input @bind-Value="@context.ServiceId" />
+        </FormItem>
+        <FormItem Label="服务名" Required>
+            <Input @bind-Value="@context.ServiceName" />
+        </FormItem>
+        <FormItem Label="健康检测模式" Required>
+            <SimpleSelect @bind-Value="@context.HeartBeatMode" Placeholder="点击选择模式" DefaultActiveFirstOption="true">
+                <SelectOptions>
+                    <SimpleSelectOption Value="@HeartBeatModes.None.ToString()"
+                                        Label="@HeartBeatModes.None.ToString()"></SimpleSelectOption>
+                    <SimpleSelectOption Value="@HeartBeatModes.Client.ToString()"
+                                        Label="@HeartBeatModes.Client.ToString()"></SimpleSelectOption>
+                    <SimpleSelectOption Value="@HeartBeatModes.Server.ToString()"
+                                        Label="@HeartBeatModes.Server.ToString()"></SimpleSelectOption>
+                </SelectOptions>
+            </SimpleSelect>
+        </FormItem>
+        <FormItem Label="IP地址" Required>
+            <Input @bind-Value="@context.Ip" />
+        </FormItem>
+
+        <FormItem Label="端口" Required>
+            <Input @bind-Value="@context.Port" />
+        </FormItem>
+        @if (context.HeartBeatMode == HeartBeatModes.Server.ToString())
+        {
+            <FormItem Label="检测Url" Required>
+                <Input @bind-Value="@context.CheckUrl" />
+            </FormItem>
+        }
+        @if (context.HeartBeatMode != HeartBeatModes.None.ToString())
+        {
+            <FormItem Label="告警Url">
+                <Input @bind-Value="@context.AlarmUrl" />
+            </FormItem>
+        }
+    </Form>
+</Modal>
+
+

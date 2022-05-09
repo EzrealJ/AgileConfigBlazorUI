@@ -4,15 +4,18 @@ using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+
 namespace AgileConfig.UIApiClient
 {
-    public enum Role
+    public enum EnumRole
     {
-        _0 = 0,
-
-        _1 = 1,
-
-        _2 = 2,
+        [Description("超级管理员")]
+        SuperAdmin = 0,
+        [Description("管理员")]
+        Admin=1,
+        [Description("操作员")]
+        NormalUser=2,
 
     }
 }

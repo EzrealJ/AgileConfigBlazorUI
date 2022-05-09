@@ -28,7 +28,7 @@ namespace AgileConfig.UIApiClient
         public string Team { get; set; }
 
         [JsonPropertyName("userRoles")]
-        public List<Role> UserRoles { get; set; }
+        public List<EnumRole> UserRoles { get; set; }
 
         [JsonPropertyName("userRoleNames")]
         public List<string> UserRoleNames { get; set; }

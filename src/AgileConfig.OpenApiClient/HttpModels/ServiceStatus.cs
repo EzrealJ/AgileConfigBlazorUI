@@ -8,9 +8,7 @@ namespace AgileConfig.OpenApiClient
 {
     public enum ServiceStatus
     {
-        _0 = 0,
-
-        _1 = 1,
-
+        Unhealthy = 0,
+        Healthy = 1
     }
 }

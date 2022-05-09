@@ -13,19 +13,19 @@ namespace AgileConfig.UIApiClient
     public interface IUserApi : IHttpApi
     {
         [HttpGet("User/Search")]
-        Task Search4Async(string userName, string team, int current, int pageSize, CancellationToken cancellationToken = default);
+        ITask<PageResult<UserVM>> SearchAsync(string userName, string team, int current, int pageSize, CancellationToken cancellationToken = default);
 
         [HttpPost("User/Add")]
-        Task Add4Async([JsonContent] UserVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> AddAsync([JsonContent] UserVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("User/Edit")]
-        Task Edit3Async([JsonContent] UserVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> EditAsync([JsonContent] UserVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("User/ResetPassword")]
-        Task ResetPasswordAsync(string userId, CancellationToken cancellationToken = default);
+        ITask<ApiResult> ResetPasswordAsync(string userId, CancellationToken cancellationToken = default);
 
         [HttpPost("User/Delete")]
-        Task Delete4Async(string userId, CancellationToken cancellationToken = default);
+        ITask<ApiResult> DeleteAsync(string userId, CancellationToken cancellationToken = default);
 
         [HttpGet("User/adminUsers")]
         ITask<ApiResult<UserVM[]>> AdminUsersAsync(CancellationToken cancellationToken = default);

@@ -19,16 +19,16 @@ namespace AgileConfig.BlazorUI.Pages
 
         public IEnumerable<ServerNodeVM> DataSource { get; set; }
 
-        protected static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+     
 
         private EnumItemShowType _itemShowType = EnumItemShowType.TableRow;
         private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
         private bool _dataLoading;
         private EditNode _editNode;
 
-
-        static readonly int _gutterY = 24;
-        static readonly Dictionary<string, int> _gutterX = new()
+        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+        private static readonly int _gutterY = 24;
+        private static readonly Dictionary<string, int> _gutterX = new()
         {
             ["xs"] = 8,
             ["sm"] = 16,
