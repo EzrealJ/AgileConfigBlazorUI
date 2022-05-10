@@ -54,8 +54,14 @@ namespace AgileConfig.BlazorUI.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            _= LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
             var res = await AppApi.GetAppGroupsAsync();
             _options = res.Data ?? Array.Empty<string>();
+            StateHasChanged();
         }
 
         private void ReSet() => _formClass = new();

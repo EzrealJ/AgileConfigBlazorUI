@@ -52,7 +52,7 @@ namespace AgileConfig.BlazorUI.Pages
             do
             {
                 await ReloadAsync();
-                StateHasChanged();
+                
             } while (await _periodicTimer.WaitForNextTickAsync());
         }
 
@@ -62,7 +62,7 @@ namespace AgileConfig.BlazorUI.Pages
             AppCount = await ReportApi.AppCountAsync();
             ConfigCount = await ReportApi.ConfigCountAsync();
             _serviceCount = await ReportApi.ServiceCountAsync();
-            Console.WriteLine("Reload Done");
+            StateHasChanged();
             return;
         }
 
@@ -92,12 +92,6 @@ namespace AgileConfig.BlazorUI.Pages
         }
 
 
-        [Inject]
-        public NavigationManager NavigationManager1 { get; set; }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            NavigationManager1.NavigateTo("/user");
-        }
     }
 }

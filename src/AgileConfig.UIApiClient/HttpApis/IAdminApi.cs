@@ -31,10 +31,10 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpPost("Admin/InitPassword")]
-        Task InitPasswordAsync([JsonContent] InitPasswordVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> InitPasswordAsync([JsonContent] InitPasswordVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("Admin/ChangePassword")]
-        Task ChangePasswordAsync([JsonContent] ChangePasswordVM body, CancellationToken cancellationToken = default);
+        ITask<ApiResult> ChangePasswordAsync([JsonContent] ChangePasswordVM body, CancellationToken cancellationToken = default);
 
         [HttpPost("Admin/Logoff")]
         Task LogoffAsync(CancellationToken cancellationToken = default);

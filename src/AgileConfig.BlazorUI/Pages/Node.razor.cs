@@ -40,21 +40,17 @@ namespace AgileConfig.BlazorUI.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadData();
+            await base.OnInitializedAsync();
+            _= LoadAllAsync();
         }
-        private async Task ReLoadAsync()
+        private async Task LoadAllAsync()
         {
             _dataLoading = true;
-            await LoadData();
-            _dataLoading = false;
-            StateHasChanged();
-        }
-
-        private async Task LoadData()
-        {
             UIApiClient.HttpResults.ServerNodeResult res = await ServerNodeApi.AllAsync();
             this.DataSource = res?.Data ?? Array.Empty<ServerNodeVM>();
-        }
+            _dataLoading = false;
+            StateHasChanged();
+        }   
 
         private async Task ReloadAllClientAsync(string address)
         {

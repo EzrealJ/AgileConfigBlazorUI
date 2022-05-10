@@ -3,17 +3,27 @@
 
 <Space Class="@ClassMapper.Class">
     <SpaceItem>
-        <AvatarDropdown
-            Name=@UserName
-            MenuItems="@_avatarMenuItems"
-            Avatar="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
-            OnItemSelected="OnUserItemSelected" />
+        <AvatarDropdown Name=@UserName
+                        MenuItems="@_avatarMenuItems"
+                        Avatar="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+                        OnItemSelected="OnUserItemSelected" />
     </SpaceItem>
-    <SpaceItem>
-         <SelectLang
-            Locales="@_locales" 
-            LanguageLabels="@_languageLabels" 
-            LanguageIcons="@_languageIcons" 
-            OnItemSelected="OnLangItemSelected" />
+    <SpaceItem Class="selectlang">
+        <SelectLang Locales="@_locales"
+                    LanguageLabels="@_languageLabels"
+                    LanguageIcons="@_languageIcons"
+                    OnItemSelected="OnLangItemSelected" />
     </SpaceItem>
 </Space>
+
+<style>
+    .selectlang {
+        cursor: pointer;
+        padding: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        vertical-align: middle;
+    }
+</style>

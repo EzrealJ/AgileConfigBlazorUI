@@ -11,6 +11,7 @@ namespace AgileConfig.UIApiClient
         [JsonPropertyName("password")]
         public string Password { get; set; }
 
+
         [JsonPropertyName("confirmPassword")]
         public string ConfirmPassword { get; set; }
 

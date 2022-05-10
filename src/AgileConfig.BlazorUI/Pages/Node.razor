@@ -11,7 +11,7 @@
 <Row>
     <Col>
     <Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button>
-    <Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="ReLoadAsync">重新加载</Button>
+    <Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="LoadAllAsync">重新加载</Button>
     <Button Type="@ButtonType.Primary" OnClick="@(()=>_editNode.Visible=true)">添加节点</Button>
     </Col>
 </Row>
@@ -55,7 +55,7 @@
     </Row>
 }
 
-<EditNode @ref=@_editNode EditType=@EnumEditType.Add OnCompleted=@ReLoadAsync />
+<EditNode @ref=@_editNode EditType=@EnumEditType.Add OnCompleted=@LoadAllAsync />
 
 
 @code {

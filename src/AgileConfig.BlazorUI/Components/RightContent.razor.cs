@@ -13,13 +13,13 @@ namespace AgileConfig.BlazorUI.Components
 
         private readonly IEnumerable<AvatarMenuItem> _avatarMenuItems = new AvatarMenuItem[]
         {
-            new AvatarMenuItem { Key = "resetPassword", IconType = "user", Option = "修改密码"},
+            new AvatarMenuItem { Key = RoutePath.RESET_PASSWORD, IconType = "user", Option = "修改密码"},
             //new AvatarMenuItem { Key = "setting", IconType = "setting", Option = "设置"},
             new AvatarMenuItem { IsDivider = true },
             new AvatarMenuItem { Key = RoutePath.LOGOUT, IconType = "logout", Option = "退出登录"}
         };
 
-
+        
         private readonly IDictionary<string, string> _languageLabels = new Dictionary<string, string>
         {
             ["zh-CN"] = "简体中文",

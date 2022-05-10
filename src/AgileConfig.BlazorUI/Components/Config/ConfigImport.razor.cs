@@ -33,6 +33,7 @@ namespace AgileConfig.BlazorUI.Components.Config
             UIApiClient.HttpResults.LoginResult authInfo = await AuthService.GetAuthInfo();
             string auth = new AuthenticationHeaderValue(authInfo.Type, authInfo.Token).ToString();
             UploadHeaders.TryAdd("Authorization", auth);
+            StateHasChanged();
         }
 
         [Inject]
@@ -46,9 +47,11 @@ namespace AgileConfig.BlazorUI.Components.Config
 
         protected override async Task OnInitializedAsync()
         {
-            await SetHeadersAsync();
             await base.OnInitializedAsync();
+            _= SetHeadersAsync();
         }
+
+
 
         private async Task OnOkAsync()
         {

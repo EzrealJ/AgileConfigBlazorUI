@@ -50,3 +50,13 @@ ol {
     min-height: 100vh;
   }
 }
+
+.allCenter {
+    align-content: center;
+    text-align: center;
+    align-items: center;
+    align-self: center;
+}
+
+
+

@@ -57,7 +57,7 @@ namespace AgileConfig.BlazorUI.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            await SearchAsync();
+            _= SearchAsync();
         }
 
         private void ReSet() => _formClass = new();

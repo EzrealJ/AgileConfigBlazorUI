@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Auth;
 using AgileConfig.BlazorUI.Consts;
+using AntDesign;
 using AntDesign.ProLayout;
 using Microsoft.AspNetCore.Components;
 
@@ -31,6 +32,7 @@ namespace AgileConfig.BlazorUI.Layouts
     };
         [Inject] private UIApiClient.IHomeApi HomeApi { get; set; }
         [Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private MessageService MessageService { get; set; }
         [Inject] private Auth.AuthService AuthService { get; set; }
 
         public string UserName { get; set; }
@@ -38,6 +40,11 @@ namespace AgileConfig.BlazorUI.Layouts
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            _ = LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
             var temp = await HomeApi.CurrentAsync();
             UserName = temp?.CurrentUser?.UserName;
             StateHasChanged();
@@ -49,6 +56,17 @@ namespace AgileConfig.BlazorUI.Layouts
             {
                 await AuthService.LogoutAsync();
                 NavigationManager.NavigateTo(RoutePath.LOGIN);
+            }
+            if (menuItem.Key == RoutePath.RESET_PASSWORD)
+            {
+                NavigationManager.NavigateTo(RoutePath.RESET_PASSWORD);
+            }
+        }
+        protected async Task OnLangItemSelected(AntDesign.MenuItem menuItem)
+        {
+            if (menuItem.Key == "en-US")
+            {
+                await MessageService.Info("Not completed~");
             }
         }
     }

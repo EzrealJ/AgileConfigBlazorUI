@@ -14,7 +14,7 @@ namespace AgileConfig.UIApiClient
     public interface IAppApi : IHttpApi
     {
         [HttpGet("App/Search")]
-        ITask<PageResult<AppListVM>> SearchAsync(string name, string id, string group, string sortField, string ascOrDesc, bool? tableGrouped, int current, int pageSize, CancellationToken cancellationToken = default);
+        ITask<PageResult<AppListVM>> SearchAsync(string name, string id, string group, string sortField, string ascOrDesc, bool? tableGrouped, int? current, int? pageSize, CancellationToken cancellationToken = default);
 
         [HttpPost("App/Add")]
         ITask<ApiResult> AddAsync([JsonContent] AppVM body, CancellationToken cancellationToken = default);

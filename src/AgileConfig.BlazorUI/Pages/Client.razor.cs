@@ -57,17 +57,20 @@ namespace AgileConfig.BlazorUI.Pages
         private async Task ReLoadAsync()
         {
             _dataLoading = true;
-            await LoadData();
+            await LoadDataAsync();
             _dataLoading = false;
         }
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+            _ = LoadDataAsync();
+        }
+
+
+        private async Task LoadDataAsync()
+        {
             var nodes = await ServerNodeApi.AllAsync();
             _addresses = new string[] { string.Empty }.Concat(nodes?.Data.Select(n => n.Address) ?? Array.Empty<string>());
-            await LoadData();
-        }
-        private async Task LoadData()
-        {
             _dataSource = await ReportApi.SearchServerNodeClientsAsync(_address, _dataSource.Current, _dataSource.PageSize);
             StateHasChanged();
         }

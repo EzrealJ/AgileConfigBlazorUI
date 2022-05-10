@@ -4,10 +4,12 @@
 
 <AuthorizeView>
     <Authorized>
-        <BasicLayout Logo="@("/assets/logo.svg")" Title="@Consts.Production.PRODUCTION_NAME" MenuData="_menuData" >
+        <BasicLayout Logo="@("/assets/logo.svg")" Title="@Consts.Production.PRODUCTION_NAME" MenuData="_menuData">
 
             <RightContentRender>
-                <AgileConfig.BlazorUI.Components.RightContent UserName=@UserName OnUserItemSelected=@OnUserItemSelected />
+                <AgileConfig.BlazorUI.Components.RightContent UserName=@UserName
+                                                              OnLangItemSelected=@OnLangItemSelected
+                                                              OnUserItemSelected=@OnUserItemSelected />
             </RightContentRender>
             <FooterRender>
                 <FooterView Copyright=@Consts.Production.PRODUCTION_NAME_DESCRIPTION Links="Links"></FooterView>
@@ -26,18 +28,18 @@
 </AuthorizeView>
 
 <style>
- body{
-     margin:0;
- }
+    body {
+        margin: 0;
+    }
 </style>
 
 
 
 @code
 {
-    
+
     public LinkItem[] Links { get; set; } =
-                                                        {
+                                                                    {
         new LinkItem
         {
             Key = "Ant Design Blazor",

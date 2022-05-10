@@ -69,12 +69,17 @@ namespace AgileConfig.BlazorUI.Pages
         public MessageService MessageService { get; set; }
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+            _= LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
             var res = await HomeApi.SysAsync();
             _envs = res.EnvList;
             _formClass.ENV = _envs.FirstOrDefault();
-            await base.OnInitializedAsync();
+            StateHasChanged();
         }
-
 
         private void ReSet() => _formClass = new() { ENV = _envs.FirstOrDefault() };
 

@@ -5,16 +5,8 @@
 @using AgileConfig.UIApiClient.HttpModels
 @using AntDesign.TableModels;
 @using AntDesign;
-@using AgileConfig.BlazorUI.Components.Node;
 @using Microsoft.AspNetCore.Components.Rendering
 
-
-
-
-
-
-
-<Divider />
 <Row Justify="space-between">
     <Col>
     <label>节点:</label>
@@ -35,6 +27,7 @@
 @if (_itemShowType == EnumItemShowType.TableRow)
 {
     <Table TItem="ClientVM" DataSource="@_dataSource.Data" RemoteDataSource
+       OnChange=@ReLoadAsync
        PageIndex=@_dataSource.Current
        PageSize=@_dataSource.PageSize
        Total="@_dataSource.Total"

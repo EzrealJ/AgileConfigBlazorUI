@@ -34,6 +34,7 @@
 @if (_itemShowType == EnumItemShowType.TableRow)
 {
     <Table TItem="UserVM" DataSource="@_dataSource.Data"
+       OnChange=@SearchAsync
        RemoteDataSource
        PageIndex=@_dataSource.Current
        PageSize=@_dataSource.PageSize

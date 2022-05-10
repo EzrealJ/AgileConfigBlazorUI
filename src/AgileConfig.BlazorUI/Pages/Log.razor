@@ -1,0 +1,69 @@
+﻿@page "/log"
+@using System.ComponentModel;
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.BlazorUI.Localizations
+@using AgileConfig.UIApiClient;
+@using AgileConfig.UIApiClient.HttpModels
+@using AntDesign.TableModels;
+@using AntDesign;
+@using Microsoft.AspNetCore.Components.Rendering
+
+
+<Form Layout=@FormLayout.Inline Model=@_formClass>
+    <FormItem Label="应用Id">
+            <Select DataSource="@_appIdOptions"
+            @bind-Value="@context.AppId"
+            Placeholder="点击选择应用"
+            EnableSearch
+            OnSearch=@SearchAppAsync
+            Style="width:150px;"
+            DefaultActiveFirstOption="false">
+    </Select>
+    </FormItem>
+    <FormItem Label="类型">
+               <SimpleSelect @bind-Value="@LogType" Placeholder="点击选择状态" DefaultActiveFirstOption="false">
+            <SelectOptions>
+                <SimpleSelectOption Value="@null"
+                                    Label="全部"></SimpleSelectOption>
+                <SimpleSelectOption Value="@SysLogType.Normal.GetIntValue().ToString()"
+                                    Label="@SysLogType.Normal.GetDescription()"></SimpleSelectOption>
+                <SimpleSelectOption Value="@SysLogType.Warn.GetIntValue().ToString()"
+                                    Label="@SysLogType.Warn.GetDescription()"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+    </FormItem>
+    <FormItem>
+        <RangePicker TValue="DateTime?[]" OnChange=@OnTimeRangeChange @bind-Value=@TimeRange> </RangePicker>
+    </FormItem>
+    <FormItem>
+        <Space>
+            <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
+            <SpaceItem><Button Type="@ButtonType.Primary" OnClick=@SearchAsync>搜索</Button></SpaceItem>
+        </Space>
+    </FormItem>
+</Form>
+<Divider />
+
+
+
+<Table TItem="SysLogVM" DataSource="@_dataSource.Data"
+       RemoteDataSource
+       OnChange=@SearchAsync
+       PageIndex=@_dataSource.Current
+       PageSize=@_dataSource.PageSize
+       Total="@_dataSource.Total">
+    <AntDesign.Column Title="应用" DataIndex="@nameof(context.AppId)" TData="string" />
+    <AntDesign.Column Title="类型" DataIndex="@nameof(context.LogType)" TData="SysLogType" />
+    <AntDesign.Column Title="时间" DataIndex="@nameof(context.LogTime)" TData="DateTime?" />
+    <AntDesign.Column Title="内容" DataIndex="@nameof(context.LogText)" TData="string" />
+</Table>
+
+
+
+@code {
+
+
+
+
+}
