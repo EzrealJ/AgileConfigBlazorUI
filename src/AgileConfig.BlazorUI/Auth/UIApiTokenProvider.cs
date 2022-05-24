@@ -16,7 +16,7 @@ namespace AgileConfig.BlazorUI.Auth
         {
             var sp = context.HttpContext.ServiceProvider;
             ILocalStorageService localStorageService = sp.GetRequiredService<ILocalStorageService>();
-            var authInfo = await localStorageService.GetItemAsync<LoginResult>(Consts.Auth.AUTH_TOKEN_NAME);
+            var authInfo = await localStorageService.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
             if (authInfo != null)
             {
                 context.HttpContext.RequestMessage.Headers.Authorization = new AuthenticationHeaderValue(authInfo.Type, authInfo.Token);
@@ -26,7 +26,7 @@ namespace AgileConfig.BlazorUI.Auth
         public async Task OnResponseAsync(ApiResponseContext context)
         {
             var sp = context.HttpContext.ServiceProvider;
-            if (context.HttpContext.ResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (context.HttpContext?.ResponseMessage?.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 var stateProvider = sp.GetRequiredService<AuthenticationStateProvider>() as ApiAuthenticationStateProvider;
                 stateProvider.MarkUserAsLoggedOut();

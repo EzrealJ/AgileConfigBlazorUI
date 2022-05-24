@@ -1,5 +1,7 @@
 ﻿@page "/node"
 @using System.ComponentModel;
+@using AgileConfig.BlazorUI.Components
+@using AgileConfig.BlazorUI.Consts
 @using AgileConfig.BlazorUI.Enums
 @using AgileConfig.UIApiClient;
 @using AntDesign.TableModels;
@@ -12,7 +14,11 @@
     <Col>
     <Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button>
     <Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="LoadAllAsync">重新加载</Button>
-    <Button Type="@ButtonType.Primary" OnClick="@(()=>_editNode.Visible=true)">添加节点</Button>
+    <AuthorizedElement JudgeKey="@JudgeKey.NODE_ADD">
+        <Children>
+            <Button Type="@ButtonType.Primary" OnClick="@(()=>_editNode.Visible=true)">添加节点</Button>
+        </Children>
+    </AuthorizedElement>
     </Col>
 </Row>
 <Divider />
@@ -63,12 +69,16 @@
     ;
 
     RenderFragment GetItemButtons(ServerNodeVM node)
-    => (RenderFragment)(
+        => (RenderFragment)(
     @<Space>
         <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(async e=>await ReloadAllClientAsync(node.Address))>刷新所有客户端的配置</Button></SpaceItem>
-        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(node))>删除</Button></SpaceItem>
+        <AuthorizedElement JudgeKey="@JudgeKey.NODE_DELETE">
+            <Children>
+                <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(node))>删除</Button></SpaceItem>
+            </Children>
+        </AuthorizedElement>
     </Space>
-    );
+        );
 
     RenderFragment GetItemTag(ServerNodeVM node)
     {
@@ -76,7 +86,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green">在线</Tag>
-    );
+        );
         }
         else
         {

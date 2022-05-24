@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Auth;
 using AgileConfig.BlazorUI.Consts;
+using AgileConfig.UIApiClient;
 using AntDesign;
 using AntDesign.ProLayout;
 using Microsoft.AspNetCore.Components;
@@ -13,12 +14,14 @@ namespace AgileConfig.BlazorUI.Layouts
             string path,
             string name,
             string key,
-            string icon) => new()
+            string icon,
+            string[] authority = null) => new()
             {
                 Path = path,
                 Name = name,
                 Key = key,
                 Icon = icon,
+                Authority = authority
             };
 
         private readonly MenuDataItem[] _menuData ={
@@ -27,7 +30,7 @@ namespace AgileConfig.BlazorUI.Layouts
         CreateMenuDataItem(RoutePath.APP,"应用","app",""),
         CreateMenuDataItem(RoutePath.CLIENT,"客户端","client",""),
         CreateMenuDataItem(RoutePath.SERVICE,"服务","service",""),
-        CreateMenuDataItem(RoutePath.USER,"用户","user",""),
+        CreateMenuDataItem(RoutePath.USER,"用户","user","",new []{ EnumRole.Admin.ToString()}),
         CreateMenuDataItem(RoutePath.LOG,"日志","log",""),
     };
         [Inject] private UIApiClient.IHomeApi HomeApi { get; set; }
@@ -69,5 +72,6 @@ namespace AgileConfig.BlazorUI.Layouts
                 await MessageService.Info("Not completed~");
             }
         }
+
     }
 }

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using AgileConfig.BlazorUI.Components.User;
+using AgileConfig.BlazorUI.Components.App;
+using AgileConfig.BlazorUI.Extensions;
+using AgileConfig.BlazorUI.Auth;
 
 namespace AgileConfig.BlazorUI.Pages
 {
@@ -25,6 +28,9 @@ namespace AgileConfig.BlazorUI.Pages
         public ModalService ModalService { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
+        [Inject]
+        public AuthService AuthService { get; set; }
+
 
         private FormClass _formClass = new();
         private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
@@ -144,6 +150,22 @@ namespace AgileConfig.BlazorUI.Pages
                 config.Content = $"重置失败,{res.Message}";
                 await MessageService.Error(config);
             }
+        }
+
+
+        private bool CheckUserListModifyPermission(UserVM user)
+        {
+            var authMap = Enum.GetValues<EnumRole>().ToDictionary(e => e.ToString(), e => e.GetIntValue());
+            var currentAuthNum = EnumRole.NormalUser;
+            var roles = AuthService.GetAuthority();
+            if (roles?.Count > 0)
+            {
+                int maxPermission = roles.Select(x => authMap[x]).Min();
+                currentAuthNum = (EnumRole)maxPermission;
+            }
+            var userAuthNum = user.UserRoles.Min();
+
+            return currentAuthNum < userAuthNum;
         }
     }
 }

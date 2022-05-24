@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.10.5" />
-    <PackageReference Include="AntDesign.Charts" Version="0.2.2" />
-    <PackageReference Include="AntDesign.ProLayout" Version="0.1.10" />
+    <PackageReference Include="AntDesign" Version="*" />
+    <PackageReference Include="AntDesign.Charts" Version="*" />
+    <PackageReference Include="AntDesign.ProLayout" Version="*" />
     <PackageReference Include="Blazor.Extensions.Logging" Version="2.0.4" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
     <PackageReference Include="HighlightBlazor" Version="0.1.9" />

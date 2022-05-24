@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Auth;
+using AgileConfig.BlazorUI.Consts;
 using AgileConfig.BlazorUI.Enums;
 using AgileConfig.BlazorUI.Pages;
 using AgileConfig.UIApiClient;
@@ -28,6 +30,10 @@ namespace AgileConfig.BlazorUI.Components.App
         public IUserApi UserApi { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
+        [Inject]
+        public IUserPermissionChecker UserPermissionChecker { get; set; }
+        [Inject]
+        public AuthService AuthService { get; set; }
 
         public bool Visible { get; set; }
 
@@ -46,20 +52,20 @@ namespace AgileConfig.BlazorUI.Components.App
             set => CurrentObject.PublishConfigPermissionUsers = value.ToList();
         }
 
+
+        private bool HasAuthPermission => UserPermissionChecker.CheckUserPermission(AuthService.GetFunctions(), JudgeKey.APP_AUTH, AppId);
+        private ButtonProps OkButtonProps
+            => HasAuthPermission ? new ButtonProps { Disabled = true } : new ButtonProps { };
         private IEnumerable<UserVM> _userAdminOptions = new List<UserVM>();
         private Form<AppAuthVM> _form;
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
-
         protected override async Task OnParametersSetAsync()
         {
-            if (Visible)
+            if (!Visible)
             {
-                await LoadDataAsync();
+                return;
             }
+            await LoadDataAsync();
         }
 
         private async Task LoadDataAsync()

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace AgileConfig.UIApiClient.HttpResults
 {
-    public class LoginResult:TokenResult
+    public class TokenResult:ApiResult
     {
-
-        public List<string> CurrentAuthority { get; set; }
-        public List<string> CurrentFunctions { get; set; }
+        public string Token { get; set; }
+        public string Type { get; set; }
     }
 }

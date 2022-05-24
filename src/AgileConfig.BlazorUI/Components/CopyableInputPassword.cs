@@ -19,7 +19,7 @@ namespace AgileConfig.BlazorUI.Components
             AddOnAfter = AddCopyable;
         }
 
-        protected  void AddCopyable(RenderTreeBuilder builder)
+        protected void AddCopyable(RenderTreeBuilder builder)
         {
             if (!Copyable)
             {

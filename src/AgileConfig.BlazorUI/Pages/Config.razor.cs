@@ -70,7 +70,7 @@ namespace AgileConfig.BlazorUI.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _= LoadDataAsync();
+            _ = LoadDataAsync();
         }
 
         private async Task LoadDataAsync()
@@ -181,7 +181,16 @@ namespace AgileConfig.BlazorUI.Pages
             await Task.CompletedTask;
 
         }
-
+        private void CancelSelectConfirm()
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = $"确定撤销选中配置项的编辑状态吗？?",
+                Icon = infoIcon,
+                OnOk = async e => await CancelSelectAsync()
+            };
+            ModalService.Confirm(options);
+        }
         private async Task CancelSelectAsync()
         {
             var config = new MessageConfig()
@@ -202,13 +211,22 @@ namespace AgileConfig.BlazorUI.Pages
                 await MessageService.Error(config);
             }
         }
-
+        private void DeleteSelectConfirm()
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = $"确定删除选中的配置项吗?",
+                Icon = infoIcon,
+                OnOk = async e => await DeleteSelectAsync()
+            };
+            ModalService.Confirm(options);
+        }
         private async Task DeleteSelectAsync()
         {
             var config = new MessageConfig()
             {
                 Content = "删除中...",
-                Key = $"{nameof(CancelSelectAsync)}-{AppId}"
+                Key = $"{nameof(DeleteSelectAsync)}-{AppId}"
             };
             var items = _selectedRows?.Select(c => c.Id);
             var res = await ConfigApi.DeleteSomeAsync(_formClass.ENV, items);
@@ -237,6 +255,26 @@ namespace AgileConfig.BlazorUI.Pages
             _enumEditType = EnumEditType.Edit;
             _editObj = app;
             _editConfig.Visible = true;
+            await Task.CompletedTask;
+        }
+        private void ItemCancelConfirm(ConfigVM app)
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = $"确定撤销对配置【{app.Key}:{app.Value}】的改动吗?",
+                Icon = infoIcon,
+                OnOk = async e => await ItemCancelAsync(app)
+            };
+            ModalService.Confirm(options);
+        }
+        private async Task ItemCancelAsync(ConfigVM app)
+        {
+            _configItemHistory.Visible = true;
+            _configItemHistoryPara = new ConfigItemHistoryPara
+            {
+                Config = app,
+                ENV = _formClass.ENV
+            };
             await Task.CompletedTask;
         }
         private async Task ItemHistoryAsync(ConfigVM app)

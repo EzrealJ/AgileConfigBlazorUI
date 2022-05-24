@@ -56,20 +56,44 @@
 <Divider />
 <Space>
     <SpaceItem>
-        <Button Type="@ButtonType.Primary" OnClick=@AddAsync>新建</Button>
-        <Button Type="@ButtonType.Primary" OnClick=@EditAsJsonAsync>以JSON格式编辑整个App的配置</Button>
-        <Button Type="@ButtonType.Primary" OnClick=@EditAsTextAsync>以TEXT格式编辑整个App的配置</Button>
+        <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_ADD">
+            <Children>
+                <Button Type="@ButtonType.Primary" OnClick=@AddAsync>新建</Button>
+            </Children>
+        </AuthorizedElement>
+        <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_EDIT">
+            <Children>
+                <Button Type="@ButtonType.Primary" OnClick=@EditAsJsonAsync>以JSON格式编辑整个App的配置</Button>
+                <Button Type="@ButtonType.Primary" OnClick=@EditAsTextAsync>以TEXT格式编辑整个App的配置</Button>
+            </Children>
+        </AuthorizedElement>
         @if (_selectedRows?.Count() > 0)
         {
-            <Button Type="@ButtonType.Primary" Danger OnClick=@CancelSelectAsync>撤销选中条目中未发布项</Button>
-            <Button Type="@ButtonType.Primary" Danger OnClick=@DeleteSelectAsync>删除选中的条目</Button>
+            <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_PUBLISH">
+                <Children>
+                    <Button Type="@ButtonType.Primary" Danger OnClick=@CancelSelectConfirm>撤销选中条目中未发布项</Button>
+                </Children>
+            </AuthorizedElement>
+            <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_DELETE">
+                <Children>
+                    <Button Type="@ButtonType.Primary" Danger OnClick=@DeleteSelectConfirm>删除选中的条目</Button>
+                </Children>
+            </AuthorizedElement>
         }
         <DropdownButton>
             <Overlay>
                 <Menu>
-                    <MenuItem Key="1" OnClick="@HistoryAsync">历史版本</MenuItem>
-                    <MenuItem Key="2" OnClick="@EnvironmentSyncAsync">环境同步</MenuItem>
-                    <MenuItem Key="3" OnClick="@JsonImportAsync">导入</MenuItem>
+                    <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_PUBLISH">
+                        <Children>
+                            <MenuItem Key="1" OnClick="@HistoryAsync">历史版本</MenuItem>
+                        </Children>
+                    </AuthorizedElement>
+                    <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_ADD">
+                        <Children>
+                            <MenuItem Key="2" OnClick="@EnvironmentSyncAsync">环境同步</MenuItem>
+                            <MenuItem Key="3" OnClick="@JsonImportAsync">导入</MenuItem>
+                        </Children>
+                    </AuthorizedElement>
                     <MenuItem Key="4" OnClick="@JsonExportAsync">导出</MenuItem>
                 </Menu>
             </Overlay>
@@ -117,9 +141,21 @@
 
     <AntDesign.ActionColumn Title="操作">
         <Space>
-            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button></SpaceItem>
-            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button></SpaceItem>
-            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemHistoryAsync(context))>历史</Button></SpaceItem>
+            <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_EDIT">
+                <Children>
+                    <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button></SpaceItem>
+                </Children>
+            </AuthorizedElement>
+            <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_DELETE">
+                <Children>
+                    <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button></SpaceItem>
+                    <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemHistoryAsync(context))>历史</Button></SpaceItem>
+                    @if (context.EditStatus != EditStatus.Commit)
+                    {
+                        <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemCancelConfirm(context))>撤销编辑</Button></SpaceItem>
+                    }
+                </Children>
+            </AuthorizedElement>
         </Space>
     </AntDesign.ActionColumn>
 </Table>
@@ -135,13 +171,13 @@
 
     RenderFragment infoIcon =
     @<Icon Type="exclamation-circle" Theme="outline" />
-    ;
+        ;
 
     RenderFragment GetEditStatusTag(ConfigVM config)
     {
         return (RenderFragment)(
     @<Tag Color="green-inverse">@config.EditStatus.GetDescription()</Tag>
-    );
+        );
     }
 
     RenderFragment GetPublicTag(ConfigVM config)
@@ -150,7 +186,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">@OnlineStatus.Online.GetDescription()</Tag>
-    );
+        );
         }
         else
         {

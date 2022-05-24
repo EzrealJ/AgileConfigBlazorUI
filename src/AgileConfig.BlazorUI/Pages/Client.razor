@@ -1,5 +1,7 @@
 ﻿@page "/client"
 @using System.ComponentModel;
+@using AgileConfig.BlazorUI.Components
+@using AgileConfig.BlazorUI.Consts
 @using AgileConfig.BlazorUI.Enums
 @using AgileConfig.UIApiClient;
 @using AgileConfig.UIApiClient.HttpModels
@@ -74,7 +76,11 @@
     => (RenderFragment)(
     @<Space>
         <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(async _=>await ReloadClientAsync(client))>刷新配置</Button></SpaceItem>
-        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>OfflineConfirm(client))>强制断开</Button></SpaceItem>
+        <AuthorizedElement JudgeKey="@JudgeKey.CLIENT_DISCONNECT">
+            <Children>
+                <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>OfflineConfirm(client))>强制断开</Button></SpaceItem>
+            </Children>
+        </AuthorizedElement>
     </Space>
     );
 }

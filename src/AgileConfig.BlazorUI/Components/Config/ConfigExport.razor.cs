@@ -32,9 +32,19 @@ namespace AgileConfig.BlazorUI.Components.Config
 
         protected override async Task OnParametersSetAsync()
         {
+            if (!Visible)
+            {
+                return;
+            }
+            await LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
+        {
             _value = await ConfigApi.ExportJsonAsync(Para.AppId, Para.ENV);
             await CheckJsonAsync(_value);
         }
+
         private async Task CheckJsonAsync(string value)
         {
             try

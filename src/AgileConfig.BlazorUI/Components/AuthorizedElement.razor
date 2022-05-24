@@ -1,0 +1,28 @@
+﻿@using AgileConfig.BlazorUI.Auth
+@if (UserPermissionChecker.CheckUserPermission(Functions, JudgeKey, AppId))
+{
+    @Children
+}
+else
+{
+    @NoMatch
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<string> Authority { get; set; }
+    [Parameter]
+    public string JudgeKey { get; set; }
+    [Parameter]
+    public string AppId { get; set; }
+    [Parameter]
+    public RenderFragment Children { get; set; }
+    [Parameter]
+    public RenderFragment NoMatch { get; set; }
+    [Inject]
+    public AuthService AuthService { get; set; }
+    [Inject]
+    public IUserPermissionChecker UserPermissionChecker { get; set; }
+
+    private IEnumerable<string> Functions => Authority ?? AuthService?.GetFunctions() ?? new(0);
+}

@@ -12,7 +12,7 @@ using AgileConfig.UIApiClient.HttpResults;
 
 namespace AgileConfig.BlazorUI.Auth
 {
-    public class ApiAuthenticationStateProvider : AuthenticationStateProvider
+    public class ApiAuthenticationStateProvider : AuthenticationStateProvider, IUserPermissionChecker
     {
         private readonly ILocalStorageService _localStorage;
 
@@ -20,17 +20,35 @@ namespace AgileConfig.BlazorUI.Auth
         {
             _localStorage = localStorage;
         }
-       
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var authInfo = await _localStorage.GetItemAsync<LoginResult>(Consts.Auth.AUTH_TOKEN_NAME);
+            var authInfo = await _localStorage.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
 
-            if (string.IsNullOrWhiteSpace(authInfo.Token))
+            if (string.IsNullOrWhiteSpace(authInfo?.Token))
             {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(authInfo.Token), "jwt")));
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(authInfo.Token), "jwt"));
+            return new AuthenticationState(user);
         }
+
+        public bool CheckUserPermission(IEnumerable<string> functions, string judgeKey, string appId)
+        {
+            appId ??= string.Empty;
+            string matchKey = $"GLOBAL_{judgeKey}";
+            bool ex = functions.Any(x => x == matchKey);
+            if (ex)
+            {
+                return true;
+            }
+            matchKey = $"APP_{appId}_{judgeKey}";
+            ex = functions.Any(x => x == matchKey);
+            return ex;
+        }
+
+
 
         public void MarkUserAsAuthenticated(string account)
         {
@@ -43,6 +61,12 @@ namespace AgileConfig.BlazorUI.Auth
         {
             var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
             var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+            NotifyAuthenticationStateChanged(authState);
+        }
+
+        public void NotifyStateChange()
+        {
+            var authState = GetAuthenticationStateAsync();
             NotifyAuthenticationStateChanged(authState);
         }
 

@@ -30,7 +30,7 @@ namespace AgileConfig.BlazorUI.Components.Config
         public Dictionary<string, string> UploadHeaders { get; set; } = new();
         private async Task SetHeadersAsync()
         {
-            UIApiClient.HttpResults.LoginResult authInfo = await AuthService.GetAuthInfo();
+            UIApiClient.HttpResults.TokenResult authInfo = await AuthService.GetAuthInfo();
             string auth = new AuthenticationHeaderValue(authInfo.Type, authInfo.Token).ToString();
             UploadHeaders.TryAdd("Authorization", auth);
             StateHasChanged();

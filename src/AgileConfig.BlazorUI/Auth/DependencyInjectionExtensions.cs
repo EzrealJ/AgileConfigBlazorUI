@@ -10,6 +10,7 @@ internal static class ServiceCollectionExtension
             .AddAuthorizationCore()
             .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
             .AddScoped<AuthService>()
+            .AddScoped<IUserPermissionChecker, ApiAuthenticationStateProvider>()
             .AddSingleton<UIApiTokenProvider>();
 
         return services;

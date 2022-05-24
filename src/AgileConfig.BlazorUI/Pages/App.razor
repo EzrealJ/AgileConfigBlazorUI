@@ -93,12 +93,46 @@
 
     <AntDesign.ActionColumn Title="操作">
         <Space>
-            <SpaceItem><Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" OnChange=@(async e=>await EnabledOrDisableAsync(context.Id)) /></SpaceItem>
-            @*<SpaceItem><NavLink>配置项</Link></SpaceItem>*@
+
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
+                <Children>
+                    <SpaceItem>
+                        <Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" OnChange=@(async e=>await EnabledOrDisableAsync(context.Id)) />
+                    </SpaceItem>
+                </Children>
+                <NoMatch>
+                    <SpaceItem>
+                        <Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" />
+                    </SpaceItem>
+                </NoMatch>
+            </AuthorizedElement>
             <SpaceItem><Button Type=@ButtonType.Default Size=@AntSizeLDSType.Small OnClick=@(e=>ConfigList(context))>配置项</Button></SpaceItem>
-            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button></SpaceItem>
-            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>AuthAsync(context))>授权</Button></SpaceItem>
-            <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button></SpaceItem>
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
+                <Children>
+                    <SpaceItem>
+                        <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button>
+                    </SpaceItem>
+                </Children>
+            </AuthorizedElement>
+
+
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_AUTH">
+                <Children>
+                    <SpaceItem>
+                        <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>AuthAsync(context))>授权</Button>
+                    </SpaceItem>
+                </Children>
+            </AuthorizedElement>
+
+
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_DELETE">
+                <Children>
+                    <SpaceItem>
+                        <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button>
+                    </SpaceItem>
+                </Children>
+            </AuthorizedElement>
+
         </Space>
     </AntDesign.ActionColumn>
 </Table>
@@ -116,9 +150,9 @@
     => (RenderFragment)(
     @<Space>
         @foreach (string name in app.InheritancedAppNames)
-            {
+        {
                 <Tag>@name</Tag>
-            }
+        }
         </Space>
     );
 

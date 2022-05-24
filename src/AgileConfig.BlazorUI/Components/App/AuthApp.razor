@@ -1,9 +1,10 @@
 ﻿@using AgileConfig.UIApiClient
 @using AntDesign.Select;
-<Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel>
+<Modal Title="@Title" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel OkButtonProps="@OkButtonProps">
     <Form @ref=@_form Model="CurrentObject" Layout=@FormLayout.Horizontal LabelColSpan="6" WrapperColSpan="18" Size=@AntSizeLDSType.Large>
         <FormItem Label="发布权">
-            <Select  @bind-Values=@(PublishConfigPermissionUsers)
+            <Select @bind-Values=@(PublishConfigPermissionUsers)
+                    Disabled=@HasAuthPermission
                     LabelName=@nameof(UserVM.UserName)
                     ValueName=@nameof(UserVM.Id)
                     TItem="@UserVM"
@@ -22,6 +23,7 @@
         </FormItem>
         <FormItem Label="修改权">
             <Select @bind-Values=@(EditConfigPermissionUsers)
+                    Disabled=@HasAuthPermission
                     LabelName=@nameof(UserVM.UserName)
                     ValueName=@nameof(UserVM.Id)
                     TItem="@UserVM"
@@ -41,8 +43,3 @@
         </FormItem>
     </Form>
 </Modal>
-
-@code {
-
-
-}
