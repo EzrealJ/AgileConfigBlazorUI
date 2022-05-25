@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileConfig.UIApiClient", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileConfig.BlazorUI.WasmHost", "src\AgileConfig.BlazorUI.WasmHost\AgileConfig.BlazorUI.WasmHost.csproj", "{73DADFA0-29BF-45FA-8906-6BDD749CB0D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileConfig.WindowsApp", "src\AgileConfig.WindowsApp\AgileConfig.WindowsApp.csproj", "{AE5EA205-3C2B-4BFC-8761-1CF35C2B72C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{73DADFA0-29BF-45FA-8906-6BDD749CB0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73DADFA0-29BF-45FA-8906-6BDD749CB0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73DADFA0-29BF-45FA-8906-6BDD749CB0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE5EA205-3C2B-4BFC-8761-1CF35C2B72C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE5EA205-3C2B-4BFC-8761-1CF35C2B72C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE5EA205-3C2B-4BFC-8761-1CF35C2B72C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE5EA205-3C2B-4BFC-8761-1CF35C2B72C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

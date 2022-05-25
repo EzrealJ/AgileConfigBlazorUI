@@ -77,14 +77,20 @@ namespace AgileConfig.BlazorUI.Layouts
         {
             if (menuItem.Key == RoutePath.LOGOUT)
             {
-                await AuthService.LogoutAsync();
-                NavigationManager.NavigateTo(RoutePath.LOGIN);
+                await Logout();
             }
             if (menuItem.Key == RoutePath.RESET_PASSWORD)
             {
                 NavigationManager.NavigateTo(RoutePath.RESET_PASSWORD);
             }
         }
+
+        private async Task Logout()
+        {
+            await AuthService.LogoutAsync();
+            NavigationManager.NavigateTo(RoutePath.LOGIN);
+        }
+
         protected async Task OnLangItemSelected(AntDesign.MenuItem menuItem)
         {
             if (menuItem.Key == "en-US")

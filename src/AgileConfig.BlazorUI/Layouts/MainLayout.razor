@@ -21,9 +21,7 @@
         <SettingDrawer />
     </Authorized>
     <NotAuthorized>
-        <div style="margin: 100px 0; width:100%; text-align: center; color: red;">
-            <span style="font-size:20px">检测到登录超时，请重新<a href="/login" style="text-decoration:underline">登录</a>！</span>
-        </div>
+        @Logout()
     </NotAuthorized>
 </AuthorizeView>
 
