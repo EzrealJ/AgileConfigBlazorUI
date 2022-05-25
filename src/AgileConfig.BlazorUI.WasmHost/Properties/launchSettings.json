@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "AgileConfig.BlazorUI.WasmHost": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5052",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

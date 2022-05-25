@@ -2,7 +2,7 @@
 
 #### 使用Blazor Wasm技术构建的AgileConfig管理UI
 
-## [服务端请移步:AgileConfig](https://github.com/dotnetcore/AgileConfig)
+### 服务端请移步:[AgileConfig](https://github.com/dotnetcore/AgileConfig)
 
 项目依赖
 
@@ -30,4 +30,5 @@
 | English        | 0%        |
 | **操作员权限** | Completed |
 | 其它           | 未统计    |
+| 遗漏项         | 未统计    |
 
