@@ -30,9 +30,11 @@ namespace AgileConfig.BlazorUI.Pages
         FormClass _formClass = new();
         EditApp _editApp;
         AuthApp _authApp;
+        InheritancedAppView _inheritancedAppView;
         EnumEditType _enumEditType;
         AppListVM _editObj;
         AppVM _authObj = new AppVM();
+        AppVM _inheritancedAppViewObj = new AppVM();
 
         private bool _loading = false;
         IEnumerable<string> _options = new List<string>();
@@ -54,7 +56,7 @@ namespace AgileConfig.BlazorUI.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _= LoadDataAsync();
+            _ = LoadDataAsync();
         }
 
         private async Task LoadDataAsync()
@@ -140,7 +142,6 @@ namespace AgileConfig.BlazorUI.Pages
 
         private async Task AddAsync()
         {
-            //await MessageService.Info("点击了新建");
             _enumEditType = EnumEditType.Add;
             _editObj = new();
             _editApp.Visible = true;
@@ -148,10 +149,15 @@ namespace AgileConfig.BlazorUI.Pages
         }
         private async Task EditAsync(AppListVM app)
         {
-            //await MessageService.Info("点击了编辑");
             _enumEditType = EnumEditType.Edit;
             _editObj = app;
             _editApp.Visible = true;
+            await Task.CompletedTask;
+        }
+        private async Task ViewInheritancedAppAsync(AppListVM app)
+        {            
+            _inheritancedAppViewObj = app;
+            _inheritancedAppView.Visible = true;
             await Task.CompletedTask;
         }
         private void ConfigList(AppVM app)

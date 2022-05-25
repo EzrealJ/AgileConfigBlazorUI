@@ -72,7 +72,7 @@ namespace AgileConfig.BlazorUI.Pages
             await base.OnInitializedAsync();
             _ = LoadDataAsync();
         }
-
+        
         private async Task LoadDataAsync()
         {
             var res = await HomeApi.SysAsync();
@@ -82,7 +82,6 @@ namespace AgileConfig.BlazorUI.Pages
         }
 
         private void ReSet() => _formClass = new() { ENV = _envs.FirstOrDefault() };
-
         private async Task SearchAsync()
         {
             if (string.IsNullOrWhiteSpace(_formClass.SortField))

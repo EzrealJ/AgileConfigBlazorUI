@@ -23,8 +23,6 @@
         <Input @bind-Value="@context.Id" />
     </FormItem>
     <FormItem Label="应用组">
-        @*<Input @bind-Value="@context.Group" />*@
-        @*<AutoComplete @bind-Value="@context.Group" Options="@_options" Placeholder="点击选择分组"/>*@
         <Select DataSource="@_options"
                 @bind-Value="@context.Group"
                 Placeholder="点击选择分组"
@@ -44,7 +42,7 @@
         <Button Type="@ButtonType.Primary" OnClick=@AddAsync>新建</Button>
     </SpaceItem>
     <SpaceItem>
-        <Checkbox @bind-Checked="_formClass.TableGrouped">分组聚合</Checkbox>
+        <Checkbox @bind-Checked="_formClass.TableGrouped" OnChange=@SearchAsync>分组聚合</Checkbox>
     </SpaceItem>
 
 </Space>
@@ -87,13 +85,12 @@
     <AntDesign.Column Title="公共" TData="bool">
         @GetPublicTag(context)
     </AntDesign.Column>
-    <AntDesign.Column Title="关联" DataIndex="@nameof(context.InheritancedAppNames)" TData="List<string>">
-        @GetInheritancedAppNames(context)
-    </AntDesign.Column>
 
     <AntDesign.ActionColumn Title="操作">
         <Space>
-
+            <SpaceItem>
+                <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ViewInheritancedAppAsync(context))>查看关联</Button>
+            </SpaceItem>
             <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
                 <Children>
                     <SpaceItem>
@@ -139,22 +136,11 @@
 
 <EditApp @ref=@_editApp EditType=@_enumEditType CurrentObject=@_editObj OnCompleted=@SearchAsync></EditApp>
 <AuthApp @ref=@_authApp AppId=@_authObj.Id AppName=@_authObj.Name OnCompleted=@SearchAsync></AuthApp>
+<InheritancedAppView @ref=@_inheritancedAppView AppId=@_inheritancedAppViewObj.Id AppName=@_inheritancedAppViewObj.Name
+                     InheritancedAppNames=@_inheritancedAppViewObj.InheritancedAppNames></InheritancedAppView>
 @code {
     RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline" />
     ;
-
-
-
-
-    RenderFragment GetInheritancedAppNames(AppListVM app)
-    => (RenderFragment)(
-    @<Space>
-        @foreach (string name in app.InheritancedAppNames)
-        {
-                <Tag>@name</Tag>
-        }
-        </Space>
-    );
 
     RenderFragment GetPublicTag(AppListVM app)
     {
@@ -162,7 +148,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">公开</Tag>
-    );
+        );
         }
         else
         {

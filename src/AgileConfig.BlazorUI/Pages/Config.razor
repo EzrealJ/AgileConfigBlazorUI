@@ -18,7 +18,7 @@
     <PageHeaderTitle>@AppId</PageHeaderTitle>
     <PageHeaderSubtitle>@($"您正在编辑{AppId}的配置项,当前您操作的环境为{_formClass.ENV}")</PageHeaderSubtitle>
     <PageHeaderExtra>
-        <RadioGroup @bind-Value="_formClass.ENV" ButtonStyle="@RadioButtonStyle.Solid">
+        <RadioGroup TValue="string" @bind-Value="_formClass.ENV" ButtonStyle="@RadioButtonStyle.Solid" OnChange=@SearchAsync>
             @foreach (var s in _envs)
             {
                 <Radio RadioButton Value="@s">@s</Radio>
@@ -171,13 +171,13 @@
 
     RenderFragment infoIcon =
     @<Icon Type="exclamation-circle" Theme="outline" />
-        ;
+    ;
 
     RenderFragment GetEditStatusTag(ConfigVM config)
     {
         return (RenderFragment)(
     @<Tag Color="green-inverse">@config.EditStatus.GetDescription()</Tag>
-        );
+    );
     }
 
     RenderFragment GetPublicTag(ConfigVM config)
@@ -186,7 +186,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">@OnlineStatus.Online.GetDescription()</Tag>
-        );
+    );
         }
         else
         {

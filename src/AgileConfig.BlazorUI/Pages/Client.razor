@@ -20,7 +20,7 @@
     </Select>
     <Space>
         <SpaceItem><Button Type="@ButtonType.Default" OnClick=@ReSet>重置</Button></SpaceItem>
-        <SpaceItem><Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="ReLoadAsync">重新加载</Button></SpaceItem>
+        <SpaceItem><Button Type="@ButtonType.Primary" Loading="_dataLoading" OnClick="SearchAsync">重新加载</Button></SpaceItem>
         <SpaceItem><Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button></SpaceItem>
     </Space>
     </Col>
@@ -28,8 +28,9 @@
 <Divider />
 @if (_itemShowType == EnumItemShowType.TableRow)
 {
-    <Table TItem="ClientVM" DataSource="@_dataSource.Data" RemoteDataSource
-       OnChange=@ReLoadAsync
+    <Table TItem="ClientVM" DataSource="@_dataSource.Data"
+       RemoteDataSource
+       OnChange=@HandleTableChange
        PageIndex=@_dataSource.Current
        PageSize=@_dataSource.PageSize
        Total="@_dataSource.Total"
@@ -73,7 +74,7 @@
     RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline" />
     ;
     RenderFragment GetItemButtons(ClientVM client)
-    => (RenderFragment)(
+        => (RenderFragment)(
     @<Space>
         <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(async _=>await ReloadClientAsync(client))>刷新配置</Button></SpaceItem>
         <AuthorizedElement JudgeKey="@JudgeKey.CLIENT_DISCONNECT">

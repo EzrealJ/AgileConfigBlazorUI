@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileConfig.OpenApiClient",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileConfig.UIApiClient", "src\AgileConfig.UIApiClient\AgileConfig.UIApiClient.csproj", "{254F74BF-D75E-4A4C-8B24-8DFBA06C7C88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileConfig.BlazorUI.WasmHost", "src\AgileConfig.BlazorUI.WasmHost\AgileConfig.BlazorUI.WasmHost.csproj", "{73DADFA0-29BF-45FA-8906-6BDD749CB0D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgileConfig.BlazorUI.WasmHost", "src\AgileConfig.BlazorUI.WasmHost\AgileConfig.BlazorUI.WasmHost.csproj", "{73DADFA0-29BF-45FA-8906-6BDD749CB0D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

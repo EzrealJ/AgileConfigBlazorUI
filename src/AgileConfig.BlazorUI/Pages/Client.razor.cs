@@ -7,6 +7,7 @@ using AgileConfig.BlazorUI.Enums;
 using AgileConfig.UIApiClient;
 using AgileConfig.UIApiClient.HttpModels;
 using AntDesign;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AgileConfig.BlazorUI.Pages
@@ -54,11 +55,21 @@ namespace AgileConfig.BlazorUI.Pages
             StateHasChanged();
         }
 
-        private async Task ReLoadAsync()
+        private async Task HandleTableChange(QueryModel<ClientVM> queryModel)
+        {
+            _dataSource.Current = queryModel.PageIndex;
+            _dataSource.PageSize = queryModel.PageSize;
+            //ITableSortModel tableSortModel = queryModel.SortModel.Last(s => !string.IsNullOrWhiteSpace(s.Sort));
+            await SearchAsync();
+        }
+
+        private async Task SearchAsync()
         {
             _dataLoading = true;
-            await LoadDataAsync();
+            _dataSource = await ReportApi.SearchServerNodeClientsAsync(_address, _dataSource.Current, _dataSource.PageSize);
             _dataLoading = false;
+            StateHasChanged();
+            
         }
         protected override async Task OnInitializedAsync()
         {
@@ -70,9 +81,8 @@ namespace AgileConfig.BlazorUI.Pages
         private async Task LoadDataAsync()
         {
             var nodes = await ServerNodeApi.AllAsync();
-            _addresses = new string[] { string.Empty }.Concat(nodes?.Data.Select(n => n.Address) ?? Array.Empty<string>());
-            _dataSource = await ReportApi.SearchServerNodeClientsAsync(_address, _dataSource.Current, _dataSource.PageSize);
-            StateHasChanged();
+            _addresses = new string[] { string.Empty }.Concat(nodes?.Data?.Select(n => n.Address) ?? Array.Empty<string>());
+            await SearchAsync();
         }
         private async Task ReloadClientAsync(ClientVM client)
         {
