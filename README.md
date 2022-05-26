@@ -4,6 +4,20 @@
 
 ### 服务端请移步:[AgileConfig](https://github.com/dotnetcore/AgileConfig)
 
+下载:[Github-Releases](https://github.com/EzrealJ/AgileConfigBlazorUI/releases)
+
+使用:
+
+* 0、请务必解压。
+
+* 1、更改appsettings.json(**对于host和winapp则是wwwroot下的appsettings.json**)中的AgileConfigServer的值为你的Server地址
+* 2、启动：
+  - 对于dist,请使用一个web服务器讲其视为静态资源托管它，它是必定每次都会发布的
+  - 对于simplehost，需要安装.NET 6运行时，然后双击AgileConfig.BlazorUI.SimpleHost.exe；注意，server是http则访问http的地址，server是https请使用https的地址，
+  - 对于winapp，暂时是实验版本，未来可能不会继续发布它
+
+若有疑问和bug和遗漏项请issue交流，或者在AgileConfig的QQ群@我，
+
 项目依赖
 
 | Package                   | Version | Link                                                         | Licence                                                      |
