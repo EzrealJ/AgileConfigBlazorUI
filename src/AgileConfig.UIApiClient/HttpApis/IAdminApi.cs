@@ -22,7 +22,7 @@ namespace AgileConfig.UIApiClient
         /// <param name="cancellationToken">cancellationToken</param>
         /// <returns>Success</returns>
         [HttpGet("Admin/PasswordInited")]
-        Task PasswordInitedAsync(CancellationToken cancellationToken = default);
+        Task<ApiResult<bool>> PasswordInitedAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 初始化密码

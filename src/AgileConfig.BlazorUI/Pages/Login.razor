@@ -6,9 +6,7 @@
 @using AgileConfig.UIApiClient
 @using Blazored.LocalStorage
 
-@inject NavigationManager NavigationManager
-@inject MessageService MsgService
-@inject AuthService authService
+
 
 
 <AntDesign.Form Model="@_loginData" Style="height:100%"
@@ -30,24 +28,9 @@
         </InputPassword>
     </FormItem>
     <FormItem WrapperColOffset="11" WrapperColSpan="2">
-        <Button Type="@ButtonType.Primary" HtmlType="submit" Block>
+        <Button Style="width:100%" Type="@ButtonType.Primary" HtmlType="submit" Block>
             登录
         </Button>
     </FormItem>
 </AntDesign.Form>
 
-@code {
-    private LoginVM _loginData = new();
-
-    private async Task OnFinish(EditContext editContext)
-    {
-        var result = await authService.LoginAsync(_loginData);
-        if (!result)
-        {
-            await MsgService.Error("帐号或密码错误！");
-            return;
-        }
-        await MsgService.Success("登录成功！");
-        NavigationManager.NavigateTo("/home");
-    }
-}

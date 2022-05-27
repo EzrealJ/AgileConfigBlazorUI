@@ -85,24 +85,22 @@
     <AntDesign.Column Title="公共" TData="bool">
         @GetPublicTag(context)
     </AntDesign.Column>
-
+    <AntDesign.ActionColumn Title="状态">
+        <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
+            <Children>
+                <Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" OnChange=@(async e=>await EnabledOrDisableAsync(context.Id)) />
+            </Children>
+            <NoMatch>
+                @GetEnableTag(context)
+            </NoMatch>
+        </AuthorizedElement>
+    </AntDesign.ActionColumn>
     <AntDesign.ActionColumn Title="操作">
         <Space>
             <SpaceItem>
                 <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ViewInheritancedAppAsync(context))>查看关联</Button>
             </SpaceItem>
-            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
-                <Children>
-                    <SpaceItem>
-                        <Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" OnChange=@(async e=>await EnabledOrDisableAsync(context.Id)) />
-                    </SpaceItem>
-                </Children>
-                <NoMatch>
-                    <SpaceItem>
-                        <Switch Checked="context.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" />
-                    </SpaceItem>
-                </NoMatch>
-            </AuthorizedElement>
+
             <SpaceItem><Button Type=@ButtonType.Default Size=@AntSizeLDSType.Small OnClick=@(e=>ConfigList(context))>配置项</Button></SpaceItem>
             <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
                 <Children>
@@ -154,6 +152,21 @@
         {
             return (RenderFragment)(
     @<Tag Color="purple">私有</Tag>
+    );
+        }
+    }
+    RenderFragment GetEnableTag(AppListVM app)
+    {
+        if (app.Enabled)
+        {
+            return (RenderFragment)(
+    @<Tag Color="green-inverse">启用</Tag>
+        );
+        }
+        else
+        {
+            return (RenderFragment)(
+    @<Tag Color="cyan">禁用</Tag>
     );
         }
     }

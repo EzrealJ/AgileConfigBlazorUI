@@ -12,6 +12,7 @@
         public const string USER = "/user";
         public const string LOG = "/log";
         public const string RESET_PASSWORD = "/resetpassword";
+        public const string Init_PASSWORD = "/initpassword";
 
 
     }
