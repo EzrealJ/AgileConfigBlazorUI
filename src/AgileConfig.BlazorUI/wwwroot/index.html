@@ -4,45 +4,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="keywords" content="antd,umi,umijs,ant design,脚手架,布局, Ant Design,项目,Pro,admin,控制台,主页,开箱即用,中后台,解决方案,组件库" />
-    <meta name="description" content="An out-of-box UI solution for enterprise applications as a React boilerplate." />
-    <meta name="description" content="开箱即用的中台前端/设计解决方案。" />
+    <meta name="description" content="基于.NET Core开发的轻量级分布式配置中心" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <title>Ant Design Pro Blazor</title>
+    <title>AgileConfig BlazorUI</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
-
-    <!-- Start Single Page Apps for GitHub Pages -->
-    <!--<base href="/AgileConfigBlazorUI/" />-->
-    <script type="text/javascript">
-        // Single Page Apps for GitHub Pages
-        // https://github.com/rafrex/spa-github-pages
-        // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
-        // ----------------------------------------------------------------------
-        // This script checks to see if a redirect is present in the query string
-        // and converts it back into the correct url and adds it to the
-        // browser's history using window.history.replaceState(...),
-        // which won't cause the browser to attempt to load the new url.
-        // When the single page app is loaded further down in this file,
-        // the correct url will be waiting in the browser's history for
-        // the single page app to route accordingly.
-        (function (l) {
-            if (l.search) {
-                var q = {};
-                l.search.slice(1).split('&').forEach(function (v) {
-                    var a = v.split('=');
-                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
-                });
-                if (q.p !== undefined) {
-                    window.history.replaceState(null, null,
-                        l.pathname.slice(0, -1) + (q.p || '') +
-                        (q.q ? ('?' + q.q) : '') +
-                        l.hash
-                    );
-                }
-            }
-        }(window.location))
-    </script>
-    <!-- End Single Page Apps for GitHub Pages -->
     <base href="/" />
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
     <link href="_content/AntDesign.ProLayout/css/ant-design-pro-layout-blazor.css" rel="stylesheet" />
@@ -211,6 +176,7 @@
                 }
             }
         </style>
+
         <div style="
           display: flex;
           justify-content: center;
@@ -231,6 +197,7 @@
                 AgileConfig-轻量级配置中心
             </div>
         </div>
+
     </div>
 
     <script src="_content/AntDesign.Charts/g2plot.js"></script>
