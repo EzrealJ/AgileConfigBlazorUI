@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.Runtime.Serialization;
-using System.Collections.ObjectModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace AgileConfig.UIApiClient
 {
@@ -70,7 +66,7 @@ namespace AgileConfig.UIApiClient
         [JsonPropertyName("value")]
         [Required(AllowEmptyStrings = true)]
         [StringLength(4000)]
-        public string Value { get; set; }=string.Empty;
+        public string Value { get; set; } = string.Empty;
 
         [JsonPropertyName("description")]
         [StringLength(200)]

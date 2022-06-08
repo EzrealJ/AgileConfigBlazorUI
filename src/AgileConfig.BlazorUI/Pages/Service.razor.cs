@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AgileConfig.BlazorUI.Components.Service;
 using AgileConfig.BlazorUI.Enums;
 using AgileConfig.UIApiClient;
 using AgileConfig.UIApiClient.HttpModels;
@@ -15,26 +14,6 @@ namespace AgileConfig.BlazorUI.Pages
 {
     public partial class Service
     {
-        class FormClass
-        {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Status { get; set; }
-            public string SortField { get; set; }
-
-            public string Order { get; set; }
-        }
-        [Inject]
-        public IServiceApi ServiceApi { get; set; }
-        [Inject]
-        public ModalService ModalService { get; set; }
-        [Inject]
-        public MessageService MessageService { get; set; }
-
-        private FormClass _formClass=new();
-        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
-        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
-        private static readonly int _gutterY = 24;
         private static readonly Dictionary<string, int> _gutterX = new()
         {
             ["xs"] = 8,
@@ -44,23 +23,79 @@ namespace AgileConfig.BlazorUI.Pages
             ["xl"] = 48,
             ["xxl"] = 64
         };
+
+        private static readonly int _gutterY = 24;
+
         private PageResult<ServiceInfoVM> _dataSource = new()
         {
             Current = 1,
             PageSize = 20
         };
 
+        private FormClass _formClass = new();
+
         private EnumItemShowType _itemShowType;
-        private void ChangeShowType()
-       => _itemShowType = _itemShowType == EnumItemShowType.TableRow ? EnumItemShowType.Card : EnumItemShowType.TableRow;
+
+        [Inject]
+        public MessageService MessageService { get; set; }
+
+        [Inject]
+        public ModalService ModalService { get; set; }
+
+        [Inject]
+        public IServiceApi ServiceApi { get; set; }
+
+        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+
+        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _= SearchAsync();
+            _ = SearchAsync();
         }
 
-        private void ReSet() => _formClass = new();
+        private async Task AddAsync()
+        {
+            _editService.Visible = true;
+            await Task.CompletedTask;
+        }
+
+        private void ChangeShowType()
+       => _itemShowType = _itemShowType == EnumItemShowType.TableRow ? EnumItemShowType.Card : EnumItemShowType.TableRow;
+
+        private async Task DeleteAsync(ServiceInfoVM service)
+        {
+            var config = new MessageConfig()
+            {
+                Content = "删除中...",
+                Key = $"{nameof(DeleteAsync)}-{service.Id}"
+            };
+            _ = MessageService.Loading(config);
+            var res = await ServiceApi.RemoveAsync(service.Id);
+            if (res.Success)
+            {
+                config.Content = "删除成功";
+                await MessageService.Success(config);
+            }
+            else
+            {
+                config.Content = $"删除失败,{res.Message}";
+                await MessageService.Error(config);
+            }
+        }
+
+        private void DeleteConfirm(ServiceInfoVM service)
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = $"是否确定删除服务【{service.ServiceId}】",
+                Icon = infoIcon,
+                OnOk = async e => await DeleteAsync(service)
+            };
+            ModalService.Confirm(options);
+        }
+
         private async Task HandleTableChange(QueryModel<ServiceInfoVM> queryModel)
         {
             _dataSource.Current = queryModel.PageIndex;
@@ -70,6 +105,9 @@ namespace AgileConfig.BlazorUI.Pages
             _formClass.Order = tableSortModel.Sort;
             await SearchAsync();
         }
+
+        private void ReSet() => _formClass = new();
+
         private async Task SearchAsync()
         {
             if (string.IsNullOrWhiteSpace(_formClass.SortField))
@@ -93,42 +131,13 @@ namespace AgileConfig.BlazorUI.Pages
             StateHasChanged();
         }
 
-        private void DeleteConfirm(ServiceInfoVM service)
+        class FormClass
         {
-            var options = new ConfirmOptions()
-            {
-                Title = $"是否确定删除服务【{service.ServiceId}】",
-                Icon = infoIcon,
-                OnOk = async e => await DeleteAsync(service)
-            };
-            ModalService.Confirm(options);
-        }
-
-        private async Task DeleteAsync(ServiceInfoVM service)
-        {
-            var config = new MessageConfig()
-            {
-                Content = "删除中...",
-                Key = $"{nameof(DeleteAsync)}-{service.Id}"
-            };
-            _ = MessageService.Loading(config);
-            var res = await ServiceApi.RemoveAsync(service.Id);
-            if (res.Success)
-            {
-                config.Content = "删除成功";
-                await MessageService.Success(config);
-            }
-            else
-            {
-                config.Content = $"删除失败,{res.Message}";
-                await MessageService.Error(config);
-            }
-        }
-
-        private async Task AddAsync()
-        {
-            _editService.Visible=true;
-            await Task.CompletedTask;
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Order { get; set; }
+            public string SortField { get; set; }
+            public string Status { get; set; }
         }
     }
 }

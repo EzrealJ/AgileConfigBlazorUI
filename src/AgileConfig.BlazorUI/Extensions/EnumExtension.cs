@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace AgileConfig.BlazorUI.Extensions
@@ -17,9 +17,8 @@ namespace AgileConfig.BlazorUI.Extensions
         }
 
 
-        public static string GetValue(this Enum em) => Convert.ToInt32(em).ToString();
-
-
         public static int GetIntValue(this Enum em) => Convert.ToInt32(em);
+
+        public static string GetValue(this Enum em) => Convert.ToInt32(em).ToString();
     }
 }

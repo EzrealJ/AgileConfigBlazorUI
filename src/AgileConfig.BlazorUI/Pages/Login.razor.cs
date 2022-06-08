@@ -1,26 +1,27 @@
-﻿using AgileConfig.BlazorUI.Auth;
+﻿using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Auth;
 using AgileConfig.BlazorUI.Consts;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using System;
-using System.Threading.Tasks;
 
 namespace AgileConfig.BlazorUI.Pages
 {
     public partial class Login
     {
         private LoginVM _loginData = new();
-        [Inject] 
-        public NavigationManager NavigationManager { get; set; }
-        [Inject] 
-        public MessageService MsgService { get; set; }
-        [Inject] 
-        public AuthService AuthService { get; set; }
         [Inject]
         public IAdminApi AdminApi { get; set; }
 
+        [Inject]
+        public AuthService AuthService { get; set; }
+
+        [Inject]
+        public MessageService MsgService { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
             var res = await AdminApi.PasswordInitedAsync();
@@ -28,7 +29,7 @@ namespace AgileConfig.BlazorUI.Pages
             {
                 return;
             }
-            NavigationManager.NavigateTo(RoutePath.Init_PASSWORD);
+            NavigationManager.NavigateTo(RoutePath.INIT_PASSWORD);
         }
 
 

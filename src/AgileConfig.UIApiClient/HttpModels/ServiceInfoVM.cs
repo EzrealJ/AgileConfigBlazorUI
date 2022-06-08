@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace AgileConfig.UIApiClient.HttpModels
 {
@@ -27,7 +21,7 @@ namespace AgileConfig.UIApiClient.HttpModels
         None,
         Client,
         Server,
-        
+
     }
     public class ServiceInfoVM
     {
@@ -56,7 +50,7 @@ namespace AgileConfig.UIApiClient.HttpModels
 
         [Required(ErrorMessage = "健康检测模式不能为空")]
         [MaxLength(10, ErrorMessage = "健康检测模式长度不能超过10位")]
-        public string HeartBeatMode { get; set; }= HeartBeatModes.None.ToString();
+        public string HeartBeatMode { get; set; } = HeartBeatModes.None.ToString();
 
         [MaxLength(2000, ErrorMessage = "检测URL长度不能超过2000")]
         public string CheckUrl { get; set; }

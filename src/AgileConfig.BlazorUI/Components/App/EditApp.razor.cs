@@ -12,23 +12,17 @@ namespace AgileConfig.BlazorUI.Components.App
 {
     public partial class EditApp
     {
+        private IEnumerable<UserVM> _adminOptions = new List<UserVM>();
         private Form<AppVM> _form;
-        [Parameter]
-        public EnumEditType EditType { get; set; }
-        [Parameter]
-        public EventCallback OnCompleted { get; set; }
-        private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
-        public bool Visible { get; set; }
+        private IEnumerable<string> _groupOptions = new List<string>();
+
+        private IEnumerable<AppVM> _publicAppOptions = new List<AppVM>();
+
         [Parameter]
         public AppVM CurrentObject { get; set; } = new AppVM();
 
-        [Inject]
-        private IAppApi AppApi { get; set; }
-        [Inject]
-        public IUserApi UserApi { get; set; }
-        [Inject]
-        public MessageService MessageService { get; set; }
-
+        [Parameter]
+        public EnumEditType EditType { get; set; }
 
         public IEnumerable<string> InheritancedApp
         {
@@ -36,10 +30,21 @@ namespace AgileConfig.BlazorUI.Components.App
             set => CurrentObject.InheritancedApps = value.ToList();
         }
 
-        private IEnumerable<string> _groupOptions = new List<string>();
-        private IEnumerable<AppVM> _publicAppOptions = new List<AppVM>();
-        private IEnumerable<UserVM> _adminOptions = new List<UserVM>();
+        [Inject]
+        public MessageService MessageService { get; set; }
 
+        [Parameter]
+        public EventCallback OnCompleted { get; set; }
+
+        [Inject]
+        public IUserApi UserApi { get; set; }
+
+        public bool Visible { get; set; }
+
+        [Inject]
+        private IAppApi AppApi { get; set; }
+
+        private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
 
         protected override async Task OnParametersSetAsync()
         {
@@ -49,7 +54,27 @@ namespace AgileConfig.BlazorUI.Components.App
             }
         }
 
- 
+        private void AddItem(MouseEventArgs args)
+        {
+            if (string.IsNullOrWhiteSpace(_name))
+            {
+                return;
+            }
+            if (_groupOptions.Contains(_name))
+            {
+                return;
+            }
+            var temp = _groupOptions.ToList();
+            temp.Add(_name);
+            _groupOptions = temp.ToArray();
+            _name = string.Empty;
+        }
+
+        private void Cancel(MouseEventArgs e)
+        {
+            _form.Reset();
+            Visible = false;
+        }
 
         private async Task LoadDataAsync()
         {
@@ -59,12 +84,6 @@ namespace AgileConfig.BlazorUI.Components.App
             _publicAppOptions = res1.Data ?? Array.Empty<AppVM>();
             var res2 = await UserApi.AdminUsersAsync();
             _adminOptions = res2.Data ?? Array.Empty<UserVM>();
-        }
-
-        private void Cancel(MouseEventArgs e)
-        {
-            _form.Reset();
-            Visible = false;
         }
 
         private async Task OnOkAsync(MouseEventArgs e)
@@ -98,24 +117,6 @@ namespace AgileConfig.BlazorUI.Components.App
             {
                 await OnCompleted.InvokeAsync(e);
             }
-        }
-
-
-
-        private void AddItem(MouseEventArgs args)
-        {
-            if (string.IsNullOrWhiteSpace(_name))
-            {
-                return;
-            }
-            if (_groupOptions.Contains(_name))
-            {
-                return;
-            }
-            var temp = _groupOptions.ToList();
-            temp.Add(_name);
-            _groupOptions = temp.ToArray();
-            _name = string.Empty;
         }
     }
 }

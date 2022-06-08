@@ -36,10 +36,10 @@ namespace AgileConfig.BlazorUI
             services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             services.AddAntDesign();
             services.Configure<ProSettings>(builder.Configuration.GetSection("ProSettings"));
-            
+
             services.AddAgileConfigUIApiClient((option, sp) =>
             {
-                IConfiguration configuration=sp.GetRequiredService<IConfiguration>();
+                IConfiguration configuration = sp.GetRequiredService<IConfiguration>();
                 string server = configuration["AgileConfigServer"];
                 option.HttpHost = new Uri(server);
                 UIApiTokenProvider filter = sp.GetRequiredService<UIApiTokenProvider>();

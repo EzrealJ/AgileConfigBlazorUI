@@ -1,13 +1,13 @@
-﻿using AgileConfig.BlazorUI.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Enums;
+using AgileConfig.BlazorUI.Extensions;
 using AgileConfig.UIApiClient;
 using AntDesign;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using AgileConfig.BlazorUI.Extensions;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AgileConfig.BlazorUI.Components.User
 {
@@ -15,18 +15,20 @@ namespace AgileConfig.BlazorUI.Components.User
     {
         private Form<UserVM> _form;
         [Parameter]
-        public EnumEditType EditType { get; set; }
-        [Parameter]
-        public EventCallback OnCompleted { get; set; }
-        private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
-        public bool Visible { get; set; }
-        [Parameter]
         public UserVM CurrentObject { get; set; } = new UserVM();
 
-        [Inject]
-        public IUserApi UserApi { get; set; }
+        [Parameter]
+        public EnumEditType EditType { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
+
+        [Parameter]
+        public EventCallback OnCompleted { get; set; }
+        [Inject]
+        public IUserApi UserApi { get; set; }
+
+        public bool Visible { get; set; }
+        private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
         private IEnumerable<string> UserRoles
         {
             get => CurrentObject.UserRoles?.Select(r => r.GetIntValue().ToString());

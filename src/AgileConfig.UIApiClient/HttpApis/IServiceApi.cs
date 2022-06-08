@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AgileConfig.UIApiClient.HttpModels;
+﻿using AgileConfig.UIApiClient.HttpModels;
 using WebApiClientCore;
 using WebApiClientCore.Attributes;
 
@@ -19,6 +14,6 @@ namespace AgileConfig.UIApiClient
         [HttpPost("service/remove")]
         ITask<ApiResult> RemoveAsync(string id);
         [HttpPost("service/add")]
-        Task<ApiResult> AddAsync([JsonContent]ServiceInfoVM currentObject);
+        Task<ApiResult> AddAsync([JsonContent] ServiceInfoVM currentObject);
     }
 }

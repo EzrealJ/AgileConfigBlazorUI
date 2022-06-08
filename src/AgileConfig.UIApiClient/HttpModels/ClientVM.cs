@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AgileConfig.UIApiClient.HttpModels
+﻿namespace AgileConfig.UIApiClient.HttpModels
 {
     public class ClientVM
     {
-        public string Id { get; set; }= string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         public string AppId { get; set; } = string.Empty;
 

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
@@ -28,8 +22,9 @@ namespace AgileConfig.WindowsApp
             await Task.CompletedTask;
             void action()
             {
-                string uri = _coreSettings?.Uri?.ToString()?? string.Empty;
-                if (string.IsNullOrEmpty(uri)) return;
+                string uri = _coreSettings?.Uri?.ToString() ?? string.Empty;
+                if (string.IsNullOrEmpty(uri))
+                    return;
                 this.webView2.CoreWebView2.Navigate(uri);
             };
             this.webView2.Invoke(action);
@@ -59,7 +54,7 @@ namespace AgileConfig.WindowsApp
         }
 
         private async void MainForm_ShownAsync(object sender, EventArgs e)
-        { 
+        {
             await LoadWebView2CoreAsync();
 
             this.webView2.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;

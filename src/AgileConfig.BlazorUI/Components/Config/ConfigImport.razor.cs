@@ -1,57 +1,54 @@
-﻿using AgileConfig.UIApiClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Auth;
+using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
 using Microsoft.Extensions.Configuration;
-using AgileConfig.BlazorUI.Auth;
-using System.Net.Http.Headers;
-using System.Text.Json;
 
 namespace AgileConfig.BlazorUI.Components.Config
 {
-    public class ConfigImportParameter
-    {
-        public string AppId { get; set; }
-
-        public string ENV { get; set; }
-    }
     public partial class ConfigImport
     {
-        [Parameter]
-        public ConfigImportParameter Para { get; set; } = new();
-        [Parameter]
-        public EventCallback OnCompleted { get; set; }
-        public bool Visible { get; set; }
+        Dictionary<string, ConfigVM> _dataSourceDic = new();
 
-        public string UploadUrl => Configuration["AgileConfigServer"] + "Config/PreViewJsonFile";
-
-        public Dictionary<string, string> UploadHeaders { get; set; } = new();
-        private async Task SetHeadersAsync()
-        {
-            UIApiClient.HttpResults.TokenResult authInfo = await AuthService.GetAuthInfo();
-            string auth = new AuthenticationHeaderValue(authInfo.Type, authInfo.Token).ToString();
-            UploadHeaders.TryAdd("Authorization", auth);
-            StateHasChanged();
-        }
-
-        [Inject]
-        public MessageService MessageService { get; set; }
-        [Inject]
-        public IConfiguration Configuration { get; set; }
         [Inject]
         public AuthService AuthService { get; set; }
+
         [Inject]
         public IConfigApi ConfigApi { get; set; }
 
+        [Inject]
+        public IConfiguration Configuration { get; set; }
+
+        [Inject]
+        public MessageService MessageService { get; set; }
+
+        [Parameter]
+        public EventCallback OnCompleted { get; set; }
+
+        [Parameter]
+        public ConfigImportParameter Para { get; set; } = new();
+        public Dictionary<string, string> UploadHeaders { get; set; } = new();
+        public string UploadUrl => Configuration["AgileConfigServer"] + "Config/PreViewJsonFile";
+        public bool Visible { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _= SetHeadersAsync();
+            _ = SetHeadersAsync();
         }
 
+        private void Cancel()
+        {
+            Para = new();
+            _dataSourceDic.Clear();
+            Visible = false;
 
+        }
+
+        private void DeleteItem(string key) => _dataSourceDic.Remove(key);
 
         private async Task OnOkAsync()
         {
@@ -61,7 +58,7 @@ namespace AgileConfig.BlazorUI.Components.Config
                 Key = $"{nameof(ConfigImport)}-{Para.AppId}"
             };
             _ = MessageService.Loading(config);
-            var res = await ConfigApi.AddRangeAsync(Para.ENV,_dataSourceDic.Values);
+            var res = await ConfigApi.AddRangeAsync(Para.ENV, _dataSourceDic.Values);
             if (res.Success)
             {
                 config.Content = "导入成功";
@@ -76,22 +73,14 @@ namespace AgileConfig.BlazorUI.Components.Config
             await OnCompleted.InvokeAsync();
 
         }
-        private void Cancel()
-        {
-            Para = new();
-            _dataSourceDic.Clear();
-            Visible = false;
 
-        }
-        Dictionary<string, ConfigVM> _dataSourceDic = new();
-        private void DeleteItem(string key) => _dataSourceDic.Remove(key);
         private async Task OnSingleCompleted(UploadInfo info)
         {
 
             var file = info.File;
             if (file.State == UploadState.Fail)
             {
-                await MessageService.Error($"{ file.FileName}上传失败.");
+                await MessageService.Error($"{file.FileName}上传失败.");
                 return;
             }
             if (info.File.State == UploadState.Uploading)
@@ -113,5 +102,20 @@ namespace AgileConfig.BlazorUI.Components.Config
             });
 
         }
+
+        private async Task SetHeadersAsync()
+        {
+            UIApiClient.HttpResults.TokenResult authInfo = await AuthService.GetAuthInfo();
+            string auth = new AuthenticationHeaderValue(authInfo.Type, authInfo.Token).ToString();
+            UploadHeaders.TryAdd("Authorization", auth);
+            StateHasChanged();
+        }
+    }
+
+    public class ConfigImportParameter
+    {
+        public string AppId { get; set; }
+
+        public string ENV { get; set; }
     }
 }

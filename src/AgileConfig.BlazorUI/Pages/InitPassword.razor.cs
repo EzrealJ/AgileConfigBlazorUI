@@ -1,8 +1,8 @@
-﻿using AgileConfig.BlazorUI.Consts;
+﻿using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Consts;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
 
 namespace AgileConfig.BlazorUI.Pages
 {

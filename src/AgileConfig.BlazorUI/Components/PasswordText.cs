@@ -1,29 +1,19 @@
-﻿using System;
-using AgileConfig.BlazorUI.Pages;
-using AntDesign;
+﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.VisualBasic;
-using OneOf;
 
 namespace AgileConfig.BlazorUI.Components
 {
     public class PasswordText : AntDesign.Text
     {
+        private const string PASSWORD_TEXT = "******";
+
+        private string _eyeIcon;
+
+        private bool _visible = false;
+
         [Parameter]
         public bool VisibilityToggle { get; set; } = true;
-
-        private const string PASSWORD_TEXT = "******";
-        private bool _visible = false;
-        private string _eyeIcon;
-        protected override void OnInitialized()
-        {
-
-            base.OnInitialized();
-            ChildContent = ChildContentBuilder;
-        }
-
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             if (builder == null)
@@ -45,6 +35,7 @@ namespace AgileConfig.BlazorUI.Components
             }
             builder.CloseElement();
         }
+
         protected void ChildContentBuilder(RenderTreeBuilder builder)
         {
             builder.OpenElement(0, "span");
@@ -58,18 +49,13 @@ namespace AgileConfig.BlazorUI.Components
             }
             builder.CloseElement();
         }
-        private void ToggleVisibility()
+
+        protected override void OnInitialized()
         {
-            if (!VisibilityToggle)
-            {
-                return;
-            }
 
-            SetIcon();
+            base.OnInitialized();
             ChildContent = ChildContentBuilder;
-            _visible = !_visible;
         }
-
         private void SetIcon()
         {
             if (_visible)
@@ -81,6 +67,18 @@ namespace AgileConfig.BlazorUI.Components
             {
                 _eyeIcon = "eye-invisible";
             }
+        }
+
+        private void ToggleVisibility()
+        {
+            if (!VisibilityToggle)
+            {
+                return;
+            }
+
+            SetIcon();
+            ChildContent = ChildContentBuilder;
+            _visible = !_visible;
         }
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using System.Runtime.Serialization;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 namespace AgileConfig.UIApiClient
 {
     public class AppVM
@@ -33,7 +29,7 @@ namespace AgileConfig.UIApiClient
         public bool Inheritanced { get; set; }
 
         [JsonPropertyName("inheritancedApps")]
-        public List<string> InheritancedApps { get; set; }=new ();
+        public List<string> InheritancedApps { get; set; } = new();
 
         [JsonPropertyName("inheritancedAppNames")]
         public List<string> InheritancedAppNames { get; set; } = new();

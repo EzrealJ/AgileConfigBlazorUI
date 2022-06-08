@@ -1,14 +1,12 @@
-﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Net.Http;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System;
-using System.Linq;
 using AgileConfig.UIApiClient.HttpResults;
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace AgileConfig.BlazorUI.Auth
 {
@@ -19,19 +17,6 @@ namespace AgileConfig.BlazorUI.Auth
         public ApiAuthenticationStateProvider(ILocalStorageService localStorage)
         {
             _localStorage = localStorage;
-        }
-
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-        {
-            var authInfo = await _localStorage.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
-
-            if (string.IsNullOrWhiteSpace(authInfo?.Token))
-            {
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-            }
-
-            var user = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(authInfo.Token), "jwt"));
-            return new AuthenticationState(user);
         }
 
         public bool CheckUserPermission(IEnumerable<string> functions, string judgeKey, string appId)
@@ -48,8 +33,18 @@ namespace AgileConfig.BlazorUI.Auth
             return ex;
         }
 
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        {
+            var authInfo = await _localStorage.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
 
+            if (string.IsNullOrWhiteSpace(authInfo?.Token))
+            {
+                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            }
 
+            var user = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(authInfo.Token), "jwt"));
+            return new AuthenticationState(user);
+        }
         public void MarkUserAsAuthenticated(string account)
         {
             var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, account) }, "apiauth"));
@@ -68,6 +63,20 @@ namespace AgileConfig.BlazorUI.Auth
         {
             var authState = GetAuthenticationStateAsync();
             NotifyAuthenticationStateChanged(authState);
+        }
+
+        private static byte[] ParseBase64WithoutPadding(string base64)
+        {
+            switch (base64.Length % 4)
+            {
+                case 2:
+                    base64 += "==";
+                    break;
+                case 3:
+                    base64 += "=";
+                    break;
+            }
+            return Convert.FromBase64String(base64);
         }
 
         private static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
@@ -98,20 +107,6 @@ namespace AgileConfig.BlazorUI.Auth
             claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
 
             return claims;
-        }
-
-        private static byte[] ParseBase64WithoutPadding(string base64)
-        {
-            switch (base64.Length % 4)
-            {
-                case 2:
-                    base64 += "==";
-                    break;
-                case 3:
-                    base64 += "=";
-                    break;
-            }
-            return Convert.FromBase64String(base64);
         }
     }
 }

@@ -1,41 +1,39 @@
-﻿using AgileConfig.BlazorUI.Enums;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Enums;
 using AgileConfig.UIApiClient;
 using AntDesign;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AgileConfig.BlazorUI.Components.Config
 {
     public partial class EditConfig
     {
+        private IEnumerable<UserVM> _adminOptions = new List<UserVM>();
         private Form<ConfigVM> _form;
-        public string ENV { get; set; }
-
-        [Parameter]
-        public EnumEditType EditType { get; set; }
-        [Parameter]
-        public EventCallback OnCompleted { get; set; }
-        private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
-        public bool Visible { get; set; }
+        private IEnumerable<string> _groupOptions = new List<string>();
+        private IEnumerable<AppVM> _publicAppOptions = new List<AppVM>();
         [Parameter]
         public ConfigVM CurrentObject { get; set; } = new();
 
-        [Inject]
-        private IConfigApi ConfigApi { get; set; }
-        [Inject]
-        public IUserApi UserApi { get; set; }
+        [Parameter]
+        public EnumEditType EditType { get; set; }
+
+        public string ENV { get; set; }
         [Inject]
         public MessageService MessageService { get; set; }
 
+        [Parameter]
+        public EventCallback OnCompleted { get; set; }
+        [Inject]
+        public IUserApi UserApi { get; set; }
 
-        private IEnumerable<string> _groupOptions = new List<string>();
-        private IEnumerable<AppVM> _publicAppOptions = new List<AppVM>();
-        private IEnumerable<UserVM> _adminOptions = new List<UserVM>();
+        public bool Visible { get; set; }
+        [Inject]
+        private IConfigApi ConfigApi { get; set; }
 
-
+        private string Title => EditType == EnumEditType.Add ? "新增" : "编辑";
         protected override async Task OnParametersSetAsync()
         {
             if (Visible)
@@ -46,17 +44,16 @@ namespace AgileConfig.BlazorUI.Components.Config
 
 
 
-        private async Task LoadDataAsync()
-        {
-            await Task.CompletedTask;
-        }
-
         private void Cancel(MouseEventArgs e)
         {
             _form.Reset();
             Visible = false;
         }
 
+        private async Task LoadDataAsync()
+        {
+            await Task.CompletedTask;
+        }
         private async Task OnOkAsync(MouseEventArgs e)
         {
             var config = new MessageConfig()
@@ -67,11 +64,11 @@ namespace AgileConfig.BlazorUI.Components.Config
             ApiResult res = new();
             if (EditType == EnumEditType.Add)
             {
-                res = await ConfigApi.AddAsync(ENV,CurrentObject);
+                res = await ConfigApi.AddAsync(ENV, CurrentObject);
             }
             if (EditType == EnumEditType.Edit)
             {
-                res = await ConfigApi.EditAsync(ENV,CurrentObject);
+                res = await ConfigApi.EditAsync(ENV, CurrentObject);
             }
             if (res.Success)
             {

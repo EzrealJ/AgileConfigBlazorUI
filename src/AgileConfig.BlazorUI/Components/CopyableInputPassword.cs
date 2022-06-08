@@ -13,10 +13,21 @@ namespace AgileConfig.BlazorUI.Components
         [Parameter]
         public TypographyCopyableConfig CopyConfig { get; set; } = new();
 
-        protected override void OnInitialized()
+        public async Task Copy()
         {
-            base.OnInitialized();
-            AddOnAfter = AddCopyable;
+            if (!Copyable)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(CopyConfig?.Text))
+            {
+                await this.JsInvokeAsync<object>(JSInteropConstants.CopyElement, Ref);
+            }
+            else
+            {
+                await this.JsInvokeAsync<object>(JSInteropConstants.Copy, CopyConfig.Text);
+            }
+            CopyConfig?.OnCopy?.Invoke();
         }
 
         protected void AddCopyable(RenderTreeBuilder builder)
@@ -34,21 +45,10 @@ namespace AgileConfig.BlazorUI.Components
             builder.CloseElement();
         }
 
-        public async Task Copy()
+        protected override void OnInitialized()
         {
-            if (!Copyable)
-            {
-                return;
-            }
-            if (string.IsNullOrEmpty(CopyConfig?.Text))
-            {
-                await this.JsInvokeAsync<object>(JSInteropConstants.CopyElement, Ref);
-            }
-            else
-            {
-                await this.JsInvokeAsync<object>(JSInteropConstants.Copy, CopyConfig.Text);
-            }
-            CopyConfig?.OnCopy?.Invoke();
+            base.OnInitialized();
+            AddOnAfter = AddCopyable;
         }
     }
 }

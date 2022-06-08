@@ -69,16 +69,20 @@
     ;
 
     RenderFragment GetItemButtons(ServerNodeVM node)
-        => (RenderFragment)(
+    => (RenderFragment)(
     @<Space>
-        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(async e=>await ReloadAllClientAsync(node.Address))>刷新所有客户端的配置</Button></SpaceItem>
+        <SpaceItem>
+            <Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary OnClick=@(async e=>await ReloadAllClientAsync(node.Address))>刷新所有客户端的配置</Button>
+        </SpaceItem>
         <AuthorizedElement JudgeKey="@JudgeKey.NODE_DELETE">
             <Children>
-                <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(node))>删除</Button></SpaceItem>
+                <SpaceItem>
+                    <Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(node))>删除</Button>
+                </SpaceItem>
             </Children>
         </AuthorizedElement>
     </Space>
-        );
+    );
 
     RenderFragment GetItemTag(ServerNodeVM node)
     {
@@ -86,7 +90,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green">在线</Tag>
-        );
+    );
         }
         else
         {

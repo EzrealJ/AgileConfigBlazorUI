@@ -8,6 +8,11 @@ namespace AgileConfig.BlazorUI.Consts
     public static class Json
     {
         public static JsonSerializerOptions SystemTextJsonDeserializeOptions { get; } = CreateJsonDeserializeOptions();
+        public static JsonReaderOptions SystemTextJsonJsonReaderOptions { get; } = new JsonReaderOptions
+        {
+            AllowTrailingCommas = true,
+        };
+
         public static JsonSerializerOptions SystemTextJsonSerializerOptions { get; } = CreateJsonDeserializeOptions();
 
         public static JsonWriterOptions SystemTextJsonWriterOptions { get; } = new JsonWriterOptions
@@ -16,10 +21,17 @@ namespace AgileConfig.BlazorUI.Consts
             Encoder = SystemTextJsonDeserializeOptions.Encoder,
             Indented = SystemTextJsonDeserializeOptions.WriteIndented
         };
-        public static JsonReaderOptions SystemTextJsonJsonReaderOptions { get; } = new JsonReaderOptions
+        /// <summary>
+        /// 创建反序列化JsonSerializerOptions
+        /// </summary>
+        /// <returns></returns>
+        private static JsonSerializerOptions CreateJsonDeserializeOptions()
         {
-            AllowTrailingCommas = true,
-        };
+            var options = CreateJsonSerializeOptions();
+            options.Converters.Add(JsonCompatibleConverter.EnumReader);
+            options.Converters.Add(JsonCompatibleConverter.DateTimeReader);
+            return options;
+        }
 
         /// <summary>
         /// 创建序列化JsonSerializerOptions
@@ -36,18 +48,6 @@ namespace AgileConfig.BlazorUI.Consts
                 NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
                 WriteIndented = true,
             };
-        }
-
-        /// <summary>
-        /// 创建反序列化JsonSerializerOptions
-        /// </summary>
-        /// <returns></returns>
-        private static JsonSerializerOptions CreateJsonDeserializeOptions()
-        {
-            var options = CreateJsonSerializeOptions();
-            options.Converters.Add(JsonCompatibleConverter.EnumReader);
-            options.Converters.Add(JsonCompatibleConverter.DateTimeReader);
-            return options;
         }
     }
 }

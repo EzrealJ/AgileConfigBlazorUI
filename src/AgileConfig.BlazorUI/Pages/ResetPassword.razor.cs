@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
@@ -8,8 +7,8 @@ namespace AgileConfig.BlazorUI.Pages
 {
     public partial class ResetPassword
     {
-        private Form<ChangePasswordVM> _form;
         private ChangePasswordVM _changePasswordVM = new();
+        private Form<ChangePasswordVM> _form;
         [Inject]
         public IAdminApi AdminApi { get; set; }
         [Inject]

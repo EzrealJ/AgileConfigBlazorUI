@@ -1,40 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using AgileConfig.UIApiClient;
-using System.Linq;
-using AntDesign;
-using Microsoft.AspNetCore.Components.Web;
 using AgileConfig.BlazorUI.Model;
+using AgileConfig.UIApiClient;
+using AntDesign;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AgileConfig.BlazorUI.Components.Config
 {
 
-    public class ConfigEditorParameter
-    {
-        public string ConfigType { get; set; } = "JSON";
-        public string AppId { get; set; }
-        public string ENV { get; set; }
-    }
     public partial class ConfigEditor
     {
-        [Inject]
-        private IConfigApi ConfigApi { get; set; }
-
-        private MessageService MessageService { get; set; }
+        private string _dataError;
 
         string _value;
+
         [Parameter]
         public ConfigEditorParameter ConfigEditorParameter { get; set; }
 
         public EventCallback<MouseEventArgs> OnCompleted { get; set; }
 
-
         public bool Visible { get; set; }
 
+        [Inject]
+        private IConfigApi ConfigApi { get; set; }
+
+        private MessageService MessageService { get; set; }
         protected override async Task OnParametersSetAsync()
         {
             if (!Visible)
@@ -54,53 +47,11 @@ namespace AgileConfig.BlazorUI.Components.Config
 
         }
 
-        private async Task OnOkAsync(MouseEventArgs e)
-        {
-            var config = new MessageConfig()
-            {
-                Content = $"正在保存...",
-                Key = $"{ConfigEditorParameter.AppId}-{ConfigEditorParameter.ENV}"
-            };
-            ApiResult res = new();
-            if (ConfigEditorParameter.ConfigType == "JSON")
-            {
-                res = await ConfigApi.SaveJsonAsync(ConfigEditorParameter.AppId, ConfigEditorParameter.ENV, new SaveJsonVM
-                {
-                    Json = _value
-                });
-            }
-            if (ConfigEditorParameter.ConfigType == "TEXT")
-            {
-                res = await ConfigApi.SaveKvListAsync(ConfigEditorParameter.AppId, ConfigEditorParameter.ENV, new SaveKVListVM
-                {
-                    Str = _value
-                });
-            }
-            if (res.Success)
-            {
-                config.Content = $"保存成功";
-                await MessageService.Success(config);
-            }
-            else
-            {
-                config.Content = $"保存失败,{res.Message}";
-                await MessageService.Error(config);
-            }
-            Visible = false;
-            if (OnCompleted.HasDelegate)
-            {
-                await OnCompleted.InvokeAsync(e);
-            }
-        }
-
         private void Cancel()
         {
             ConfigEditorParameter = new();
             Visible = false;
         }
-
-
-        private string _dataError;
 
         private async Task CheckJsonAsync(string value)
         {
@@ -151,7 +102,50 @@ namespace AgileConfig.BlazorUI.Components.Config
             await Task.CompletedTask;
         }
 
+        private async Task OnOkAsync(MouseEventArgs e)
+        {
+            var config = new MessageConfig()
+            {
+                Content = $"正在保存...",
+                Key = $"{ConfigEditorParameter.AppId}-{ConfigEditorParameter.ENV}"
+            };
+            ApiResult res = new();
+            if (ConfigEditorParameter.ConfigType == "JSON")
+            {
+                res = await ConfigApi.SaveJsonAsync(ConfigEditorParameter.AppId, ConfigEditorParameter.ENV, new SaveJsonVM
+                {
+                    Json = _value
+                });
+            }
+            if (ConfigEditorParameter.ConfigType == "TEXT")
+            {
+                res = await ConfigApi.SaveKvListAsync(ConfigEditorParameter.AppId, ConfigEditorParameter.ENV, new SaveKVListVM
+                {
+                    Str = _value
+                });
+            }
+            if (res.Success)
+            {
+                config.Content = $"保存成功";
+                await MessageService.Success(config);
+            }
+            else
+            {
+                config.Content = $"保存失败,{res.Message}";
+                await MessageService.Error(config);
+            }
+            Visible = false;
+            if (OnCompleted.HasDelegate)
+            {
+                await OnCompleted.InvokeAsync(e);
+            }
+        }
+    }
 
-
+    public class ConfigEditorParameter
+    {
+        public string AppId { get; set; }
+        public string ConfigType { get; set; } = "JSON";
+        public string ENV { get; set; }
     }
 }

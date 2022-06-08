@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Enums;
 using AgileConfig.UIApiClient;
@@ -14,8 +13,6 @@ namespace AgileConfig.BlazorUI.Pages
 {
     public partial class Client
     {
-        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
-        private static readonly int _gutterY = 24;
         private static readonly Dictionary<string, int> _gutterX = new()
         {
             ["xs"] = 8,
@@ -25,36 +22,43 @@ namespace AgileConfig.BlazorUI.Pages
             ["xl"] = 48,
             ["xxl"] = 64
         };
-        private EnumItemShowType _itemShowType;
-        private bool _dataLoading;
+
+        private static readonly int _gutterY = 24;
         private string _address;
         private IEnumerable<string> _addresses = Array.Empty<string>();
-        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
-
+        private bool _dataLoading;
         private PageResult<ClientVM> _dataSource = new()
         {
             Current = 1,
             PageSize = 20,
         };
-        [Inject]
-        public IReportApi ReportApi { get; set; }
-        [Inject]
-        public IServerNodeApi ServerNodeApi { get; set; }
-        [Inject]
-        public IRemoteServerProxyApi RemoteServerProxyApi { get; set; }
+
+        private EnumItemShowType _itemShowType;
         [Inject]
         public MessageService MessageService { get; set; }
+
         [Inject]
         public ModalService ModalService { get; set; }
 
-        private void ChangeShowType()
-            => _itemShowType = _itemShowType == EnumItemShowType.TableRow ? EnumItemShowType.Card : EnumItemShowType.TableRow;
-        private void ReSet()
+        [Inject]
+        public IRemoteServerProxyApi RemoteServerProxyApi { get; set; }
+
+        [Inject]
+        public IReportApi ReportApi { get; set; }
+
+        [Inject]
+        public IServerNodeApi ServerNodeApi { get; set; }
+
+        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
+        protected override async Task OnInitializedAsync()
         {
-            _address = string.Empty;
-            StateHasChanged();
+            await base.OnInitializedAsync();
+            _ = LoadDataAsync();
         }
 
+        private void ChangeShowType()
+                    => _itemShowType = _itemShowType == EnumItemShowType.TableRow ? EnumItemShowType.Card : EnumItemShowType.TableRow;
         private async Task HandleTableChange(QueryModel<ClientVM> queryModel)
         {
             _dataSource.Current = queryModel.PageIndex;
@@ -63,27 +67,46 @@ namespace AgileConfig.BlazorUI.Pages
             await SearchAsync();
         }
 
-        private async Task SearchAsync()
-        {
-            _dataLoading = true;
-            _dataSource = await ReportApi.SearchServerNodeClientsAsync(_address, _dataSource.Current, _dataSource.PageSize);
-            _dataLoading = false;
-            StateHasChanged();
-            
-        }
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            _ = LoadDataAsync();
-        }
-
-
         private async Task LoadDataAsync()
         {
             var nodes = await ServerNodeApi.AllAsync();
             _addresses = new string[] { string.Empty }.Concat(nodes?.Data?.Select(n => n.Address) ?? Array.Empty<string>());
             await SearchAsync();
         }
+
+        private async Task OfflineAsync(ClientVM client)
+        {
+            var config = new MessageConfig()
+            {
+                Content = "断开中...",
+                Key = $"{nameof(OfflineAsync)}-{client.Id}"
+            };
+            _ = MessageService.Loading(config, 1);
+            var res = await RemoteServerProxyApi.OfflineAsync(client.Address, client.Id);
+            if (res.Success)
+            {
+                config.Content = "断开成功";
+                await MessageService.Success(config);
+            }
+            else
+            {
+                config.Content = $"断开失败,{res.Message}";
+                await MessageService.Error(config);
+            }
+        }
+
+        private void OfflineConfirm(ClientVM client)
+        {
+            ModalService.DestroyAllConfirmAsync();
+            var options = new ConfirmOptions
+            {
+                Title = $"是否确定断开与客户端【{client.Id}】的连接？",
+                Icon = infoIcon,
+                OnOk = async e => await OfflineAsync(client)
+            };
+            ModalService.Confirm(options);
+        }
+
         private async Task ReloadClientAsync(ClientVM client)
         {
             var config = new MessageConfig()
@@ -105,36 +128,18 @@ namespace AgileConfig.BlazorUI.Pages
             }
         }
 
-        private void OfflineConfirm(ClientVM client)
+        private void ReSet()
         {
-            ModalService.DestroyAllConfirmAsync();
-            var options = new ConfirmOptions
-            {
-                Title = $"是否确定断开与客户端【{client.Id}】的连接？",
-                Icon = infoIcon,
-                OnOk = async e => await OfflineAsync(client)
-            };
-            ModalService.Confirm(options);
+            _address = string.Empty;
+            StateHasChanged();
         }
-        private async Task OfflineAsync(ClientVM client)
+        private async Task SearchAsync()
         {
-            var config = new MessageConfig()
-            {
-                Content = "断开中...",
-                Key = $"{nameof(OfflineAsync)}-{client.Id}"
-            };
-            _ = MessageService.Loading(config, 1);
-            var res = await RemoteServerProxyApi.OfflineAsync(client.Address, client.Id);
-            if (res.Success)
-            {
-                config.Content = "断开成功";
-                await MessageService.Success(config);
-            }
-            else
-            {
-                config.Content = $"断开失败,{res.Message}";
-                await MessageService.Error(config);
-            }
+            _dataLoading = true;
+            _dataSource = await ReportApi.SearchServerNodeClientsAsync(_address, _dataSource.Current, _dataSource.PageSize);
+            _dataLoading = false;
+            StateHasChanged();
+
         }
     }
 }

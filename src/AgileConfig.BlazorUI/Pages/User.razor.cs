@@ -1,41 +1,19 @@
-﻿using AgileConfig.BlazorUI.Enums;
-using AgileConfig.UIApiClient.HttpResults;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Auth;
+using AgileConfig.BlazorUI.Components.User;
+using AgileConfig.BlazorUI.Enums;
+using AgileConfig.BlazorUI.Extensions;
 using AgileConfig.UIApiClient;
-using AntDesign.TableModels;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using AgileConfig.BlazorUI.Components.User;
-using AgileConfig.BlazorUI.Components.App;
-using AgileConfig.BlazorUI.Extensions;
-using AgileConfig.BlazorUI.Auth;
 
 namespace AgileConfig.BlazorUI.Pages
 {
     public partial class User
     {
-        class FormClass
-        {
-            public string UserName { get; set; }
-            public string Team { get; set; }
-        }
-        [Inject]
-        public IUserApi UserApi { get; set; }
-        [Inject]
-        public ModalService ModalService { get; set; }
-        [Inject]
-        public MessageService MessageService { get; set; }
-        [Inject]
-        public AuthService AuthService { get; set; }
-
-
-        private FormClass _formClass = new();
-        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
-        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
-        private static readonly int _gutterY = 24;
         private static readonly Dictionary<string, int> _gutterX = new()
         {
             ["xs"] = 8,
@@ -45,15 +23,38 @@ namespace AgileConfig.BlazorUI.Pages
             ["xl"] = 48,
             ["xxl"] = 64
         };
+
+        private static readonly int _gutterY = 24;
+
         private PageResult<UserVM> _dataSource = new()
         {
             Current = 1,
             PageSize = 20
         };
 
+        private UserVM _editObj;
+
+        private EditUser _editUser;
+
+        private FormClass _formClass = new();
+
         private EnumItemShowType _itemShowType;
-        private void ChangeShowType()
-       => _itemShowType = _itemShowType == EnumItemShowType.TableRow ? EnumItemShowType.Card : EnumItemShowType.TableRow;
+
+        [Inject]
+        public AuthService AuthService { get; set; }
+
+        [Inject]
+        public MessageService MessageService { get; set; }
+
+        [Inject]
+        public ModalService ModalService { get; set; }
+
+        [Inject]
+        public IUserApi UserApi { get; set; }
+
+        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+
+        private string ShowTypeString => _itemShowType == EnumItemShowType.Card ? "表格显示" : "卡片显示";
 
         protected override async Task OnInitializedAsync()
         {
@@ -61,28 +62,30 @@ namespace AgileConfig.BlazorUI.Pages
             _ = SearchAsync();
         }
 
-        private void ReSet() => _formClass = new();
-
-        private async Task SearchAsync()
+        private async Task AddAsync()
         {
-            _dataSource = await UserApi.SearchAsync(
-                 _formClass.UserName,
-                 _formClass.Team,
-                 _dataSource.Current,
-                 _dataSource.PageSize
-                 );
-            StateHasChanged();
+            _editUser.Visible = true;
+            _editUser.EditType = EnumEditType.Add;
+            _editObj = new();
+            await Task.CompletedTask;
         }
 
-        private void DeleteConfirm(UserVM user)
+        private void ChangeShowType()
+       => _itemShowType = _itemShowType == EnumItemShowType.TableRow ? EnumItemShowType.Card : EnumItemShowType.TableRow;
+
+        private bool CheckUserListModifyPermission(UserVM user)
         {
-            var options = new ConfirmOptions()
+            var authMap = Enum.GetValues<EnumRole>().ToDictionary(e => e.ToString(), e => e.GetIntValue());
+            var currentAuthNum = EnumRole.NormalUser;
+            var roles = AuthService.GetAuthority();
+            if (roles?.Count > 0)
             {
-                Title = $"是否确定删除用户【{user.UserName}】",
-                Icon = infoIcon,
-                OnOk = async e => await DeleteAsync(user)
-            };
-            ModalService.Confirm(options);
+                int maxPermission = roles.Select(x => authMap[x]).Min();
+                currentAuthNum = (EnumRole)maxPermission;
+            }
+            var userAuthNum = user.UserRoles.Min();
+
+            return currentAuthNum < userAuthNum;
         }
 
         private async Task DeleteAsync(UserVM user)
@@ -105,15 +108,18 @@ namespace AgileConfig.BlazorUI.Pages
                 await MessageService.Error(config);
             }
         }
-        private EditUser _editUser;
-        private UserVM _editObj;
-        private async Task AddAsync()
+
+        private void DeleteConfirm(UserVM user)
         {
-            _editUser.Visible = true;
-            _editUser.EditType = EnumEditType.Add;
-            _editObj = new();
-            await Task.CompletedTask;
+            var options = new ConfirmOptions()
+            {
+                Title = $"是否确定删除用户【{user.UserName}】",
+                Icon = infoIcon,
+                OnOk = async e => await DeleteAsync(user)
+            };
+            ModalService.Confirm(options);
         }
+
         private async Task EditAsync(UserVM user)
         {
             _editUser.Visible = true;
@@ -121,16 +127,9 @@ namespace AgileConfig.BlazorUI.Pages
             _editObj = user;
             await Task.CompletedTask;
         }
-        private void ResetPasswordConfirm(UserVM user)
-        {
-            var options = new ConfirmOptions()
-            {
-                Title = $"确定重置用户【{user.UserName}】的密码为【123456】？",
-                Icon = infoIcon,
-                OnOk = async e => await ResetPasswordAsync(user)
-            };
-            ModalService.Confirm(options);
-        }
+
+        private void ReSet() => _formClass = new();
+
         private async Task ResetPasswordAsync(UserVM user)
         {
             var config = new MessageConfig()
@@ -152,20 +151,32 @@ namespace AgileConfig.BlazorUI.Pages
             }
         }
 
-
-        private bool CheckUserListModifyPermission(UserVM user)
+        private void ResetPasswordConfirm(UserVM user)
         {
-            var authMap = Enum.GetValues<EnumRole>().ToDictionary(e => e.ToString(), e => e.GetIntValue());
-            var currentAuthNum = EnumRole.NormalUser;
-            var roles = AuthService.GetAuthority();
-            if (roles?.Count > 0)
+            var options = new ConfirmOptions()
             {
-                int maxPermission = roles.Select(x => authMap[x]).Min();
-                currentAuthNum = (EnumRole)maxPermission;
-            }
-            var userAuthNum = user.UserRoles.Min();
+                Title = $"确定重置用户【{user.UserName}】的密码为【123456】？",
+                Icon = infoIcon,
+                OnOk = async e => await ResetPasswordAsync(user)
+            };
+            ModalService.Confirm(options);
+        }
 
-            return currentAuthNum < userAuthNum;
+        private async Task SearchAsync()
+        {
+            _dataSource = await UserApi.SearchAsync(
+                 _formClass.UserName,
+                 _formClass.Team,
+                 _dataSource.Current,
+                 _dataSource.PageSize
+                 );
+            StateHasChanged();
+        }
+
+        class FormClass
+        {
+            public string Team { get; set; }
+            public string UserName { get; set; }
         }
     }
 }
