@@ -9,12 +9,33 @@
 使用:
 
 * 0、请务必解压。
-
 * 1、更改appsettings.json(**对于host和winapp则是wwwroot下的appsettings.json**)中的AgileConfigServer的值为你的Server地址
 * 2、启动：
   - 对于dist,请使用一个web服务器将其视为静态资源托管它，它是必定每次都会发布的
   - 对于simplehost，需要安装.NET 6运行时，然后双击AgileConfig.BlazorUI.SimpleHost.exe；注意，server是http则访问http的地址，server是https请使用https的地址，
   - 对于winapp，暂时是实验版本，未来可能不会继续发布它
+
+如果需要部署到nginx,类似其它的单页应用程序，你需要配置try_files，否则会在交互时遇到404问题
+
+```
+server {
+  listen 80;
+  server_name xxxx.com;
+
+  location / {
+    root /path;
+    try_files $uri @fallback;
+  }
+
+  location @fallback {
+    root /path;
+    rewrite .* /index.html break;
+  }
+}
+
+```
+
+
 
 若有疑问和bug和遗漏项请issue交流，或者在AgileConfig的QQ群@我，
 
