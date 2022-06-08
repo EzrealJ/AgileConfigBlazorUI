@@ -79,9 +79,9 @@
     => CheckUserListModifyPermission(user)
     ? (RenderFragment)(
     @<Space>
-        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(e=>ResetPasswordConfirm(user))>重置密码</Button></SpaceItem>
-        <SpaceItem><Button Type=@ButtonType.Primary OnClick=@(e=>EditAsync(user))>修改</Button></SpaceItem>
-        <SpaceItem><Button Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(user))>删除</Button></SpaceItem>
+        <SpaceItem><Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary OnClick=@(e=>ResetPasswordConfirm(user))>重置密码</Button></SpaceItem>
+        <SpaceItem><Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary OnClick=@(e=>EditAsync(user))>修改</Button></SpaceItem>
+        <SpaceItem><Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary Danger OnClick=@(e=>DeleteConfirm(user))>删除</Button></SpaceItem>
     </Space>
         )
         : (RenderFragment)( @<Space />);

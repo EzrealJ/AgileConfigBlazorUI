@@ -148,8 +148,12 @@
             </AuthorizedElement>
             <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_DELETE">
                 <Children>
-                    <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button></SpaceItem>
-                    <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemHistoryAsync(context))>历史</Button></SpaceItem>
+                    <SpaceItem>
+                        <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemHistoryAsync(context))>历史</Button>
+                    </SpaceItem>
                     @if (context.EditStatus != EditStatus.Commit)
                     {
                         <SpaceItem><Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ItemCancelConfirm(context))>撤销编辑</Button></SpaceItem>
@@ -171,13 +175,13 @@
 
     RenderFragment infoIcon =
     @<Icon Type="exclamation-circle" Theme="outline" />
-    ;
+        ;
 
     RenderFragment GetEditStatusTag(ConfigVM config)
     {
         return (RenderFragment)(
     @<Tag Color="green-inverse">@config.EditStatus.GetDescription()</Tag>
-    );
+        );
     }
 
     RenderFragment GetPublicTag(ConfigVM config)
@@ -186,7 +190,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">@OnlineStatus.Online.GetDescription()</Tag>
-    );
+        );
         }
         else
         {
