@@ -3,6 +3,7 @@
 @using AgileConfig.BlazorUI.Components.Service
 @using AgileConfig.BlazorUI.Enums
 @using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.BlazorUI.Helpers
 @using AgileConfig.BlazorUI.Localizations
 @using AgileConfig.UIApiClient;
 @using AgileConfig.UIApiClient.HttpModels
@@ -18,10 +19,10 @@
 
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="服务Id">
-        <Input @bind-Value=@context.Id />
+        <Input @bind-Value=@context.Id OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem Label="服务名">
-        <Input @bind-Value="@context.Name" />
+        <Input @bind-Value="@context.Name" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem Label="状态">
         <SimpleSelect @bind-Value="@context.Status" Placeholder="点击选择状态" DefaultActiveFirstOption="false">

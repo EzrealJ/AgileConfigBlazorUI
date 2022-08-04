@@ -3,6 +3,7 @@
 @using AgileConfig.BlazorUI.Components
 @using AgileConfig.BlazorUI.Components.App
 @using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Helpers
 @using AgileConfig.UIApiClient;
 @using AgileConfig.UIApiClient.HttpResults
 @using AntDesign.TableModels;
@@ -17,10 +18,10 @@
 
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="名称">
-        <Input @bind-Value=@context.Name />
+        <Input @bind-Value=@context.Name OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)" />
     </FormItem>
     <FormItem Label="应用Id">
-        <Input @bind-Value="@context.Id" />
+        <Input @bind-Value="@context.Id" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem Label="应用组">
         <Select DataSource="@_options"
@@ -130,13 +131,13 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">公开</Tag>
-    );
+        );
         }
         else
         {
             return (RenderFragment)(
     @<Tag Color="purple">私有</Tag>
-        );
+    );
         }
     }
     RenderFragment GetEnableTag(AppListVM app)
@@ -145,7 +146,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">启用</Tag>
-    );
+        );
         }
         else
         {

@@ -4,6 +4,7 @@
 @using AgileConfig.BlazorUI.Components.Config
 @using AgileConfig.BlazorUI.Enums
 @using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.BlazorUI.Helpers
 @using AgileConfig.UIApiClient;
 @using AgileConfig.UIApiClient.HttpResults
 @using AntDesign.TableModels;
@@ -29,10 +30,10 @@
 <Divider />
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="组">
-        <Input @bind-Value=@context.Group />
+        <Input @bind-Value=@context.Group OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem Label="键">
-        <Input @bind-Value="@context.Key" />
+        <Input @bind-Value="@context.Key" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem Label="发布状态">
         <SimpleSelect @bind-Value="@_onlineStatusStr" Placeholder="点击选择状态" DefaultActiveFirstOption="false">
@@ -121,8 +122,9 @@
     <AntDesign.Column Title="键" DataIndex="@nameof(context.Key)" TData="string">
         <Paragraph Copyable>@context.Key</Paragraph>
     </AntDesign.Column>
-    <AntDesign.Column Title="值" DataIndex="@nameof(context.Value)" TData="string">
-        <Paragraph Copyable>@context.Value</Paragraph>
+    <AntDesign.Column Title="值" DataIndex="@nameof(context.Value)" TData="string" 
+    Style="max-width:300px;padding:auto">
+        <Paragraph Copyable Ellipsis Style="width:auto">@context.Value</Paragraph>
     </AntDesign.Column>
     <AntDesign.Column Title="描述" DataIndex="@nameof(context.Description)" TData="string" />
     <AntDesign.Column Title="创建时间"

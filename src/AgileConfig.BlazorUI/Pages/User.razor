@@ -3,6 +3,7 @@
 @using AgileConfig.BlazorUI.Components.User
 @using AgileConfig.BlazorUI.Enums
 @using AgileConfig.BlazorUI.Extensions
+@using AgileConfig.BlazorUI.Helpers
 @using AgileConfig.BlazorUI.Localizations
 @using AgileConfig.UIApiClient;
 @using AgileConfig.UIApiClient.HttpModels
@@ -13,10 +14,10 @@
 
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="用户名">
-        <Input @bind-Value=@context.UserName />
+        <Input @bind-Value=@context.UserName OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem Label="团队">
-        <Input @bind-Value="@context.Team" />
+        <Input @bind-Value="@context.Team" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
     </FormItem>
     <FormItem>
         <Space>

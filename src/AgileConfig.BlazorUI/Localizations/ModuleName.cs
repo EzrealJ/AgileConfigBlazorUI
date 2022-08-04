@@ -2,7 +2,7 @@
 
 namespace AgileConfig.BlazorUI.Localizations
 {
-    public static class ModuleName
+    public  static class ModuleName
     {
         public static string GetByRoutePath(string path)
         {
