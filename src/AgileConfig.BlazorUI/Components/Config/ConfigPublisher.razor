@@ -1,0 +1,6 @@
+﻿<Modal Title="@($"即将发布{Para?.ENV}的配置")" Visible="@Visible" OnOk="@OnOkAsync" OnCancel=@Cancel>
+    <label>请填写发布日志</label>
+    <TextArea @bind-Value="_log" />
+</Modal>
+
+

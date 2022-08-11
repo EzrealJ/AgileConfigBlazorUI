@@ -26,7 +26,7 @@ namespace AgileConfig.BlazorUI.Auth
         public async Task OnResponseAsync(ApiResponseContext context)
         {
             var sp = context.HttpContext.ServiceProvider;
-            if (context.HttpContext?.ResponseMessage?.StatusCode != System.Net.HttpStatusCode.OK)
+            if (context.HttpContext?.ResponseMessage?.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 var stateProvider = sp.GetRequiredService<AuthenticationStateProvider>() as ApiAuthenticationStateProvider;
                 stateProvider.MarkUserAsLoggedOut();

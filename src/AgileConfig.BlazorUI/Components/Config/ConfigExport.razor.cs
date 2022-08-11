@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AgileConfig.BlazorUI.Helpers;
 using AgileConfig.BlazorUI.Model;
 using AgileConfig.UIApiClient;
 using Microsoft.AspNetCore.Components;
@@ -39,23 +40,11 @@ namespace AgileConfig.BlazorUI.Components.Config
             Visible = false;
         }
 
-        private async Task CheckJsonAsync(string value)
-        {
-            try
-            {
-                var json = JsonSerializer.Deserialize<JsonData>(value, Consts.Json.SystemTextJsonDeserializeOptions);
-                _value = JsonSerializer.Serialize(json, Consts.Json.SystemTextJsonSerializerOptions);
-            }
-            catch (Exception ex)
-            {
-            }
-            await Task.CompletedTask;
-        }
 
         private async Task LoadDataAsync()
         {
             _value = await ConfigApi.ExportJsonAsync(Para.AppId, Para.ENV);
-            await CheckJsonAsync(_value);
+            JsonDataHelper.SerializeJson(ref _value);
         }
         private async Task SaveAsync()
         {
@@ -63,6 +52,7 @@ namespace AgileConfig.BlazorUI.Components.Config
             using var fileStream = new MemoryStream(Encoding.UTF8.GetBytes(_value));
             using var streamRef = new DotNetStreamReference(stream: fileStream);
             await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            Visible = false;
         }
     }
 

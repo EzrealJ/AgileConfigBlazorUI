@@ -46,6 +46,10 @@ namespace AgileConfig.BlazorUI.Pages
         private ConfigImportParameter _configImportParameter;
         private ConfigItemHistory _configItemHistory;
         private ConfigItemHistoryPara _configItemHistoryPara;
+        private ConfigComparer _configComparer;
+        private ConfigComparerParameter _configComparerParameter;
+        private ConfigPublisher _configPublisher;
+        private ConfigPublisherParameter _configPublisherParameter;
         EditConfig _editConfig;
         ConfigVM _editObj;
         EnumEditType _enumEditType;
@@ -77,6 +81,18 @@ namespace AgileConfig.BlazorUI.Pages
             _enumEditType = EnumEditType.Add;
             _editObj = new();
             _editConfig.Visible = true;
+            await Task.CompletedTask;
+        }
+
+
+        private async Task PublishAsync()
+        {
+            _configPublisher.Visible = true;
+            _configPublisherParameter = new ConfigPublisherParameter
+            {
+                AppId = AppId,
+                ENV = _formClass.ENV
+            };
             await Task.CompletedTask;
         }
 
@@ -223,6 +239,17 @@ namespace AgileConfig.BlazorUI.Pages
                 AppId = AppId,
                 CurrentEnvironment = _formClass.ENV,
                 SyncableEnvironments = _envs.Where(e => e != _formClass.ENV).ToArray()
+            };
+            await Task.CompletedTask;
+        }
+        private async Task EnvironmentComparerAsync()
+        {
+            _configComparer.Visible = true;
+            _configComparerParameter = new ConfigComparerParameter
+            {
+                AppId = AppId,
+                LeftENV = _formClass.ENV,
+                OtherENVArray = _envs.Where(e => e != _formClass.ENV).ToArray()
             };
             await Task.CompletedTask;
         }

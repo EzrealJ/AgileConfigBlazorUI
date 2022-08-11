@@ -63,7 +63,7 @@ namespace AgileConfig.BlazorUI.Components.Config
                 config.Content = $"回滚失败,{res.Message}";
                 await MessageService.Error(config);
             }
-            await OnCompleted.InvokeAsync();
+            _ = OnCompleted.InvokeAsync();
         }
 
         private void RollBackConfirm(PublishTimeline timeline)

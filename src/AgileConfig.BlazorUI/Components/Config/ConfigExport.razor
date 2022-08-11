@@ -1,7 +1,8 @@
-﻿<Modal Visible=@Visible Width="@("61.8%")"
+﻿@using AgileConfig.BlazorUI.Helpers
+<Modal Visible=@Visible Width="@("61.8%")"
        Title=@($"导出前预览,当前环境为{Para?.ENV}")
        OnCancel=@Cancel
        OnOk=@SaveAsync>
-    <TextArea AutoSize @bind-value="_value" OnBlur=@(e=>CheckJsonAsync(_value)) />
+    <TextArea AutoSize @bind-value="_value" OnBlur=@(e=>JsonDataHelper.SerializeJson(ref _value)) />
 
 </Modal>

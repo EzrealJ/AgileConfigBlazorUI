@@ -45,7 +45,7 @@
             await MessageService.Error(config);
         }
         Visible = false;
-        await OnCompleted.InvokeAsync();
+        _= OnCompleted.InvokeAsync();
     }
 
     private void Close()

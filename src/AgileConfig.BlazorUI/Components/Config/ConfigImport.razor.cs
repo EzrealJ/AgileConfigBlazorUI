@@ -70,7 +70,7 @@ namespace AgileConfig.BlazorUI.Components.Config
                 config.Content = $"导入失败,{res.Message}";
                 await MessageService.Error(config);
             }
-            await OnCompleted.InvokeAsync();
+            _= OnCompleted.InvokeAsync();
 
         }
 

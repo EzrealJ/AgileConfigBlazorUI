@@ -7,6 +7,6 @@ namespace AgileConfig.BlazorUI.Model
     public class JsonData
     {
         [JsonExtensionData]
-        public Dictionary<string, JsonElement> ExtensionData { get; set; }
+        public SortedDictionary<string, JsonElement> ExtensionData { get; set; } = new();
     }
 }

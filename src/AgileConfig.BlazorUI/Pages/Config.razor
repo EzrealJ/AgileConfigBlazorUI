@@ -30,10 +30,10 @@
 <Divider />
 <Form Layout=@FormLayout.Inline Model=@_formClass>
     <FormItem Label="组">
-        <Input @bind-Value=@context.Group OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
+        <Input @bind-Value=@context.Group OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)" />
     </FormItem>
     <FormItem Label="键">
-        <Input @bind-Value="@context.Key" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
+        <Input @bind-Value="@context.Key" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)" />
     </FormItem>
     <FormItem Label="发布状态">
         <SimpleSelect @bind-Value="@_onlineStatusStr" Placeholder="点击选择状态" DefaultActiveFirstOption="false">
@@ -60,6 +60,11 @@
         <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_ADD">
             <Children>
                 <Button Type="@ButtonType.Primary" OnClick=@AddAsync>新建</Button>
+            </Children>
+        </AuthorizedElement>
+        <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_PUBLISH">
+            <Children>
+                <Button Type="@ButtonType.Primary" OnClick=@PublishAsync>发布</Button>
             </Children>
         </AuthorizedElement>
         <AuthorizedElement AppId="@AppId" JudgeKey="@JudgeKey.CONFIG_EDIT">
@@ -96,6 +101,7 @@
                         </Children>
                     </AuthorizedElement>
                     <MenuItem Key="4" OnClick="@JsonExportAsync">导出</MenuItem>
+                    @*<MenuItem Key="4" OnClick="@EnvironmentComparerAsync">环境比对</MenuItem>*@
                 </Menu>
             </Overlay>
             <Unbound>
@@ -122,8 +128,8 @@
     <AntDesign.Column Title="键" DataIndex="@nameof(context.Key)" TData="string">
         <Paragraph Copyable>@context.Key</Paragraph>
     </AntDesign.Column>
-    <AntDesign.Column Title="值" DataIndex="@nameof(context.Value)" TData="string" 
-    Style="max-width:300px;padding:auto">
+    <AntDesign.Column Title="值" DataIndex="@nameof(context.Value)" TData="string"
+                      Style="max-width:300px;padding:auto">
         <Paragraph Copyable Ellipsis Style="width:auto">@context.Value</Paragraph>
     </AntDesign.Column>
     <AntDesign.Column Title="描述" DataIndex="@nameof(context.Description)" TData="string" />
@@ -172,6 +178,8 @@
 <ConfigEnvironmentSync @ref=@_configEnvironmentSync Para=@_configEnvSyncParameter OnCompleted=@SearchAsync></ConfigEnvironmentSync>
 <ConfigImport @ref="_configImport" Para=@_configImportParameter OnCompleted=@SearchAsync></ConfigImport>
 <ConfigExport @ref="_configExport" Para=@_configExportParameter></ConfigExport>
+<ConfigComparer @ref="_configComparer" Para=@_configComparerParameter></ConfigComparer>
+<ConfigPublisher @ref="_configPublisher" Para=@_configPublisherParameter></ConfigPublisher>
 @code {
 
 

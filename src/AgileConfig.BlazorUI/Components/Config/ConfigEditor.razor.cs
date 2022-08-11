@@ -137,7 +137,7 @@ namespace AgileConfig.BlazorUI.Components.Config
             Visible = false;
             if (OnCompleted.HasDelegate)
             {
-                await OnCompleted.InvokeAsync(e);
+                _ = OnCompleted.InvokeAsync(e);
             }
         }
     }
