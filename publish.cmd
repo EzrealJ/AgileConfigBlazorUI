@@ -8,3 +8,4 @@ dotnet publish .\src\AgileConfig.BlazorUI.SimpleHost\AgileConfig.BlazorUI.Simple
 7z a %output%/simple.7z %output%/simple/*
 dotnet publish .\src\AgileConfig.WindowsApp\AgileConfig.WindowsApp.csproj -c Release --self-contained -r win-x64 -o %output%\winapp
 7z a %output%/winapp.7z %output%/winapp/*
+
