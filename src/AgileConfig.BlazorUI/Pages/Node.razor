@@ -3,6 +3,7 @@
 @using AgileConfig.BlazorUI.Components
 @using AgileConfig.BlazorUI.Consts
 @using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Helpers
 @using AgileConfig.UIApiClient;
 @using AntDesign.TableModels;
 @using AntDesign;
@@ -43,7 +44,7 @@
 }
 @if (_itemShowType == EnumItemShowType.Card)
 {
-    <Row Gutter=@Gutter>
+    <Row Gutter=@LayoutHelper.Gutter>
         @foreach (ServerNodeVM item in DataSource)
         {
             <AntDesign.Col Xs="24" Md="16" Lg="8" @key=@item.Address>

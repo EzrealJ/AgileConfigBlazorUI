@@ -1,0 +1,98 @@
+﻿@page "/agileconfigservermanager"
+@layout AgileConfig.BlazorUI.Layouts.NothingLayout
+@using AgileConfig.BlazorUI.Enums
+@using AgileConfig.BlazorUI.Helpers
+@using AgileConfig.BlazorUI.Model
+@using AgileConfig.BlazorUI.Components
+<div style="padding:50px;">
+    <Space>
+        <SpaceItem><Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button></SpaceItem>
+
+        <SpaceItem><Button Type=@ButtonType.Primary OnClick="@(()=>_editNode.Visible=true)">添加</Button></SpaceItem>
+
+    </Space>
+    <Divider></Divider>
+    <AgileConfig.BlazorUI.Components.AgileConfigServer.EditAgileConfigServer @ref=@_editNode EditType=@_editType OnCompleted=@LoadAsync />
+    @if (_itemShowType == EnumItemShowType.TableRow)
+    {
+        <Table TItem="AgileConfigServerSetting" DataSource="@AgileConfigServerSettings">
+            <AntDesign.Column Title="名称"
+                          DataIndex="@nameof(context.Name)"
+                          TData="string" />
+            <AntDesign.Column Title="Api地址" DataIndex="@nameof(context.Url)" TData="string"></AntDesign.Column>
+
+            <AntDesign.Column Title="状态" DataIndex="@nameof(context.IsCurrent)" TData="bool">
+                @GetItemTag(context)
+            </AntDesign.Column>
+            <AntDesign.ActionColumn Title="操作">
+                @GetItemButtons(context)
+            </AntDesign.ActionColumn>
+        </Table>
+    }
+    @if (_itemShowType == EnumItemShowType.Card)
+    {
+        <Row Gutter=@LayoutHelper.Gutter>
+            @foreach (AgileConfigServerSetting item in AgileConfigServerSettings)
+            {
+                <AntDesign.Col Xs="24" Md="16" Lg="8" @key=@item.Url>
+                    <Card>
+                        <p>名称:@item.Name</p>
+                        <p>Api地址:@item.Url</p>
+                        @GetItemTag(item)
+                        <Divider />
+                        @GetItemButtons(item)
+
+                    </Card>
+                </AntDesign.Col>
+            }
+        </Row>
+    }
+</div>
+
+
+@code {
+    RenderFragment infoIcon =@<Icon Type="exclamation-circle" Theme="outline" />
+             ;
+
+    RenderFragment GetItemButtons(AgileConfigServerSetting setting)
+    {
+        if (!setting.IsCurrent)
+        {
+            return (RenderFragment)(
+    @<Space>
+        <SpaceItem>
+            <Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary OnClick=@(async e=>await SetCurrentServerAsync(setting.Url))>切换到此服务</Button>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary OnClick=@(e=>EditServer(setting))>编辑</Button>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Size=@AntSizeLDSType.Small Type=@ButtonType.Primary OnClick=@(async e=>await DeleteServerAsync(setting.Url))>删除</Button>
+        </SpaceItem>
+    </Space>
+    );
+        }
+        else
+        {
+            return (RenderFragment)(@<Space />);
+        }
+    }
+
+    RenderFragment GetItemTag(AgileConfigServerSetting setting)
+    {
+        if (setting.IsCurrent)
+        {
+            return (RenderFragment)(
+    @<Tag Color="green">当前服务</Tag>
+        );
+        }
+        else
+        {
+            return (RenderFragment)(
+    @<Tag Color="red-inverse">未使用</Tag>
+    );
+        }
+    }
+
+
+}

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Auth;
 using AgileConfig.BlazorUI.Consts;
+using AgileConfig.BlazorUI.Services;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using AntDesign.ProLayout;
@@ -24,7 +25,7 @@ namespace AgileConfig.BlazorUI.Layouts
 
         [Inject] private MessageService MessageService { get; set; }
 
-        [Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private NavigationService NavigationService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,7 +49,7 @@ namespace AgileConfig.BlazorUI.Layouts
             }
             if (menuItem.Key == RoutePath.RESET_PASSWORD)
             {
-                NavigationManager.NavigateTo(RoutePath.RESET_PASSWORD);
+                NavigationService.NavigateTo(RoutePath.RESET_PASSWORD);
             }
         }
 
@@ -77,7 +78,7 @@ namespace AgileConfig.BlazorUI.Layouts
         private async Task Logout()
         {
             await AuthService.LogoutAsync();
-            NavigationManager.NavigateTo(RoutePath.LOGIN);
+            NavigationService.NavigateTo(RoutePath.LOGIN);
         }
 
         private void SetMenus()

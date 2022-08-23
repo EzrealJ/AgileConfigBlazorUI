@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Auth;
+using AgileConfig.BlazorUI.Filters;
+using AgileConfig.BlazorUI.Services;
 using AntDesign.ProLayout;
 using Blazor.Extensions.Logging;
 using Blazored.LocalStorage;
@@ -29,21 +31,22 @@ namespace AgileConfig.BlazorUI
 
         private static void ConfigureServices(WebAssemblyHostBuilder builder, IServiceCollection services)
         {
+            
             services.AddLogging(config =>
             {
                 config.AddBrowserConsole().SetMinimumLevel(LogLevel.Warning);
             });
+            services.AddSingleton<NavigationService>();
             services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             services.AddAntDesign();
             services.Configure<ProSettings>(builder.Configuration.GetSection("ProSettings"));
-
+            services.AddScoped<AgileConfigServerProvider>();
             services.AddAgileConfigUIApiClient((option, sp) =>
             {
                 IConfiguration configuration = sp.GetRequiredService<IConfiguration>();
                 string server = configuration["AgileConfigServer"];
                 option.HttpHost = new Uri(server);
-                UIApiTokenProvider filter = sp.GetRequiredService<UIApiTokenProvider>();
-                option.GlobalFilters.Add(filter);
+                option.GlobalFilters.Add(new AgileConfigServerFilter());
             });
             services.AddBlazoredLocalStorage(config =>
             {

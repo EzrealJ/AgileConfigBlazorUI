@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Components.App;
 using AgileConfig.BlazorUI.Enums;
+using AgileConfig.BlazorUI.Services;
 using AgileConfig.UIApiClient;
 using AgileConfig.UIApiClient.HttpResults;
 using AntDesign;
@@ -46,7 +47,7 @@ namespace AgileConfig.BlazorUI.Pages
         public MessageService MessageService { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationService NavigationService { get; set; }
 
         [Inject]
         private IAppApi AppApi { get; set; }
@@ -75,7 +76,7 @@ namespace AgileConfig.BlazorUI.Pages
 
         private void ConfigList(AppVM app)
         {
-            NavigationManager.NavigateTo($"/Config/{app.Id}");
+            NavigationService.NavigateTo($"/Config/{app.Id}");
         }
 
         private async Task DeleteAsync(AppListVM app)

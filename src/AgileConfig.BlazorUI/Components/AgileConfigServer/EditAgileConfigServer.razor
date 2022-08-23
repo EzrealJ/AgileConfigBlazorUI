@@ -1,0 +1,14 @@
+﻿@using AgileConfig.BlazorUI.Model
+@using AgileConfig.UIApiClient
+<Modal Title="@Title" Visible="@Visible" OnOk="@AddAsync" OnCancel=@Cancel>
+    <Form @ref=@_form Model="CurrentObject">
+        <FormItem Label="名称" Required>
+            <Input @bind-Value="@context.Name" />
+        </FormItem>
+        <FormItem Label="地址" Required>
+            <TextArea @bind-Value="@context.Url" />
+        </FormItem>
+    </Form>
+</Modal>
+
+

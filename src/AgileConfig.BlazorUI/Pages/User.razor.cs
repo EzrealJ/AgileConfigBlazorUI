@@ -37,7 +37,7 @@ namespace AgileConfig.BlazorUI.Pages
         private EditUser _editUser;
 
         private FormClass _formClass = new();
-
+        private EnumEditType _editType;
         private EnumItemShowType _itemShowType;
 
         [Inject]
@@ -65,7 +65,7 @@ namespace AgileConfig.BlazorUI.Pages
         private async Task AddAsync()
         {
             _editUser.Visible = true;
-            _editUser.EditType = EnumEditType.Add;
+            _editType= EnumEditType.Add;
             _editObj = new();
             await Task.CompletedTask;
         }
@@ -123,7 +123,7 @@ namespace AgileConfig.BlazorUI.Pages
         private async Task EditAsync(UserVM user)
         {
             _editUser.Visible = true;
-            _editUser.EditType = EnumEditType.Edit;
+            _editType = EnumEditType.Edit;
             _editObj = user;
             await Task.CompletedTask;
         }

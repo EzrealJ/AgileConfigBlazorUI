@@ -249,7 +249,8 @@ namespace AgileConfig.BlazorUI.Pages
             {
                 AppId = AppId,
                 LeftENV = _formClass.ENV,
-                OtherENVArray = _envs.Where(e => e != _formClass.ENV).ToArray()
+                OtherENVArray = _envs.Where(e => e != _formClass.ENV).ToArray(),
+                AllEnv = _envs
             };
             await Task.CompletedTask;
         }

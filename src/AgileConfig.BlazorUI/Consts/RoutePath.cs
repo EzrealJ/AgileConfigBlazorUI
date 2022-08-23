@@ -13,5 +13,6 @@
         public const string RESET_PASSWORD = "/resetpassword";
         public const string SERVICE = "/service";
         public const string USER = "/user";
+        public const string AGILE_CONFIG_SERVER_MANAGER = "agileconfigservermanager";
     }
 }

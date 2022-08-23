@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Consts;
+using AgileConfig.BlazorUI.Services;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
@@ -15,7 +16,7 @@ namespace AgileConfig.BlazorUI.Pages
         [Inject]
         public MessageService MessageService { get; set; }
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationService NavigationService { get; set; }
 
         private async Task SubmitAsync()
         {
@@ -35,7 +36,7 @@ namespace AgileConfig.BlazorUI.Pages
             {
                 config.Content = "初始化成功";
                 await MessageService.Success(config);
-                NavigationManager.NavigateTo(RoutePath.LOGIN);
+                NavigationService.NavigateTo(RoutePath.LOGIN);
             }
             else
             {

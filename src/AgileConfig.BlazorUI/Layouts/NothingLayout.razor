@@ -1,0 +1,18 @@
+﻿@namespace AgileConfig.BlazorUI.Layouts
+@using AgileConfig.BlazorUI.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+@inject NavigationService NavigationService;
+
+<AntDesign.Layout Style="padding:0;margin:0">
+    <Header Style="background-color:white;">
+        <Space>
+            <SpaceItem>
+                <Button OnClick="()=>NavigationService.NavigateBack()">返回</Button>
+            </SpaceItem>
+        </Space>
+    </Header>
+    <Content Style="background-color:white;">
+        @Body
+    </Content>
+</AntDesign.Layout>

@@ -3,30 +3,60 @@
        Title=@($"环境比对")
        OnCancel=@Cancel>
     <Row>
-        <Col Span="8">
-        <Title Level="2">@($"当前环境{Para.LeftENV}")</Title>
-        </Col>
-        <Col Span="8">
-        <Title Level="3">选择比对环境</Title>
-        <RadioGroup TValue="string" @bind-Value="_rightENV" ButtonStyle="@RadioButtonStyle.Solid" OnChange=@LoadRightDataAsync>
-                @foreach (var s in Para.OtherENVArray)
+        <Col Span="12">
+        <Title Level="3">@($"当前环境{Para.LeftENV}")</Title>
+            <RadioGroup TValue="string" @bind-Value="Para.LeftENV" ButtonStyle="@RadioButtonStyle.Solid" OnChange=@ChangeLeftEnvAsync>
+                @foreach (var s in Para.AllEnv)
                 {
                 <Radio RadioButton Value="@s">@s</Radio>
                 }
         </RadioGroup>
         <Divider />
         </Col>
-        <Col Span="8">差异</Col>
+        <Col Span="12">
+        <Title Level="3">选择比对环境</Title>
+        <RadioGroup TValue="string" @bind-Value="Para.RightENV" ButtonStyle="@RadioButtonStyle.Solid" OnChange=@ChangeRightEnvAsync>
+                @foreach (var s in Para.OtherENVArray)
+                {
+                <Radio RadioButton Value="@s">@s</Radio>
+                }
+        </RadioGroup>
+      
+        <Divider />
+        </Col>
 
+        @if (_showSource)
+        {
+            <GridCol Span="12">
+            <TextArea Style="height:300px;scroll-behavior:auto" @bind-value="_leftString" OnBlur=@(e=>JsonDataHelper.SerializeJson(ref _leftString)) />
+            </GridCol>
+            <GridCol Span="12">
+            <TextArea Style="height:300px;scroll-behavior:auto" @bind-value="_rightString" OnBlur=@(e=>JsonDataHelper.SerializeJson(ref _rightString)) />
+            </GridCol>
 
-        <Col Span="8">
-        <TextArea AutoSize @bind-value="_leftString" OnBlur=@(e=>JsonDataHelper.SerializeJson(ref _leftString)) />
+        }
+    </Row>
+    <Row>
+        <Col Span="24">
+        <Title Level="3">差异</Title>
+        <Button>@Para.LeftENV</Button>
+        =>
+        <Button>@Para.RightENV</Button>
+        <Switch Checked="@_showSource" CheckedChildren="显示源以供参考" UnCheckedChildren="直接显示差异" OnChange="LoadSourceAsync" />
+        <Switch Checked="_comparerAsJson" CheckedChildren="JSON" UnCheckedChildren="KeyValue" OnChange="ChangeComparerMode" />
+        <Divider />
         </Col>
         <Col Span="8">
-        <TextArea AutoSize @bind-value="_rightString" OnBlur=@(e=>JsonDataHelper.SerializeJson(ref _rightString)) />
+        <Title Level="5">增加</Title>
+        <TextArea Style="height:300px;scroll-behavior:auto" @bind-value="_add" />
         </Col>
         <Col Span="8">
-        <TextArea AutoSize @bind-value="_change"/>
+        <Title Level="5">移除</Title>
+        <TextArea Style="height:300px;scroll-behavior:auto" @bind-value="_sub" />
+        </Col>
+        <Col Span="8">
+        <Title Level="5">修改</Title>
+        <TextArea Style="height:300px;scroll-behavior:auto" @bind-value="_diff" />
         </Col>
     </Row>
 </Modal>

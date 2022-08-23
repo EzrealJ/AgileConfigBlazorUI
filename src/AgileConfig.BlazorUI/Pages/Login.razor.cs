@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AgileConfig.BlazorUI.Auth;
 using AgileConfig.BlazorUI.Consts;
+using AgileConfig.BlazorUI.Services;
 using AgileConfig.UIApiClient;
 using AntDesign;
 using Microsoft.AspNetCore.Components;
@@ -21,7 +22,7 @@ namespace AgileConfig.BlazorUI.Pages
         public MessageService MsgService { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationService NavigationService { get; set; }
         protected override async Task OnInitializedAsync()
         {
             var res = await AdminApi.PasswordInitedAsync();
@@ -29,7 +30,7 @@ namespace AgileConfig.BlazorUI.Pages
             {
                 return;
             }
-            NavigationManager.NavigateTo(RoutePath.INIT_PASSWORD);
+            NavigationService.NavigateTo(RoutePath.INIT_PASSWORD);
         }
 
 
@@ -42,7 +43,7 @@ namespace AgileConfig.BlazorUI.Pages
                 return;
             }
             await MsgService.Success("登录成功！");
-            NavigationManager.NavigateTo("/home");
+            NavigationService.NavigateTo("/home");
         }
     }
 }

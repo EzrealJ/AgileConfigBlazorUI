@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AgileConfig.BlazorUI.Consts;
+using AgileConfig.BlazorUI.Services;
 using AntDesign;
 using AntDesign.ProLayout;
 using Microsoft.AspNetCore.Components;
@@ -8,6 +9,8 @@ namespace AgileConfig.BlazorUI.Components
 {
     public partial class RightContent : AntDomComponentBase
     {
+        [Inject] private NavigationService NavigationService { get; set; }
+
         private readonly IEnumerable<AvatarMenuItem> _avatarMenuItems = new AvatarMenuItem[]
         {
             new AvatarMenuItem { Key = RoutePath.RESET_PASSWORD, IconType = "user", Option = "修改密码"},
@@ -44,6 +47,11 @@ namespace AgileConfig.BlazorUI.Components
             ClassMapper
                 .Clear()
                 .Add("right");
+        }
+
+        private void ChangeAgileConfigServer()
+        {
+            NavigationService.NavigateTo(RoutePath.AGILE_CONFIG_SERVER_MANAGER);
         }
     }
 }

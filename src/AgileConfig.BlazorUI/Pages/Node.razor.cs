@@ -11,22 +11,12 @@ namespace AgileConfig.BlazorUI.Pages
 {
     public partial class Node
     {
-        private static readonly Dictionary<string, int> _gutterX = new()
-        {
-            ["xs"] = 8,
-            ["sm"] = 16,
-            ["md"] = 24,
-            ["lg"] = 32,
-            ["xl"] = 48,
-            ["xxl"] = 64
-        };
 
-        private static readonly int _gutterY = 24;
         private bool _dataLoading;
         private EditNode _editNode;
         private EnumItemShowType _itemShowType = EnumItemShowType.TableRow;
         public IEnumerable<ServerNodeVM> DataSource { get; set; }
-        private static (Dictionary<string, int> X, int Y) Gutter => (_gutterX, _gutterY);
+      
         [Inject] private MessageService MessageService { get; set; }
         [Inject] private ModalService ModalService { get; set; }
         [Inject] private IRemoteServerProxyApi RemoteServerProxyApi { get; set; }

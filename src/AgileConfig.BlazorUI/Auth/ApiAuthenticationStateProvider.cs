@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -12,11 +13,11 @@ namespace AgileConfig.BlazorUI.Auth
 {
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider, IUserPermissionChecker
     {
-        private readonly ILocalStorageService _localStorage;
+        private readonly ILocalStorageService _localStorageService;
 
         public ApiAuthenticationStateProvider(ILocalStorageService localStorage)
         {
-            _localStorage = localStorage;
+            _localStorageService = localStorage;
         }
 
         public bool CheckUserPermission(IEnumerable<string> functions, string judgeKey, string appId)
@@ -32,10 +33,14 @@ namespace AgileConfig.BlazorUI.Auth
             ex = functions.Any(x => x == matchKey);
             return ex;
         }
-
+        public async Task<LoginResult> GetLoginResultAsync()
+        {
+            var authInfo = await _localStorageService.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
+            return authInfo;
+        }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var authInfo = await _localStorage.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
+            var authInfo = await _localStorageService.GetItemAsync<LoginResult>(Consts.CacheKey.TOKEN);
 
             if (string.IsNullOrWhiteSpace(authInfo?.Token))
             {
@@ -108,5 +113,7 @@ namespace AgileConfig.BlazorUI.Auth
 
             return claims;
         }
+
+
     }
 }
