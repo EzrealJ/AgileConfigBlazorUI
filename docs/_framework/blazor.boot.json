@@ -9,7 +9,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "AgileConfig.BlazorUI.dll": "sha256-KJEfLx5kkgk8tPXB\/aZp2cpM0Wtu+4yukaLuCaE56T8=",
+      "AgileConfig.BlazorUI.dll": "sha256-TjuVMvPIHS+B9ZmcFM4W\/ojNYhr9KzF3\/JFlhi5eYDc=",
       "AgileConfig.UIApiClient.dll": "sha256-+8jUi+hjAS3R\/QwKmmXpTttnlIUawfTGzw7dL3y4Khk=",
       "AntDesign.Charts.dll": "sha256-n81c2BJO7iDckPFvRtVVnvYbPieOdzZDCrircgudriM=",
       "AntDesign.dll": "sha256-JgC9CMgiR5pmVhh5BXp5vw8Ot33t2AZDIINJCgfijU8=",
