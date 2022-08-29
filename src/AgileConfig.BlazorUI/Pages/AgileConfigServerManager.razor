@@ -7,9 +7,7 @@
 <div style="padding:50px;">
     <Space>
         <SpaceItem><Button Type="@ButtonType.Primary" OnClick="ChangeShowType">@ShowTypeString</Button></SpaceItem>
-
         <SpaceItem><Button Type=@ButtonType.Primary OnClick="@(()=>_editNode.Visible=true)">添加</Button></SpaceItem>
-
     </Space>
     <Divider></Divider>
     <AgileConfig.BlazorUI.Components.AgileConfigServer.EditAgileConfigServer @ref=@_editNode EditType=@_editType OnCompleted=@LoadAsync />
@@ -92,6 +90,7 @@
     @<Tag Color="red-inverse">未使用</Tag>
     );
         }
+        
     }
 
 
