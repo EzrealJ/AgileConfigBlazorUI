@@ -165,7 +165,7 @@ namespace AgileConfig.BlazorUI.Pages
                  _dataSource.Current,
                  _dataSource.PageSize
                  );
-
+            _dataSource.Data.ForEach(data => data.ResetGroupTitle());
             StateHasChanged();
         }
         private async Task ViewInheritancedAppAsync(AppListVM app)

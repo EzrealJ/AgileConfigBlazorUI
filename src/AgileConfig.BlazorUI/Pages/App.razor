@@ -21,7 +21,7 @@
         <Input @bind-Value=@context.Name OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)" />
     </FormItem>
     <FormItem Label="应用Id">
-        <Input @bind-Value="@context.Id" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)"/>
+        <Input @bind-Value="@context.Id" OnkeyDown="(arg)=>KeyboardHelper.OnEnterAsync(arg,SearchAsync)" />
     </FormItem>
     <FormItem Label="应用组">
         <Select DataSource="@_options"
@@ -96,24 +96,31 @@
             </NoMatch>
         </AuthorizedElement>
     </AntDesign.ActionColumn>
+
     <AntDesign.ActionColumn Title="操作">
-        <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ViewInheritancedAppAsync(context))>查看关联</Button>
-        <Button Type=@ButtonType.Default Size=@AntSizeLDSType.Small OnClick=@(e=>ConfigList(context))>配置项</Button>
-        <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
-            <Children>
-                <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button>
-            </Children>
-        </AuthorizedElement>
-        <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_AUTH">
-            <Children>
-                <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>AuthAsync(context))>授权</Button>
-            </Children>
-        </AuthorizedElement>
-        <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_DELETE">
-            <Children>
-                <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button>
-            </Children>
-        </AuthorizedElement>
+        @if (!context.IsGroupTitle)
+        {
+            @if (context.InheritancedAppNames?.Any() ?? false)
+            {
+                <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>ViewInheritancedAppAsync(context))>查看关联</Button>
+            }
+            <Button Type=@ButtonType.Default Size=@AntSizeLDSType.Small OnClick=@(e=>ConfigList(context))>配置项</Button>
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_EDIT">
+                <Children>
+                    <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>EditAsync(context))>编辑</Button>
+                </Children>
+            </AuthorizedElement>
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_AUTH">
+                <Children>
+                    <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small OnClick=@(e=>AuthAsync(context))>授权</Button>
+                </Children>
+            </AuthorizedElement>
+            <AuthorizedElement AppId="@context.Id" JudgeKey="@JudgeKey.APP_DELETE">
+                <Children>
+                    <Button Type=@ButtonType.Primary Size=@AntSizeLDSType.Small Danger OnClick=@(e=>DeleteConfirm(context))>删除</Button>
+                </Children>
+            </AuthorizedElement>
+        }
     </AntDesign.ActionColumn>
 </Table>
 
@@ -131,13 +138,13 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">公开</Tag>
-        );
+    );
         }
         else
         {
             return (RenderFragment)(
     @<Tag Color="purple">私有</Tag>
-    );
+        );
         }
     }
     RenderFragment GetEnableTag(AppListVM app)
@@ -146,7 +153,7 @@
         {
             return (RenderFragment)(
     @<Tag Color="green-inverse">启用</Tag>
-        );
+    );
         }
         else
         {
